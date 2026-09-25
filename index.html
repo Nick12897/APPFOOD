@@ -368,31 +368,57 @@
           </div>
         </div>
       </div>
-      <div>
-        <div class="flex items-center justify-between mb-space-sm">
-          <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-[20px]">alt_route</span> Phương án dự phòng</h3>
-          <span class="font-label-sm text-label-sm text-primary font-bold">Tỷ lệ duyệt &gt; 85%</span>
+      <!-- ══ PHƯƠNG ÁN DỰ PHÒNG (LIÊN KẾT VỚI SỔ TAY NÀNG & TÙY CHỈNH) ══ -->
+      <div class="space-y-space-sm">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-secondary text-[20px]">alt_route</span>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Phương án dự phòng</h3>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-label-sm text-[11px] text-primary font-bold bg-primary-fixed/60 px-2 py-0.5 rounded-full">Tỷ lệ duyệt &gt; 90%</span>
+            <button onclick="openCustomBackupModal()" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-xs font-bold text-on-surface-variant flex items-center gap-1 transition-colors" title="Tùy chỉnh hoặc chọn từ Sổ tay nàng">
+              <span class="material-symbols-outlined text-[14px]">tune</span>
+              <span>Tùy chỉnh</span>
+            </button>
+          </div>
         </div>
-        <div class="space-y-space-sm">
-          <div class="bg-surface-container-lowest p-space-md rounded-DEFAULT shadow-sm flex items-center justify-between">
-            <div class="flex items-center gap-space-md">
-              <div class="w-12 h-12 rounded-DEFAULT bg-primary-fixed flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-[24px]">ramen_dining</span></div>
-              <div><span class="font-label-sm text-label-sm text-primary font-bold block">LỰA CHỌN SỐ 2 (91%)</span><h4 class="font-headline-sm text-headline-sm text-on-surface text-[15px]" id="r-b1">Phở Bò Tái Lăn Bát Đá</h4></div>
-            </div>
-            <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
-          </div>
-          <div class="bg-surface-container-lowest p-space-md rounded-DEFAULT shadow-sm flex items-center justify-between">
-            <div class="flex items-center gap-space-md">
-              <div class="w-12 h-12 rounded-DEFAULT bg-secondary-fixed flex items-center justify-center text-secondary shrink-0"><span class="material-symbols-outlined text-[24px]">soup_kitchen</span></div>
-              <div><span class="font-label-sm text-label-sm text-secondary font-bold block">LỰA CHỌN SỐ 3 (86%)</span><h4 class="font-headline-sm text-headline-sm text-on-surface text-[15px]" id="r-b2">Bún Riêu Cua Bắp Bò</h4></div>
-            </div>
-            <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
-          </div>
+        <div id="r-backup-list" class="space-y-space-sm">
+          <!-- Rendered dynamically by renderResultBackups() -->
         </div>
       </div>
-      <div class="bg-gradient-to-br from-tertiary-fixed/30 to-surface-container p-space-md rounded-DEFAULT flex items-center gap-space-md">
-        <div class="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm shrink-0"><span class="material-symbols-outlined text-[22px]">tips_and_updates</span></div>
-        <p class="font-body-sm text-body-sm text-on-surface-variant" id="r-tip"><strong class="text-on-surface">Mẹo nhỏ chàng ơi:</strong> Nhớ dặn cay vừa và gọi thêm trà sữa thái đỏ cho nàng nhé!</p>
+
+      <!-- ══ MẸO NHỎ CHÀNG ƠI (ĐỒNG BỘ VỚI SỔ TAY NÀNG & TÙY CHỈNH) ══ -->
+      <div class="bg-gradient-to-br from-tertiary-fixed/30 via-surface-container to-secondary-fixed/20 p-4 rounded-2xl flex flex-col gap-2.5 border border-primary/20 shadow-sm relative overflow-hidden">
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-xs shrink-0">
+              <span class="material-symbols-outlined text-[20px]">tips_and_updates</span>
+            </div>
+            <div>
+              <span class="font-label-md text-xs font-bold text-on-surface block">Mẹo nhỏ chàng ơi (Từ Sổ tay nàng):</span>
+              <span class="text-[10px] text-primary font-semibold">Tự động đối chiếu Gu ăn uống &amp; Blacklist của bé</span>
+            </div>
+          </div>
+          <button onclick="openResultTipEditModal()" class="w-7 h-7 rounded-full bg-surface-container-lowest/80 hover:bg-primary-fixed hover:text-primary flex items-center justify-center text-on-surface-variant transition-colors shadow-2xs shrink-0" title="Chỉnh sửa mẹo dặn dò này">
+            <span class="material-symbols-outlined text-[15px]">edit</span>
+          </button>
+        </div>
+
+        <div id="r-tip-container" class="font-body-sm text-xs text-on-surface-variant leading-relaxed space-y-1.5 pl-1">
+          <!-- Dynamic tip and tags -->
+        </div>
+
+        <div class="pt-2 border-t border-surface-container-high/60 flex items-center justify-between text-[11px]">
+          <span class="text-on-surface-variant flex items-center gap-1">
+            <span class="material-symbols-outlined text-[13px] text-secondary">verified</span>
+            Đồng bộ từ Sổ tay &amp; Blacklist của bé
+          </span>
+          <button onclick="navigate('notebook')" class="text-primary font-bold hover:underline flex items-center gap-0.5">
+            <span>Sửa trong Sổ tay</span>
+            <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+          </button>
+        </div>
       </div>
     </div>
     <div class="mt-space-xl px-margin space-y-space-sm">
@@ -1519,6 +1545,169 @@
   </div>
 </div>
 
+<!-- ══ CUSTOM BACKUP OPTIONS MODAL ══ -->
+<div id="custom-backup-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-sm space-y-3.5 shadow-2xl animate-pop-in border border-outline-variant/30">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🔄</span>
+        <div>
+          <h4 class="font-headline-sm text-sm text-on-surface font-bold">Tùy chỉnh Phương Án Dự Phòng</h4>
+          <span class="font-label-sm text-[11px] text-on-surface-variant">Chọn từ Sổ tay hoặc tự điền món</span>
+        </div>
+      </div>
+      <button onclick="closeCustomBackupModal()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Quick pick from Sổ tay nàng -->
+    <div class="space-y-1">
+      <span class="font-label-sm text-[11px] text-primary font-bold block">✨ Chọn nhanh từ Quán Ruột trong Sổ tay:</span>
+      <div class="flex gap-1.5 overflow-x-auto py-1" id="backup-fav-picker-row">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <div class="space-y-2.5">
+      <div>
+        <label class="font-label-sm text-[11px] text-on-surface-variant font-bold block mb-1">Phương án dự phòng 1 (Lựa chọn 2):</label>
+        <div class="flex items-center gap-1.5">
+          <input id="cb-b1-input" type="text" class="flex-1 bg-surface-container-low text-on-surface px-3 py-2 rounded-xl text-xs font-semibold focus:outline-none border border-outline-variant/40" placeholder="Tên món dự phòng 1..." />
+          <button type="button" onclick="openEmojiPicker('cb1')" class="px-2 py-1.5 rounded-xl bg-surface-container text-xs font-bold text-on-surface-variant">🎨</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="font-label-sm text-[11px] text-on-surface-variant font-bold block mb-1">Phương án dự phòng 2 (Lựa chọn 3):</label>
+        <div class="flex items-center gap-1.5">
+          <input id="cb-b2-input" type="text" class="flex-1 bg-surface-container-low text-on-surface px-3 py-2 rounded-xl text-xs font-semibold focus:outline-none border border-outline-variant/40" placeholder="Tên món dự phòng 2..." />
+          <button type="button" onclick="openEmojiPicker('cb2')" class="px-2 py-1.5 rounded-xl bg-surface-container text-xs font-bold text-on-surface-variant">🎨</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between pt-2 border-t border-surface-container-high">
+      <button type="button" onclick="resetCustomBackupsToDefault()" class="text-on-surface-variant hover:text-error text-[11px] font-bold flex items-center gap-1 py-1 px-2 rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-[14px]">restart_alt</span>
+        <span>Mặc định</span>
+      </button>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="closeCustomBackupModal()" class="px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface text-xs font-bold active:scale-95 transition-transform">
+          Hủy
+        </button>
+        <button type="button" onclick="saveCustomBackups()" class="px-4 py-1.5 rounded-full bg-primary text-on-primary text-xs font-bold shadow-sm active:scale-95 transition-transform flex items-center gap-1">
+          <span class="material-symbols-outlined text-[15px]">check</span>
+          <span>Lưu dự phòng</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BACKUP DISH ACTION MODAL (KHI CHẠM VÀO MÓN DỰ PHÒNG) ══ -->
+<div id="backup-action-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-sm space-y-3.5 shadow-2xl animate-pop-in border border-outline-variant/30">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div id="bam-icon" class="w-12 h-12 rounded-2xl bg-secondary-fixed flex items-center justify-center text-3xl shrink-0 overflow-hidden shadow-2xs border border-primary/20">
+          🍜
+        </div>
+        <div class="min-w-0 flex-1">
+          <h4 id="bam-title" class="font-headline-sm text-sm text-on-surface font-bold truncate">Phở Bò Tái Lăn Bát Đá</h4>
+          <span id="bam-badge" class="font-label-sm text-[11px] bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-bold inline-block mt-0.5">Phương án dự phòng</span>
+        </div>
+      </div>
+      <button onclick="closeBackupActionModal()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <div class="p-3 bg-surface-container-low rounded-xl text-xs space-y-1 border border-outline-variant/20">
+      <span class="font-bold text-on-surface block flex items-center gap-1">
+        <span class="material-symbols-outlined text-primary text-[15px]">swap_horiz</span>
+        Bạn muốn đổi sang món này thay vì món hiện tại?
+      </span>
+      <p class="text-on-surface-variant leading-relaxed">
+        Hệ thống sẽ cập nhật món này thành lựa chọn chính và cập nhật mẹo dặn dò tương ứng từ Sổ tay nàng!
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="space-y-2 pt-1 border-t border-surface-container-high/60">
+      <button onclick="promoteBackupToPrimary()" class="w-full py-2.5 px-3 rounded-full bg-primary text-on-primary text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-transform">
+        <span class="material-symbols-outlined text-[17px]">verified</span>
+        <span>Chốt món này làm Lựa Chọn Chính! ✨</span>
+      </button>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="searchBackupOnMap()" class="py-2 px-3 rounded-full bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-bold flex items-center justify-center gap-1 active:scale-95 transition-transform truncate">
+          <span class="material-symbols-outlined text-primary text-[16px]">navigation</span>
+          <span>Tìm bản đồ 🗺️</span>
+        </button>
+        <button onclick="openBackupInNotebook()" class="py-2 px-3 rounded-full bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-bold flex items-center justify-center gap-1 active:scale-95 transition-transform truncate">
+          <span class="material-symbols-outlined text-primary text-[16px]">menu_book</span>
+          <span>Mở Sổ tay nàng</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT RESULT TIP MODAL ══ -->
+<div id="edit-result-tip-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-sm space-y-3.5 shadow-2xl animate-pop-in border border-outline-variant/30">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">💡</span>
+        <div>
+          <h4 class="font-headline-sm text-sm text-on-surface font-bold">Chỉnh sửa Mẹo Dặn Dò Cho Chàng</h4>
+          <span class="font-label-sm text-[11px] text-on-surface-variant">Đồng bộ từ Gu ăn uống của bé</span>
+        </div>
+      </div>
+      <button onclick="closeResultTipEditModal()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Current Sổ tay hints -->
+    <div class="bg-surface-container-low p-3 rounded-xl text-xs space-y-1.5 border border-outline-variant/30">
+      <span class="font-label-sm font-bold text-primary block flex items-center gap-1">
+        <span class="material-symbols-outlined text-[15px]">auto_awesome</span>
+        Gu ăn uống đang lưu trong Sổ tay:
+      </span>
+      <div class="flex flex-wrap gap-1" id="modal-tip-pills">
+        <!-- Rendered by JS -->
+      </div>
+      <button type="button" onclick="closeResultTipEditModal(); navigate('notebook'); openProfileEditModal();" class="text-primary text-[11px] font-bold hover:underline flex items-center gap-0.5 pt-1">
+        <span class="material-symbols-outlined text-[13px]">edit_note</span>
+        <span>Sửa Gu ăn uống &amp; Blacklist trong Sổ tay</span>
+      </button>
+    </div>
+
+    <!-- Custom note for this tip -->
+    <div>
+      <label class="font-label-sm text-[11px] text-on-surface-variant font-bold block mb-1">Ghi chú dặn dò riêng cho món này:</label>
+      <textarea id="edit-custom-result-tip-input" rows="3" class="w-full bg-surface-container-low text-on-surface p-3 rounded-xl text-xs leading-relaxed focus:outline-none border border-outline-variant/40 resize-none" placeholder="Nhập dặn dò thêm (VD: Xin thêm quẩy giòn, dặn bếp làm ít mỡ...)"></textarea>
+    </div>
+
+    <div class="flex items-center justify-between pt-2 border-t border-surface-container-high">
+      <button type="button" onclick="resetResultTipToDefault()" class="text-on-surface-variant hover:text-error text-[11px] font-bold flex items-center gap-1 py-1 px-2 rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-[14px]">restart_alt</span>
+        <span>Gốc</span>
+      </button>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="closeResultTipEditModal()" class="px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface text-xs font-bold active:scale-95 transition-transform">
+          Hủy
+        </button>
+        <button type="button" onclick="saveResultTipChanges()" class="px-4 py-1.5 rounded-full bg-primary text-on-primary text-xs font-bold shadow-sm active:scale-95 transition-transform flex items-center gap-1">
+          <span class="material-symbols-outlined text-[15px]">check</span>
+          <span>Lưu mẹo ✨</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── Navigation ──
 const subs={home:'Giải Mã',quiz:'Trắc Nghiệm',result:'Kết Quả',wheel:'Vòng Quay',map:'Bản Đồ Quán',notebook:'Sổ Tay Nàng'};
@@ -1847,13 +2036,13 @@ function qNext(){
   if(cur<Qs.length-1){cur++;sel=null;renderQ();}
   else{
     const r=Rs[Math.floor(Math.random()*Rs.length)];
+    currentResultData = r;
     document.getElementById('r-emoji').textContent=r.e;
     document.getElementById('r-dish').textContent=r.dish;
     document.getElementById('r-badge').textContent=r.badge;
     document.getElementById('r-analysis').textContent=r.analysis;
-    document.getElementById('r-b1').textContent=r.b1;
-    document.getElementById('r-b2').textContent=r.b2;
-    document.getElementById('r-tip').innerHTML='<strong class="text-on-surface">Mẹo nhỏ chàng ơi:</strong> '+r.tip;
+    renderResultBackups(r);
+    renderResultTip(r);
     navigate('result');
   }
 }
@@ -2270,6 +2459,20 @@ function selectEmoji(emoji) {
     currentSelectedFavIcon = emoji;
     updateFavModalIconPreview();
     renderFavIconOptions();
+  } else if (emojiPickerTarget === 'cb1') {
+    const input = document.getElementById('cb-b1-input');
+    if (input) {
+      let text = input.value.trim().replace(/[\p{Extended_Pictographic}\uFE0F\u200D]+$/u, '').trim();
+      input.value = (text ? text + ' ' : '') + emoji;
+      customResultBackups.icon1 = emoji;
+    }
+  } else if (emojiPickerTarget === 'cb2') {
+    const input = document.getElementById('cb-b2-input');
+    if (input) {
+      let text = input.value.trim().replace(/[\p{Extended_Pictographic}\uFE0F\u200D]+$/u, '').trim();
+      input.value = (text ? text + ' ' : '') + emoji;
+      customResultBackups.icon2 = emoji;
+    }
   }
   closeEmojiPicker();
 }
@@ -2987,6 +3190,7 @@ function saveProfileChanges() {
   }
 
   renderProfile();
+  renderResultTip(currentResultData || (Rs && Rs[0]));
   closeProfileEditModal();
   showToast('Đã lưu thông tin của bé yêu thành công! 🥰');
 }
@@ -3095,6 +3299,7 @@ function renderFavList() {
     list.appendChild(card);
   });
   renderHomeFavList();
+  renderResultBackups(currentResultData || (Rs && Rs[0]));
 }
 
 function updateFavModalIconPreview() {
@@ -3828,6 +4033,398 @@ function goToNotebookComfortTips() {
   }, 100);
 }
 
+// ── RESULT BACKUP OPTIONS & NOTEBOOK-SYNCED TIPS ──
+
+let currentResultData = null;
+let customResultBackups = {};
+try {
+  customResultBackups = JSON.parse(localStorage.getItem('an_gi_custom_backups') || '{}');
+} catch(e) {
+  customResultBackups = {};
+}
+
+let customResultExtraTip = '';
+try {
+  customResultExtraTip = localStorage.getItem('an_gi_custom_extra_tip') || '';
+} catch(e) {}
+
+let currentSelectedBackupItem = null;
+
+function renderResultBackups(r) {
+  const container = document.getElementById('r-backup-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const res = r || (Rs && Rs[0]);
+
+  // Determine Option 2
+  let b1 = null;
+  if (customResultBackups.b1 && customResultBackups.b1.trim()) {
+    b1 = {
+      title: customResultBackups.b1.trim(),
+      icon: customResultBackups.icon1 || '🍜',
+      rate: '96%',
+      badge: 'LỰA CHỌN SỐ 2 (Tùy chỉnh)',
+      fromNotebook: false
+    };
+  } else if (favDishes.length > 0) {
+    b1 = {
+      title: favDishes[0].title,
+      icon: favDishes[0].icon || '🍜',
+      rate: '96%',
+      badge: 'LỰA CHỌN SỐ 2 (96%)',
+      fromNotebook: true,
+      note: favDishes[0].note || favDishes[0].address
+    };
+  } else {
+    b1 = {
+      title: res?.b1 || 'Phở Bò Tái Lăn Bát Đá',
+      icon: '🍜',
+      rate: '91%',
+      badge: 'LỰA CHỌN SỐ 2 (91%)',
+      fromNotebook: false
+    };
+  }
+
+  // Determine Option 3
+  let b2 = null;
+  if (customResultBackups.b2 && customResultBackups.b2.trim()) {
+    b2 = {
+      title: customResultBackups.b2.trim(),
+      icon: customResultBackups.icon2 || '🍲',
+      rate: '91%',
+      badge: 'LỰA CHỌN SỐ 3 (Tùy chỉnh)',
+      fromNotebook: false
+    };
+  } else if (favDishes.length > 1) {
+    b2 = {
+      title: favDishes[1].title,
+      icon: favDishes[1].icon || '🍲',
+      rate: '90%',
+      badge: 'LỰA CHỌN SỐ 3 (90%)',
+      fromNotebook: true,
+      note: favDishes[1].note || favDishes[1].address
+    };
+  } else {
+    b2 = {
+      title: res?.b2 || 'Bún Riêu Cua Bắp Bò',
+      icon: '🍲',
+      rate: '86%',
+      badge: 'LỰA CHỌN SỐ 3 (86%)',
+      fromNotebook: false
+    };
+  }
+
+  const items = [b1, b2];
+  items.forEach((item, idx) => {
+    const isImg = isImageAvatar(item.icon);
+    const iconHtml = isImg
+      ? `<img src="${item.icon}" alt="${item.title}" class="w-full h-full object-cover rounded-DEFAULT" />`
+      : `<span class="text-2xl">${item.icon}</span>`;
+
+    const card = document.createElement('div');
+    card.className = 'bg-surface-container-lowest p-space-md rounded-DEFAULT shadow-sm flex items-center justify-between cursor-pointer hover:bg-surface-container-low transition-all active:scale-[0.99] border border-outline-variant/15 select-none';
+    card.title = 'Bấm để đổi sang món này hoặc xem thông tin';
+    card.onclick = () => openBackupActionModal(item);
+
+    card.innerHTML = `
+      <div class="flex items-center gap-space-md min-w-0">
+        <div class="w-12 h-12 rounded-DEFAULT ${idx === 0 ? 'bg-primary-fixed text-primary' : 'bg-secondary-fixed text-secondary'} flex items-center justify-center shrink-0 shadow-2xs overflow-hidden">
+          ${iconHtml}
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="font-label-sm text-[11px] ${idx === 0 ? 'text-primary' : 'text-secondary'} font-bold block">${item.badge}</span>
+            ${item.fromNotebook ? '<span class="text-[9px] bg-primary text-on-primary px-1.5 py-0.2 rounded-full font-bold">Từ Sổ tay nàng ❤️</span>' : ''}
+          </div>
+          <h4 class="font-headline-sm text-headline-sm text-on-surface text-[15px] font-bold truncate">${item.title}</h4>
+          ${item.note ? `<p class="font-body-sm text-xs text-on-surface-variant truncate">${item.note}</p>` : ''}
+        </div>
+      </div>
+      <div class="flex items-center gap-1 text-on-surface-variant shrink-0">
+        <span class="text-[11px] font-semibold hidden sm:inline text-primary">Đổi món</span>
+        <span class="material-symbols-outlined text-outline-variant text-[18px]">chevron_right</span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderResultTip(r) {
+  const container = document.getElementById('r-tip-container');
+  if (!container) return;
+  const res = r || (Rs && Rs[0]);
+
+  let html = '';
+  if (res?.tip) {
+    html += `<p class="text-on-surface font-medium leading-relaxed"><strong class="text-primary">Gợi ý chàng:</strong> ${res.tip}</p>`;
+  }
+
+  // Spicy preference from Sổ tay
+  const spicyLevel = beProfile.spicyLevel || 2;
+  const spicyNote = beProfile.spicyNote || 'Quá cay là quăng đũa liền!';
+  html += `
+    <div class="flex items-center gap-2 text-[11px] bg-surface-container-lowest/90 px-3 py-1.5 rounded-xl border border-secondary-fixed text-on-surface">
+      <span class="material-symbols-outlined text-[15px] text-secondary shrink-0">local_fire_department</span>
+      <span class="truncate">Độ cay bé dặn: <strong class="text-secondary">${spicyLevel}/5</strong> (${spicyNote})</span>
+    </div>
+  `;
+
+  // Milk tea formula from Sổ tay
+  if (beProfile.milkTeaFormula) {
+    html += `
+      <div class="flex items-center gap-2 text-[11px] bg-surface-container-lowest/90 px-3 py-1.5 rounded-xl border border-primary/20 text-on-surface">
+        <span class="material-symbols-outlined text-[15px] text-primary shrink-0">coffee</span>
+        <span class="truncate">Trà sữa chân ái: <strong class="text-primary">${beProfile.milkTeaFormula}</strong></span>
+      </div>
+    `;
+  }
+
+  // Blacklist warning from Sổ tay
+  if (beProfile.blacklistTags && beProfile.blacklistTags.length > 0) {
+    html += `
+      <div class="flex items-center gap-2 text-[11px] bg-error-container/40 px-3 py-1.5 rounded-xl border border-error/20 text-on-error-container">
+        <span class="material-symbols-outlined text-[15px] text-error shrink-0">do_not_disturb_on</span>
+        <span class="truncate">Vùng cấm địa: <strong>${beProfile.blacklistTags.join(', ')}</strong></span>
+      </div>
+    `;
+  }
+
+  // Custom extra tip if user configured one
+  if (customResultExtraTip && customResultExtraTip.trim()) {
+    html += `
+      <div class="p-2.5 bg-surface-container-lowest rounded-xl border border-primary/30 text-[11px] text-on-surface font-medium shadow-2xs">
+        <span class="text-primary font-bold">Lưu ý riêng của chàng:</span> "${customResultExtraTip.trim()}"
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+}
+
+function openCustomBackupModal() {
+  const row = document.getElementById('backup-fav-picker-row');
+  if (row) {
+    row.innerHTML = '';
+    if (favDishes.length === 0) {
+      row.innerHTML = '<span class="text-[11px] text-on-surface-variant">Chưa có quán nào trong Sổ tay</span>';
+    } else {
+      favDishes.forEach(d => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-primary-fixed hover:text-primary text-[11px] font-bold text-on-surface-variant whitespace-nowrap shrink-0 transition-colors';
+        btn.textContent = `${d.icon || '🍜'} ${d.title}`;
+        btn.onclick = () => {
+          const b1 = document.getElementById('cb-b1-input');
+          const b2 = document.getElementById('cb-b2-input');
+          if (!b1.value.trim()) {
+            b1.value = d.title;
+            customResultBackups.icon1 = d.icon;
+          } else {
+            b2.value = d.title;
+            customResultBackups.icon2 = d.icon;
+          }
+        };
+        row.appendChild(btn);
+      });
+    }
+  }
+
+  const b1Input = document.getElementById('cb-b1-input');
+  const b2Input = document.getElementById('cb-b2-input');
+  if (b1Input) b1Input.value = customResultBackups.b1 || '';
+  if (b2Input) b2Input.value = customResultBackups.b2 || '';
+
+  const modal = document.getElementById('custom-backup-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    if (!modal._hasClickInit) {
+      modal._hasClickInit = true;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeCustomBackupModal();
+      });
+    }
+  }
+}
+
+function closeCustomBackupModal() {
+  const modal = document.getElementById('custom-backup-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function saveCustomBackups() {
+  const b1 = document.getElementById('cb-b1-input').value.trim();
+  const b2 = document.getElementById('cb-b2-input').value.trim();
+
+  customResultBackups.b1 = b1;
+  customResultBackups.b2 = b2;
+
+  try {
+    localStorage.setItem('an_gi_custom_backups', JSON.stringify(customResultBackups));
+  } catch(e) {}
+
+  renderResultBackups(currentResultData || Rs[0]);
+  closeCustomBackupModal();
+  showToast('Đã lưu phương án dự phòng thành công! ✨');
+}
+
+function resetCustomBackupsToDefault() {
+  customResultBackups = {};
+  try {
+    localStorage.removeItem('an_gi_custom_backups');
+  } catch(e) {}
+  renderResultBackups(currentResultData || Rs[0]);
+  closeCustomBackupModal();
+  showToast('Đã khôi phục phương án dự phòng tự động từ Sổ tay nàng! 💖');
+}
+
+function openBackupActionModal(bItem) {
+  if (!bItem) return;
+  currentSelectedBackupItem = bItem;
+
+  const iconEl = document.getElementById('bam-icon');
+  if (iconEl) {
+    if (isImageAvatar(bItem.icon)) {
+      iconEl.innerHTML = `<img src="${bItem.icon}" alt="${bItem.title}" class="w-full h-full object-cover" />`;
+    } else {
+      iconEl.innerHTML = bItem.icon || '🍜';
+    }
+  }
+
+  const titleEl = document.getElementById('bam-title');
+  if (titleEl) titleEl.textContent = bItem.title;
+
+  const badgeEl = document.getElementById('bam-badge');
+  if (badgeEl) badgeEl.textContent = bItem.fromNotebook ? 'Quán ruột trong Sổ tay nàng ❤️' : (bItem.badge || 'Phương án dự phòng');
+
+  const modal = document.getElementById('backup-action-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    if (!modal._hasClickInit) {
+      modal._hasClickInit = true;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeBackupActionModal();
+      });
+    }
+  }
+}
+
+function closeBackupActionModal() {
+  const modal = document.getElementById('backup-action-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function promoteBackupToPrimary() {
+  if (!currentSelectedBackupItem) return;
+  const newMain = currentSelectedBackupItem.title;
+  const newEmoji = currentSelectedBackupItem.icon || '🍜';
+
+  const dishEl = document.getElementById('r-dish');
+  if (dishEl) dishEl.textContent = newMain;
+
+  const emojiEl = document.getElementById('r-emoji');
+  if (emojiEl) {
+    if (isImageAvatar(newEmoji)) {
+      emojiEl.innerHTML = `<img src="${newEmoji}" alt="${newMain}" class="w-full h-full object-cover rounded-full" />`;
+    } else {
+      emojiEl.textContent = newEmoji;
+    }
+  }
+
+  const badgeEl = document.getElementById('r-badge');
+  if (badgeEl) badgeEl.textContent = 'Gu bé chuẩn chỉ (Từ Sổ tay)';
+
+  const analysisEl = document.getElementById('r-analysis');
+  if (analysisEl) analysisEl.textContent = `Đã chuyển sang món dự phòng "${newMain}" theo đúng gu nàng dặn trong Sổ tay!`;
+
+  closeBackupActionModal();
+  showToast(`Đã đổi sang "${newMain}" làm món chính! 🥳`);
+}
+
+function searchBackupOnMap() {
+  if (!currentSelectedBackupItem) return;
+  const query = currentSelectedBackupItem.title;
+  closeBackupActionModal();
+  navigate('map');
+  const mapInput = document.querySelector('#sc-map input[type="text"]');
+  if (mapInput) {
+    mapInput.value = query;
+    mapInput.focus();
+  }
+  showToast(`Đang tìm kiếm "${query}" trên bản đồ 🗺️`);
+}
+
+function openBackupInNotebook() {
+  closeBackupActionModal();
+  goToNotebookFavs();
+}
+
+function openResultTipEditModal() {
+  const pills = document.getElementById('modal-tip-pills');
+  if (pills) {
+    pills.innerHTML = `
+      <span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold">🌶️ Cay: ${beProfile.spicyLevel}/5</span>
+      <span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold">🧋 Trà sữa</span>
+      <span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-[10px] font-bold">🚫 ${beProfile.blacklistTags ? beProfile.blacklistTags.length : 2} vùng cấm</span>
+    `;
+  }
+
+  const input = document.getElementById('edit-custom-result-tip-input');
+  if (input) input.value = customResultExtraTip;
+
+  const modal = document.getElementById('edit-result-tip-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    if (!modal._hasClickInit) {
+      modal._hasClickInit = true;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeResultTipEditModal();
+      });
+    }
+  }
+}
+
+function closeResultTipEditModal() {
+  const modal = document.getElementById('edit-result-tip-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function saveResultTipChanges() {
+  const input = document.getElementById('edit-custom-result-tip-input');
+  customResultExtraTip = input ? input.value.trim() : '';
+
+  try {
+    localStorage.setItem('an_gi_custom_extra_tip', customResultExtraTip);
+  } catch(e) {}
+
+  renderResultTip(currentResultData || Rs[0]);
+  closeResultTipEditModal();
+  showToast('Đã lưu mẹo dặn dò thành công! ✨');
+}
+
+function resetResultTipToDefault() {
+  customResultExtraTip = '';
+  try {
+    localStorage.removeItem('an_gi_custom_extra_tip');
+  } catch(e) {}
+
+  renderResultTip(currentResultData || Rs[0]);
+  closeResultTipEditModal();
+  showToast('Đã khôi phục mẹo mặc định từ Sổ tay nàng!');
+}
+
 // Init
 navigate('home');
 renderWheel();
@@ -3839,6 +4436,8 @@ renderProfile();
 renderFavList();
 renderHomeFavList();
 renderComfortTips();
+renderResultBackups(Rs[0]);
+renderResultTip(Rs[0]);
 renderBlackList();
 selectMood(0, true);
 </script>
