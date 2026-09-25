@@ -222,42 +222,43 @@
         </div>
         <span class="material-symbols-outlined text-[22px] text-secondary">arrow_forward</span>
       </div>
-      <div class="flex flex-col p-4 rounded-lg bg-surface-container-lowest shadow-sm space-y-space-sm">
+      <!-- ══ MÓN QUEN NÀNG DẶN (Đồng bộ trực tiếp với Quán Ruột trong Sổ tay nàng) ══ -->
+      <div class="flex flex-col p-4 rounded-lg bg-surface-container-lowest shadow-sm space-y-space-sm border border-outline-variant/15">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant">
               <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">bookmark_heart</span>
             </div>
-            <span class="font-label-lg text-label-lg text-on-surface">Món quen nàng dặn</span>
+            <div>
+              <span class="font-label-lg text-label-lg text-on-surface font-bold block leading-tight">Món quen nàng dặn</span>
+              <span class="text-[10px] text-on-surface-variant">Lấy từ Quán Ruột trong Sổ tay</span>
+            </div>
           </div>
-          <button onclick="navigate('notebook')" class="font-label-sm text-label-sm text-primary">Xem 8 món</button>
+          <button id="home-fav-count-btn" onclick="goToNotebookFavs()" class="font-label-sm text-xs text-primary font-bold hover:underline flex items-center gap-0.5" title="Mở danh sách quán ruột trong sổ tay">
+            <span>Xem quán</span>
+            <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+          </button>
         </div>
-        <div class="flex gap-2 overflow-x-auto py-1">
-          <div class="flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-surface-container-low flex-shrink-0">
-            <span class="text-2xl">🍛</span>
-            <div><span class="font-label-md text-label-md text-on-surface block leading-tight">Cơm tấm sườn</span><span class="font-body-sm text-body-sm text-on-surface-variant text-[11px]">Nhiều bì ớt rim</span></div>
-          </div>
-          <div class="flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-surface-container-low flex-shrink-0">
-            <span class="text-2xl">🍜</span>
-            <div><span class="font-label-md text-label-md text-on-surface block leading-tight">Bún đậu</span><span class="font-body-sm text-body-sm text-on-surface-variant text-[11px]">Đậu giòn mắm tôm</span></div>
-          </div>
-          <div class="flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-surface-container-low flex-shrink-0">
-            <span class="text-2xl">🧋</span>
-            <div><span class="font-label-md text-label-md text-on-surface block leading-tight">Trà sữa</span><span class="font-body-sm text-body-sm text-on-surface-variant text-[11px]">50% đường ít đá</span></div>
-          </div>
+        <div class="flex gap-2 overflow-x-auto py-1 scrollbar-none" id="home-fav-list">
+          <!-- Rendered dynamically by renderHomeFavList() from favDishes -->
         </div>
       </div>
-      <div onclick="navigate('notebook')" class="flex items-center justify-between p-4 rounded-lg bg-surface-container-high cursor-pointer active:scale-[0.99] transition-transform">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary flex-shrink-0">
+
+      <!-- ══ BÍ KÍP DỖ NGƯỜI YÊU KHI DỖI (Đồng bộ trực tiếp với Sổ tay nàng) ══ -->
+      <div onclick="goToNotebookComfortTips()" class="flex items-center justify-between p-4 rounded-lg bg-surface-container-high hover:bg-surface-variant cursor-pointer active:scale-[0.99] transition-all border border-outline-variant/20 shadow-xs group" title="Bấm để xem &amp; sửa bí kíp dỗ nàng trong Sổ tay">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary flex-shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
             <span class="material-symbols-outlined text-[20px]">healing</span>
           </div>
-          <div>
-            <span class="font-label-lg text-label-lg text-on-surface font-bold block">Bí kíp dỗ người yêu khi dỗi</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant">Top đồ ngọt êm bụng, sinh tố mát lạnh hạ hoả 🔥</span>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="font-label-lg text-label-lg text-on-surface font-bold block truncate">Bí kíp dỗ người yêu khi dỗi</span>
+              <span class="text-[10px] bg-primary-fixed text-primary px-1.5 py-0.2 rounded-full font-bold">Sổ tay</span>
+            </div>
+            <span id="home-comfort-tip-summary" class="font-body-sm text-xs text-on-surface-variant block truncate mt-0.5">Top đồ ngọt êm bụng, sinh tố mát lạnh hạ hoả 🔥</span>
           </div>
         </div>
-        <span class="material-symbols-outlined text-outline text-[20px]">chevron_right</span>
+        <span class="material-symbols-outlined text-outline text-[20px] shrink-0 group-hover:translate-x-1 transition-transform">chevron_right</span>
       </div>
     </section>
   </div>
@@ -846,11 +847,37 @@
       </div>
     </div>
 
-    <div class="bg-secondary-fixed/50 rounded-xl p-space-md flex items-center gap-space-md">
-      <span class="text-3xl">💡</span>
-      <div>
-        <span class="font-label-md text-label-md text-on-secondary-fixed font-bold block">Mẹo vàng dỗ dành</span>
-        <p class="font-body-sm text-body-sm text-on-secondary-fixed-variant">Lúc bé nói "Ăn gì cũng được" nhưng mặt suy tư, mở sổ tay này và chốt ngay món nước nóng hổi nhé!</p>
+    <!-- ══ BÍ KÍP DỖ NGƯỜI YÊU KHI DỖI (Đồng bộ với Trang chủ) ══ -->
+    <div id="nb-comfort-tips-section" class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm border border-outline-variant/20 space-y-3 transition-all duration-300">
+      <div class="flex items-center justify-between pb-2 border-b border-surface-container-high/60">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary shrink-0 shadow-2xs">
+            <span class="material-symbols-outlined text-[20px]">healing</span>
+          </div>
+          <div>
+            <h3 class="font-headline-sm text-sm text-on-surface font-bold">Bí kíp dỗ người yêu khi dỗi 🩹</h3>
+            <span class="font-label-sm text-[11px] text-on-surface-variant">Chiến thuật dập tắt cơn giận &amp; dỗ ngọt bao tử nàng</span>
+          </div>
+        </div>
+        <button onclick="openComfortTipsModal()" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-xs font-bold text-on-surface-variant flex items-center gap-1 transition-colors" title="Chỉnh sửa bí kíp dỗ nàng">
+          <span class="material-symbols-outlined text-[14px]">edit</span>
+          <span>Sửa mẹo</span>
+        </button>
+      </div>
+
+      <!-- Danh sách mẹo dỗ dành render động -->
+      <div id="nb-comfort-tips-list" class="space-y-2">
+        <!-- Rendered dynamically by renderComfortTips() -->
+      </div>
+
+      <div class="pt-1 flex items-center justify-between text-[11px] text-on-surface-variant">
+        <span class="flex items-center gap-1 text-primary font-medium">
+          <span class="material-symbols-outlined text-[13px]">sync</span>
+          Đồng bộ trực tiếp với mục ở Trang chủ
+        </span>
+        <button onclick="openComfortTipsModal()" class="text-primary font-bold hover:underline flex items-center gap-0.5">
+          <span>+ Thêm bí kíp riêng</span>
+        </button>
       </div>
     </div>
 
@@ -1384,6 +1411,110 @@
           <span>Lưu ghi chú ✨</span>
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOME DISH DETAIL / QUICK ACTION MODAL ══ -->
+<div id="home-dish-detail-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-sm space-y-3.5 shadow-2xl animate-pop-in border border-outline-variant/30">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2.5">
+        <div id="hdd-icon" class="w-12 h-12 rounded-2xl bg-secondary-fixed flex items-center justify-center text-3xl shrink-0 overflow-hidden shadow-2xs border border-primary/20">
+          🍜
+        </div>
+        <div class="min-w-0">
+          <h4 id="hdd-title" class="font-headline-sm text-sm text-on-surface font-bold truncate">Cơm tấm sườn bì chả</h4>
+          <span id="hdd-badge" class="font-label-sm text-[11px] bg-primary-fixed text-primary px-2 py-0.5 rounded-full font-bold inline-block mt-0.5">Quán ruột nàng mê</span>
+        </div>
+      </div>
+      <button onclick="closeHomeDishDetailModal()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Address & Note -->
+    <div class="space-y-2 text-xs">
+      <div id="hdd-address-row" class="flex items-center gap-1.5 text-on-surface-variant bg-surface-container-low px-3 py-2 rounded-xl">
+        <span class="material-symbols-outlined text-[16px] text-primary shrink-0">location_on</span>
+        <span id="hdd-address" class="truncate font-medium">42 Hàng Mành, Hoàn Kiếm</span>
+      </div>
+
+      <div id="hdd-note-row" class="bg-surface-container-low p-3 rounded-xl border border-outline-variant/15 space-y-1">
+        <div class="flex items-center gap-1 text-primary font-bold">
+          <span class="material-symbols-outlined text-[15px]">tips_and_updates</span>
+          <span>Lưu ý dặn dò của Bé:</span>
+        </div>
+        <p id="hdd-note" class="text-on-surface italic leading-relaxed">
+          "Gọi thêm chả viên nướng, nước chấm xin thêm ớt băm riêng"
+        </p>
+      </div>
+    </div>
+
+    <!-- 3 Core Integrated Actions -->
+    <div class="space-y-2 pt-1 border-t border-surface-container-high/60">
+      <button onclick="addCurrentFavToWheel()" class="w-full py-2.5 px-3 rounded-full bg-primary text-on-primary text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-transform">
+        <span class="material-symbols-outlined text-[17px]">casino</span>
+        <span>Đưa vào Vòng Quay may mắn 🎯</span>
+      </button>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="searchCurrentFavOnMap()" class="py-2 px-3 rounded-full bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-bold flex items-center justify-center gap-1 active:scale-95 transition-transform truncate">
+          <span class="material-symbols-outlined text-primary text-[16px]">navigation</span>
+          <span>Tìm bản đồ 🗺️</span>
+        </button>
+        <button onclick="openCurrentFavInNotebook()" class="py-2 px-3 rounded-full bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-bold flex items-center justify-center gap-1 active:scale-95 transition-transform truncate">
+          <span class="material-symbols-outlined text-primary text-[16px]">menu_book</span>
+          <span>Xem trong Sổ tay</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COMFORT TIPS EDIT MODAL ══ -->
+<div id="comfort-tips-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[85vh] overflow-y-auto space-y-3.5 shadow-2xl animate-pop-in border border-outline-variant/30">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🩹</span>
+        <div>
+          <h4 class="font-headline-sm text-sm text-on-surface font-bold">Chỉnh sửa Bí Kíp Dỗ Nàng</h4>
+          <span class="font-label-sm text-[11px] text-on-surface-variant">Đồng bộ cả ở Sổ tay &amp; Trang chủ</span>
+        </div>
+      </div>
+      <button onclick="closeComfortTipsModal()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- List of existing tips -->
+    <div class="space-y-2" id="comfort-tips-editor-list">
+      <!-- Rendered dynamically -->
+    </div>
+
+    <!-- Form to add new tip -->
+    <div class="bg-surface-container-low p-3 rounded-xl space-y-2 border border-outline-variant/30">
+      <span class="font-label-sm text-xs font-bold text-primary block">+ Thêm bí kíp dỗ dành mới</span>
+      <div class="grid grid-cols-4 gap-2">
+        <input id="new-tip-icon" type="text" class="w-full bg-surface text-on-surface px-2 py-1.5 rounded-lg text-xs text-center border border-outline-variant/40" placeholder="Icon 🍰" value="💖" />
+        <input id="new-tip-badge" type="text" class="col-span-3 w-full bg-surface text-on-surface px-3 py-1.5 rounded-lg text-xs border border-outline-variant/40" placeholder="Huy hiệu (VD: Tuyệt chiêu số 5)" />
+      </div>
+      <input id="new-tip-title" type="text" class="w-full bg-surface text-on-surface px-3 py-1.5 rounded-lg text-xs font-bold border border-outline-variant/40" placeholder="Tiêu đề bí kíp (VD: Khen bé xinh &amp; đưa đi ăn kem)" />
+      <textarea id="new-tip-desc" rows="2" class="w-full bg-surface text-on-surface p-2.5 rounded-lg text-xs border border-outline-variant/40 resize-none" placeholder="Nội dung chi tiết lời dặn dò dỗ nàng..."></textarea>
+      <button type="button" onclick="addNewComfortTip()" class="w-full py-1.5 rounded-lg bg-primary text-on-primary text-xs font-bold active:scale-95 transition-transform flex items-center justify-center gap-1 shadow-xs">
+        <span class="material-symbols-outlined text-[14px]">add</span>
+        <span>Thêm bí kíp này</span>
+      </button>
+    </div>
+
+    <div class="flex items-center justify-between pt-2 border-t border-surface-container-high">
+      <button type="button" onclick="resetComfortTipsToDefault()" class="text-on-surface-variant hover:text-error text-[11px] font-bold flex items-center gap-1 py-1 px-2 rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-[14px]">restart_alt</span>
+        <span>Khôi phục gốc</span>
+      </button>
+      <button type="button" onclick="closeComfortTipsModal()" class="px-5 py-2 rounded-full bg-primary text-on-primary text-xs font-bold shadow-sm active:scale-95 transition-transform">
+        Hoàn tất ✨
+      </button>
     </div>
   </div>
 </div>
@@ -2963,6 +3094,7 @@ function renderFavList() {
     `;
     list.appendChild(card);
   });
+  renderHomeFavList();
 }
 
 function updateFavModalIconPreview() {
@@ -3323,6 +3455,379 @@ function initFloatingWheelWidget() {
   widget.addEventListener('pointercancel', endDrag);
 }
 
+// ── HOME <-> NOTEBOOK DEEP INTEGRATION ──
+
+let currentSelectedHomeFav = null;
+
+function renderHomeFavList() {
+  const container = document.getElementById('home-fav-list');
+  const countBtn = document.getElementById('home-fav-count-btn');
+  if (countBtn) {
+    countBtn.innerHTML = `<span>Xem ${favDishes.length} quán</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span>`;
+  }
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (favDishes.length === 0) {
+    container.innerHTML = `
+      <div class="flex items-center gap-2 p-2.5 rounded-2xl bg-surface-container-low text-on-surface-variant text-xs flex-1 border border-dashed border-outline-variant/30">
+        <span class="text-xl">📝</span>
+        <span>Chưa có quán ruột. Bấm "+ Thêm quán" để lưu món bé mê vào Sổ tay nhé!</span>
+      </div>
+      <button onclick="openAddFavModal()" class="flex items-center gap-1 px-3 py-2 rounded-2xl bg-primary text-on-primary text-xs font-bold shrink-0 active:scale-95 transition-transform shadow-xs">
+        <span class="material-symbols-outlined text-[16px]">add</span> Thêm quán
+      </button>
+    `;
+    return;
+  }
+
+  favDishes.forEach(dish => {
+    const isImg = isImageAvatar(dish.icon);
+    const iconHtml = isImg
+      ? `<img src="${dish.icon}" alt="${dish.title}" class="w-8 h-8 rounded-full object-cover shrink-0 border border-primary/20" />`
+      : `<span class="text-2xl shrink-0">${dish.icon || '🍜'}</span>`;
+
+    const card = document.createElement('div');
+    card.className = 'flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-surface-container-low flex-shrink-0 cursor-pointer hover:bg-surface-container transition-all active:scale-95 max-w-[210px] shadow-2xs border border-outline-variant/15 select-none';
+    card.title = `Chạm để xem chi tiết quán "${dish.title}"`;
+    card.onclick = () => openHomeDishDetailModal(dish.id);
+    card.innerHTML = `
+      ${iconHtml}
+      <div class="min-w-0 flex-1">
+        <span class="font-label-md text-label-md text-on-surface block leading-tight truncate font-bold">${dish.title}</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant text-[11px] block truncate mt-0.5">${dish.note || dish.address || 'Quán ruột nàng mê'}</span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Append "+ Thêm quán" button at end
+  const addBtn = document.createElement('button');
+  addBtn.className = 'flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant text-xs font-bold shrink-0 active:scale-95 transition-all border border-dashed border-outline-variant/40';
+  addBtn.title = 'Thêm quán ruột mới vào Sổ tay nàng';
+  addBtn.innerHTML = `<span class="material-symbols-outlined text-[16px]">add</span><span>Thêm quán</span>`;
+  addBtn.onclick = () => openAddFavModal();
+  container.appendChild(addBtn);
+}
+
+function goToNotebookFavs() {
+  navigate('notebook');
+  nbTab('fav');
+  setTimeout(() => {
+    const target = document.getElementById('nb-fav');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
+}
+
+function openHomeDishDetailModal(id) {
+  const dish = favDishes.find(d => d.id === id);
+  if (!dish) return;
+  currentSelectedHomeFav = dish;
+
+  const iconEl = document.getElementById('hdd-icon');
+  if (iconEl) {
+    if (isImageAvatar(dish.icon)) {
+      iconEl.innerHTML = `<img src="${dish.icon}" alt="${dish.title}" class="w-full h-full object-cover" />`;
+    } else {
+      iconEl.innerHTML = dish.icon || '🍜';
+    }
+  }
+
+  const titleEl = document.getElementById('hdd-title');
+  if (titleEl) titleEl.textContent = dish.title;
+
+  const badgeEl = document.getElementById('hdd-badge');
+  if (badgeEl) badgeEl.textContent = dish.badge || 'Quán ruột của Bé';
+
+  const addrRow = document.getElementById('hdd-address-row');
+  const addrEl = document.getElementById('hdd-address');
+  if (addrRow && addrEl) {
+    if (dish.address) {
+      addrRow.classList.remove('hidden');
+      addrEl.textContent = dish.address;
+    } else {
+      addrRow.classList.add('hidden');
+    }
+  }
+
+  const noteRow = document.getElementById('hdd-note-row');
+  const noteEl = document.getElementById('hdd-note');
+  if (noteRow && noteEl) {
+    if (dish.note) {
+      noteRow.classList.remove('hidden');
+      noteEl.textContent = `"${dish.note}"`;
+    } else {
+      noteRow.classList.add('hidden');
+    }
+  }
+
+  const modal = document.getElementById('home-dish-detail-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    if (!modal._hasClickInit) {
+      modal._hasClickInit = true;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeHomeDishDetailModal();
+      });
+    }
+  }
+}
+
+function closeHomeDishDetailModal() {
+  const modal = document.getElementById('home-dish-detail-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function addCurrentFavToWheel() {
+  if (!currentSelectedHomeFav) return;
+  const name = currentSelectedHomeFav.title;
+
+  if (!wheelDishes.includes(name)) {
+    wheelDishes.unshift(name);
+    try {
+      localStorage.setItem('an_gi_wheel_dishes', JSON.stringify(wheelDishes));
+    } catch(e) {}
+    renderWheel();
+    updateCustomBadge();
+  }
+
+  closeHomeDishDetailModal();
+  navigate('wheel');
+  showToast(`Đã thêm "${name}" vào Vòng Quay! Bấm QUAY NGAY nhé 🎯`);
+}
+
+function searchCurrentFavOnMap() {
+  if (!currentSelectedHomeFav) return;
+  const query = currentSelectedHomeFav.address || currentSelectedHomeFav.title;
+  closeHomeDishDetailModal();
+  navigate('map');
+  const mapInput = document.querySelector('#sc-map input[type="text"]');
+  if (mapInput) {
+    mapInput.value = query;
+    mapInput.focus();
+  }
+  showToast(`Đang tìm kiếm "${currentSelectedHomeFav.title}" trên bản đồ 🗺️`);
+}
+
+function openCurrentFavInNotebook() {
+  if (!currentSelectedHomeFav) return;
+  const favTitle = currentSelectedHomeFav.title;
+  closeHomeDishDetailModal();
+  goToNotebookFavs();
+  setTimeout(() => {
+    const cards = document.querySelectorAll('#fav-list > div');
+    const targetCard = Array.from(cards).find(c => c.innerHTML.includes(favTitle));
+    if (targetCard) {
+      targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      targetCard.classList.add('ring-2', 'ring-primary', 'ring-offset-2', 'shadow-md');
+      setTimeout(() => {
+        targetCard.classList.remove('ring-2', 'ring-primary', 'ring-offset-2', 'shadow-md');
+      }, 2500);
+    }
+  }, 200);
+}
+
+// ── BÍ KÍP DỖ NGƯỜI YÊU KHI DỖI (COMFORT TIPS) ──
+const defaultComfortTips = [
+  {
+    id: 'ct1',
+    icon: '🧋',
+    badge: 'Tuyệt chiêu số 1',
+    title: 'Đặt trà sữa theo đúng công thức nàng',
+    desc: 'Không cần hỏi trước, order ngay 1 ly trà sữa đúng gu nàng dặn (30% đường 50% đá) giao tận tay hoặc mang đến liền.'
+  },
+  {
+    id: 'ct2',
+    icon: '🤐',
+    badge: 'Điều cấm kỵ',
+    title: 'Tuyệt đối không hỏi "Ăn gì cũng được hả em?"',
+    desc: 'Bé đang dỗi sẽ càng tức hơn nếu phải suy nghĩ. Hãy đưa sẵn 2 lựa chọn cụ thể, ví dụ: "Ăn bún chả hay ăn lẩu thái hả em?".'
+  },
+  {
+    id: 'ct3',
+    icon: '🍲',
+    badge: 'Chiến thuật bao tử',
+    title: 'Ưu tiên món nước nóng hổi ấm bụng',
+    desc: 'Đưa nàng đi ăn tô phở bò tái lăn hoặc bún riêu ấm nóng. Vị nước lèo béo thơm sẽ giúp nàng thư giãn và hạ hỏa nhanh chóng.'
+  },
+  {
+    id: 'ct4',
+    icon: '🍨',
+    badge: 'Chiêu ngọt ngào',
+    title: 'Đồ ngọt xoa dịu tâm trạng',
+    desc: 'Luôn thủ sẵn kem bơ, bánh flan hoặc món ăn vặt bé mê. Lượng đường tự nhiên giúp phục hồi năng lượng và tạo cảm xúc vui vẻ.'
+  }
+];
+
+let comfortTips = [];
+try {
+  const savedTips = localStorage.getItem('an_gi_comfort_tips');
+  comfortTips = savedTips ? JSON.parse(savedTips) : [...defaultComfortTips];
+} catch(e) {
+  comfortTips = [...defaultComfortTips];
+}
+
+function saveComfortTipsToStorage() {
+  try {
+    localStorage.setItem('an_gi_comfort_tips', JSON.stringify(comfortTips));
+  } catch(e) {}
+}
+
+function renderComfortTips() {
+  const list = document.getElementById('nb-comfort-tips-list');
+  const summaryEl = document.getElementById('home-comfort-tip-summary');
+  
+  if (summaryEl) {
+    if (comfortTips.length > 0) {
+      summaryEl.textContent = `${comfortTips.length} tuyệt chiêu dỗ nàng: ${comfortTips[0].title} 🔥`;
+    } else {
+      summaryEl.textContent = 'Top đồ ngọt êm bụng, sinh tố mát lạnh hạ hoả 🔥';
+    }
+  }
+
+  if (list) {
+    if (comfortTips.length === 0) {
+      list.innerHTML = `
+        <div class="p-3 text-center text-xs text-on-surface-variant bg-surface-container-low rounded-xl">
+          Chưa có bí kíp dỗ người yêu nào. Hãy thêm mẹo riêng của bạn nhé!
+        </div>
+      `;
+    } else {
+      list.innerHTML = '';
+      comfortTips.forEach(tip => {
+        const item = document.createElement('div');
+        item.className = 'p-3 rounded-xl bg-surface-container-low border border-outline-variant/15 space-y-1 hover:border-primary/30 transition-all';
+        item.innerHTML = `
+          <div class="flex items-center justify-between gap-1">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="text-xl shrink-0">${tip.icon || '🩹'}</span>
+              <span class="font-label-md text-xs font-bold text-on-surface truncate">${tip.title}</span>
+            </div>
+            ${tip.badge ? `<span class="font-label-sm text-[10px] bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-bold shrink-0">${tip.badge}</span>` : ''}
+          </div>
+          <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed pl-7">${tip.desc}</p>
+        `;
+        list.appendChild(item);
+      });
+    }
+  }
+
+  renderComfortTipsEditorList();
+}
+
+function renderComfortTipsEditorList() {
+  const editorList = document.getElementById('comfort-tips-editor-list');
+  if (!editorList) return;
+  editorList.innerHTML = '';
+  comfortTips.forEach(tip => {
+    const row = document.createElement('div');
+    row.className = 'p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between gap-2 border border-outline-variant/20';
+    row.innerHTML = `
+      <div class="flex items-center gap-2 min-w-0 flex-1">
+        <span class="text-xl shrink-0">${tip.icon || '🩹'}</span>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-1.5">
+            <span class="font-label-sm text-xs font-bold text-on-surface truncate">${tip.title}</span>
+            ${tip.badge ? `<span class="text-[9px] bg-secondary-fixed text-on-secondary-fixed px-1.5 rounded font-bold">${tip.badge}</span>` : ''}
+          </div>
+          <span class="text-[10px] text-on-surface-variant block truncate">${tip.desc}</span>
+        </div>
+      </div>
+      <button onclick="deleteComfortTip('${tip.id}')" class="w-7 h-7 rounded-full bg-surface-container hover:bg-error-container hover:text-error flex items-center justify-center text-outline shrink-0 transition-colors" title="Xóa bí kíp này">
+        <span class="material-symbols-outlined text-[15px]">delete</span>
+      </button>
+    `;
+    editorList.appendChild(row);
+  });
+}
+
+function openComfortTipsModal() {
+  renderComfortTipsEditorList();
+  const modal = document.getElementById('comfort-tips-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    if (!modal._hasClickInit) {
+      modal._hasClickInit = true;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeComfortTipsModal();
+      });
+    }
+  }
+}
+
+function closeComfortTipsModal() {
+  const modal = document.getElementById('comfort-tips-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function addNewComfortTip() {
+  const icon = document.getElementById('new-tip-icon').value.trim() || '🩹';
+  const badge = document.getElementById('new-tip-badge').value.trim();
+  const title = document.getElementById('new-tip-title').value.trim();
+  const desc = document.getElementById('new-tip-desc').value.trim();
+
+  if (!title || !desc) {
+    showToast('Vui lòng nhập cả tiêu đề và nội dung bí kíp nhé!');
+    return;
+  }
+
+  const newTip = {
+    id: 'ct_' + Date.now(),
+    icon,
+    badge: badge || 'Bí kíp yêu',
+    title,
+    desc
+  };
+
+  comfortTips.push(newTip);
+  saveComfortTipsToStorage();
+  renderComfortTips();
+
+  // Clear inputs
+  document.getElementById('new-tip-title').value = '';
+  document.getElementById('new-tip-desc').value = '';
+  document.getElementById('new-tip-badge').value = '';
+  showToast('Đã thêm bí kíp dỗ dành mới! 🩹✨');
+}
+
+function deleteComfortTip(id) {
+  comfortTips = comfortTips.filter(t => t.id !== id);
+  saveComfortTipsToStorage();
+  renderComfortTips();
+  showToast('Đã xóa bí kíp khỏi danh sách!');
+}
+
+function resetComfortTipsToDefault() {
+  comfortTips = [...defaultComfortTips];
+  saveComfortTipsToStorage();
+  renderComfortTips();
+  showToast('Đã khôi phục 4 bí kíp gốc dỗ người yêu! 🩹');
+}
+
+function goToNotebookComfortTips() {
+  navigate('notebook');
+  setTimeout(() => {
+    const target = document.getElementById('nb-comfort-tips-section');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('ring-2', 'ring-primary', 'ring-offset-2', 'shadow-lg');
+      setTimeout(() => {
+        target.classList.remove('ring-2', 'ring-primary', 'ring-offset-2', 'shadow-lg');
+      }, 2500);
+    }
+  }, 100);
+}
+
 // Init
 navigate('home');
 renderWheel();
@@ -3332,6 +3837,8 @@ initDraggablePopup();
 initFloatingWheelWidget();
 renderProfile();
 renderFavList();
+renderHomeFavList();
+renderComfortTips();
 renderBlackList();
 selectMood(0, true);
 </script>
