@@ -135,13 +135,24 @@
             ☀️
           </div>
           <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between">
-              <span id="mood-advice-title" class="font-headline-sm text-sm text-on-surface font-bold">Bé vui vẻ &amp; yêu đời 🌸</span>
-              <span id="mood-advice-badge" class="font-label-sm text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded-full font-bold">Khám phá món mới</span>
+            <div class="flex items-center justify-between gap-1.5">
+              <span id="mood-advice-title" class="font-headline-sm text-sm text-on-surface font-bold truncate">Bé vui vẻ &amp; yêu đời 🌸</span>
+              <div class="flex items-center gap-1 shrink-0">
+                <span id="mood-advice-badge" class="font-label-sm text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded-full font-bold">Khám phá món mới</span>
+                <button type="button" onclick="openEditMoodNoteModal()" title="Sửa ghi chú trạng thái này" class="w-6 h-6 rounded-full bg-surface-container-high hover:bg-primary-container hover:text-on-primary text-on-surface-variant flex items-center justify-center transition-all active:scale-90" aria-label="Sửa ghi chú">
+                  <span class="material-symbols-outlined text-[14px]">edit</span>
+                </button>
+              </div>
             </div>
-            <p id="mood-advice-desc" class="font-body-sm text-xs text-on-surface-variant pt-0.5 leading-relaxed">
-              Hôm nay mood của bé đỉnh chóp! Sẵn sàng thử món mới lạ hoặc không gian lãng mạn như Sushi, Đồ nướng Hàn Quốc.
-            </p>
+            <div class="cursor-pointer group relative pt-1" onclick="openEditMoodNoteModal()" title="Bấm để sửa ghi chú &amp; lời dặn dò">
+              <p id="mood-advice-desc" class="font-body-sm text-xs text-on-surface-variant leading-relaxed group-hover:text-on-surface transition-colors">
+                Hôm nay mood của bé đỉnh chóp! Sẵn sàng thử món mới lạ hoặc không gian lãng mạn như Sushi, Đồ nướng Hàn Quốc.
+              </p>
+              <div class="flex items-center gap-1 pt-1 text-[11px] text-primary hover:underline font-medium">
+                <span class="material-symbols-outlined text-[13px]">edit_note</span>
+                <span>Chạm để sửa ghi chú</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="flex items-center gap-2 pt-1 border-t border-surface-container-high/60">
@@ -1323,6 +1334,60 @@
   </div>
 </div>
 
+<!-- ══ EDIT MOOD NOTE MODAL ══ -->
+<div id="edit-mood-note-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-sm space-y-3.5 shadow-2xl animate-pop-in border border-outline-variant/30">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <span id="modal-mood-emoji" class="text-2xl">😾</span>
+        <div>
+          <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Sửa ghi chú trạng thái</h4>
+          <span id="modal-mood-target-name" class="font-label-sm text-[11px] text-primary font-bold">Báo động: Bé đang dỗi nhẹ! 🚨</span>
+        </div>
+      </div>
+      <button onclick="closeEditMoodNoteModal()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <div class="space-y-2.5">
+      <div>
+        <label class="font-label-sm text-[11px] text-on-surface-variant font-bold block mb-1">Tiêu đề trạng thái:</label>
+        <input id="edit-mood-title-input" type="text" class="w-full bg-surface-container-low text-on-surface px-3 py-2 rounded-xl text-xs font-semibold focus:outline-none border border-outline-variant/40" placeholder="Tiêu đề tâm trạng..." />
+      </div>
+
+      <div>
+        <label class="font-label-sm text-[11px] text-on-surface-variant font-bold block mb-1">Huy hiệu nhắc nhở:</label>
+        <input id="edit-mood-badge-input" type="text" class="w-full bg-surface-container-low text-on-surface px-3 py-2 rounded-xl text-xs font-semibold focus:outline-none border border-outline-variant/40" placeholder="Ví dụ: Cần dỗ dành gấp" />
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <label class="font-label-sm text-[11px] text-on-surface-variant font-bold">Ghi chú &amp; Lời dặn dò ẩm thực:</label>
+          <span class="text-[10px] text-primary font-medium">Hiện trên trang chủ</span>
+        </div>
+        <textarea id="edit-mood-desc-input" rows="3" class="w-full bg-surface-container-low text-on-surface p-3 rounded-xl text-xs leading-relaxed focus:outline-none border border-outline-variant/40 resize-none" placeholder="Nhập lời dặn dò, món bé thích hoặc chiến lược dỗ nàng..."></textarea>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between pt-2 border-t border-surface-container-high">
+      <button type="button" onclick="resetMoodNoteToDefault()" class="text-on-surface-variant hover:text-error text-[11px] font-bold flex items-center gap-1 py-1 px-2 rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-[14px]">restart_alt</span>
+        <span>Khôi phục gốc</span>
+      </button>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="closeEditMoodNoteModal()" class="px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface text-xs font-bold active:scale-95 transition-transform">
+          Hủy
+        </button>
+        <button type="button" onclick="saveMoodNote()" class="px-4 py-1.5 rounded-full bg-primary text-on-primary text-xs font-bold shadow-sm active:scale-95 transition-transform flex items-center gap-1">
+          <span class="material-symbols-outlined text-[15px]">check</span>
+          <span>Lưu ghi chú ✨</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── Navigation ──
 const subs={home:'Giải Mã',quiz:'Trắc Nghiệm',result:'Kết Quả',wheel:'Vòng Quay',map:'Bản Đồ Quán',notebook:'Sổ Tay Nàng'};
@@ -1394,6 +1459,12 @@ const moodProfiles = [
 ];
 
 let selectedMoodIdx = 0;
+let customMoodNotes = {};
+try {
+  customMoodNotes = JSON.parse(localStorage.getItem('an_gi_custom_mood_notes') || '{}');
+} catch(e) {
+  customMoodNotes = {};
+}
 
 function selectMood(idx, silent = false) {
   selectedMoodIdx = idx;
@@ -1410,15 +1481,21 @@ function selectMood(idx, silent = false) {
     }
   });
 
+  // Check customized values if any
+  const custom = customMoodNotes[idx] || {};
+  const curTitle = (custom.title !== undefined && custom.title.trim() !== '') ? custom.title : mood.title;
+  const curBadge = (custom.badge !== undefined && custom.badge.trim() !== '') ? custom.badge : mood.badge;
+  const curDesc = (custom.desc !== undefined && custom.desc.trim() !== '') ? custom.desc : mood.desc;
+
   // Update card content
   const icon = document.getElementById('mood-advice-icon');
   if (icon) icon.textContent = mood.emoji;
   const title = document.getElementById('mood-advice-title');
-  if (title) title.textContent = mood.title;
+  if (title) title.textContent = curTitle;
   const badge = document.getElementById('mood-advice-badge');
-  if (badge) badge.textContent = mood.badge;
+  if (badge) badge.textContent = curBadge;
   const desc = document.getElementById('mood-advice-desc');
-  if (desc) desc.textContent = mood.desc;
+  if (desc) desc.textContent = curDesc;
   const lbl = document.getElementById('mood-wheel-action-lbl');
   if (lbl) lbl.textContent = mood.wheelLabel;
 
@@ -1432,6 +1509,93 @@ function selectMood(idx, silent = false) {
     applyPreset(mood.wheelPreset);
     showToast(mood.tipToast);
   }
+}
+
+function openEditMoodNoteModal() {
+  const mood = moodProfiles[selectedMoodIdx] || moodProfiles[0];
+  const custom = customMoodNotes[selectedMoodIdx] || {};
+
+  const em = document.getElementById('modal-mood-emoji');
+  if (em) em.textContent = mood.emoji;
+  const targetName = document.getElementById('modal-mood-target-name');
+  if (targetName) targetName.textContent = mood.title;
+
+  const titleInput = document.getElementById('edit-mood-title-input');
+  if (titleInput) titleInput.value = (custom.title !== undefined && custom.title.trim() !== '') ? custom.title : mood.title;
+
+  const badgeInput = document.getElementById('edit-mood-badge-input');
+  if (badgeInput) badgeInput.value = (custom.badge !== undefined && custom.badge.trim() !== '') ? custom.badge : mood.badge;
+
+  const descInput = document.getElementById('edit-mood-desc-input');
+  if (descInput) descInput.value = (custom.desc !== undefined && custom.desc.trim() !== '') ? custom.desc : mood.desc;
+
+  const modal = document.getElementById('edit-mood-note-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    if (!modal._hasClickInit) {
+      modal._hasClickInit = true;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeEditMoodNoteModal();
+      });
+    }
+    setTimeout(() => {
+      if (descInput) {
+        descInput.focus();
+        descInput.setSelectionRange(descInput.value.length, descInput.value.length);
+      }
+    }, 120);
+  }
+}
+
+function closeEditMoodNoteModal() {
+  const modal = document.getElementById('edit-mood-note-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function saveMoodNote() {
+  const titleInput = document.getElementById('edit-mood-title-input');
+  const badgeInput = document.getElementById('edit-mood-badge-input');
+  const descInput = document.getElementById('edit-mood-desc-input');
+
+  const title = titleInput ? titleInput.value.trim() : '';
+  const badge = badgeInput ? badgeInput.value.trim() : '';
+  const desc = descInput ? descInput.value.trim() : '';
+
+  if (!desc) {
+    showToast('Vui lòng không để trống phần ghi chú dặn dò nhé!');
+    return;
+  }
+
+  const mood = moodProfiles[selectedMoodIdx] || moodProfiles[0];
+  customMoodNotes[selectedMoodIdx] = {
+    title: title || mood.title,
+    badge: badge || mood.badge,
+    desc: desc
+  };
+
+  try {
+    localStorage.setItem('an_gi_custom_mood_notes', JSON.stringify(customMoodNotes));
+  } catch(e){}
+
+  selectMood(selectedMoodIdx, true);
+  closeEditMoodNoteModal();
+  showToast('Đã lưu ghi chú tâm trạng thành công! ✨');
+}
+
+function resetMoodNoteToDefault() {
+  if (customMoodNotes[selectedMoodIdx]) {
+    delete customMoodNotes[selectedMoodIdx];
+    try {
+      localStorage.setItem('an_gi_custom_mood_notes', JSON.stringify(customMoodNotes));
+    } catch(e){}
+  }
+  selectMood(selectedMoodIdx, true);
+  closeEditMoodNoteModal();
+  showToast('Đã khôi phục ghi chú gốc của tâm trạng này!');
 }
 
 function applyMoodToWheel() {
