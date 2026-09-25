@@ -113,19 +113,47 @@
         <span class="font-label-md text-label-md text-tertiary uppercase tracking-wider">Chọn tâm trạng của bé</span>
         <span class="font-label-sm text-label-sm text-primary flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">touch_app</span> Chạm để chọn</span>
       </div>
-      <div class="flex gap-space-sm overflow-x-auto pb-2 -mx-margin px-margin" id="mood-row">
-        <button class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary-container text-on-primary shadow-sm transition-all active:scale-95">
+      <div class="flex gap-space-sm overflow-x-auto pb-1 -mx-margin px-margin" id="mood-row">
+        <button onclick="selectMood(0)" class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary-container text-on-primary shadow-sm transition-all active:scale-95">
           <span class="text-base">☀️</span><span class="font-label-lg text-label-lg whitespace-nowrap">Dễ thương vui vẻ</span>
         </button>
-        <button class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
+        <button onclick="selectMood(1)" class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
           <span class="text-base">😾</span><span class="font-label-lg text-label-lg whitespace-nowrap">Hơi dỗi nhẹ</span>
         </button>
-        <button class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
+        <button onclick="selectMood(2)" class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
           <span class="text-base">🥱</span><span class="font-label-lg text-label-lg whitespace-nowrap">Căng thẳng mệt mỏi</span>
         </button>
-        <button class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
+        <button onclick="selectMood(3)" class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
           <span class="text-base">🤤</span><span class="font-label-lg text-label-lg whitespace-nowrap">Thèm cả thế giới</span>
         </button>
+      </div>
+
+      <!-- Dynamic Mood Recommendation Card -->
+      <div id="mood-advice-card" class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/25 space-y-2.5 transition-all">
+        <div class="flex items-start gap-2.5">
+          <div id="mood-advice-icon" class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-2xl shrink-0 shadow-2xs">
+            ☀️
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span id="mood-advice-title" class="font-headline-sm text-sm text-on-surface font-bold">Bé vui vẻ &amp; yêu đời 🌸</span>
+              <span id="mood-advice-badge" class="font-label-sm text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded-full font-bold">Khám phá món mới</span>
+            </div>
+            <p id="mood-advice-desc" class="font-body-sm text-xs text-on-surface-variant pt-0.5 leading-relaxed">
+              Hôm nay mood của bé đỉnh chóp! Sẵn sàng thử món mới lạ hoặc không gian lãng mạn như Sushi, Đồ nướng Hàn Quốc.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 pt-1 border-t border-surface-container-high/60">
+          <button id="mood-wheel-action-btn" onclick="applyMoodToWheel()" class="flex-1 py-2 px-3 rounded-full bg-primary-container text-on-primary text-xs font-bold flex items-center justify-center gap-1 shadow-xs active:scale-95 transition-transform truncate">
+            <span class="material-symbols-outlined text-[15px]">casino</span>
+            <span id="mood-wheel-action-lbl">Quay món khám phá 🍣</span>
+          </button>
+          <button id="mood-quiz-action-btn" onclick="startQuizWithMood()" class="flex-1 py-2 px-3 rounded-full bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-bold flex items-center justify-center gap-1 active:scale-95 transition-transform truncate">
+            <span class="material-symbols-outlined text-primary text-[15px]">auto_awesome</span>
+            <span>Giải mã siêu tốc ⚡</span>
+          </button>
+        </div>
       </div>
     </section>
     <!-- Hero quiz card -->
@@ -1317,15 +1345,114 @@ function navigate(s){
   window.scrollTo(0,0);
 }
 
-// ── Mood ──
-document.querySelectorAll('.mood-btn').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('.mood-btn').forEach(x=>{
-      x.className='mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95';
-    });
-    b.className='mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary-container text-on-primary shadow-sm transition-all active:scale-95';
+// ── Mood Selection & Automatic Smart Action ──
+const moodProfiles = [
+  {
+    idx: 0,
+    emoji: '☀️',
+    title: 'Bé vui vẻ & yêu đời 🌸',
+    badge: 'Khám phá món mới',
+    desc: 'Hôm nay mood của bé đỉnh chóp! Sẵn sàng thử món mới lạ hoặc không gian lãng mạn như Sushi, Đồ nướng Hàn Quốc.',
+    wheelPreset: 'default',
+    wheelLabel: 'Quay món khám phá 🍣',
+    statusText: 'Hôm nay: Vui vẻ dễ thương, muốn thử món mới ☀️',
+    tipToast: 'Đã nạp thực đơn khám phá món mới cho bé yêu! 🌸'
+  },
+  {
+    idx: 1,
+    emoji: '😾',
+    title: 'Báo động: Bé đang dỗi nhẹ! 🚨',
+    badge: 'Cần dỗ dành gấp',
+    desc: 'Bé đang phụng phịu, tuyệt đối không hỏi "Ăn gì cũng được"! Hãy chiều nàng bằng Trà sữa Maycha full topping hoặc đồ ăn vặt bé mê.',
+    wheelPreset: 'snack',
+    wheelLabel: 'Vòng quay Trà sữa & Ăn vặt 🧋',
+    statusText: 'Hôm nay: Đang hơi dỗi nhẹ, cần trà sữa dỗ dành 😾🧋',
+    tipToast: 'Đã bật chế độ dỗ dành: Ưu tiên Trà sữa & Ăn vặt! 🧋'
+  },
+  {
+    idx: 2,
+    emoji: '🥱',
+    title: 'Bé căng thẳng & mệt nhoài 💆‍♀️',
+    badge: 'Món nước ấm nóng',
+    desc: 'Sau ngày dài mệt mỏi, bao tử bé cần được vỗ về bởi nước lèo nóng hổi, xì xụp ấm bụng như Phở bò, Bún bò, Bánh canh cua.',
+    wheelPreset: 'soup',
+    wheelLabel: 'Vòng quay Đồ nước nóng hổi 🍲',
+    statusText: 'Hôm nay: Căng thẳng mệt mỏi, cần món nước ấm nóng 🥱🍲',
+    tipToast: 'Đã chuyển vòng quay sang các món nước ấm nóng sạc năng lượng! 🍲'
+  },
+  {
+    idx: 3,
+    emoji: '🤤',
+    title: 'Bé thèm cả thế giới, đói lả! ⚡',
+    badge: 'Chốt món ăn ngay',
+    desc: 'Cơn đói đã lên đỉnh điểm! Bé không thể đợi lâu, hãy chốt ngay bữa ăn đẫy đà no nê: Haidilao, Buffet BBQ hoặc Cơm tấm sườn bì chả.',
+    wheelPreset: 'grill',
+    wheelLabel: 'Vòng quay Lẩu & Nướng no nê 🥘',
+    statusText: 'Hôm nay: Thèm cả thế giới, đói bụng cồn cào 🤤🍗',
+    tipToast: 'Đã nạp thực đơn Lẩu & Nướng đậm đà cứu đói cấp tốc! 🍖'
+  }
+];
+
+let selectedMoodIdx = 0;
+
+function selectMood(idx, silent = false) {
+  selectedMoodIdx = idx;
+  const mood = moodProfiles[idx];
+  if (!mood) return;
+
+  // Highlight button
+  const btns = document.querySelectorAll('.mood-btn');
+  btns.forEach((b, i) => {
+    if (i === idx) {
+      b.className = 'mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary-container text-on-primary shadow-sm transition-all active:scale-95';
+    } else {
+      b.className = 'mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95';
+    }
   });
-});
+
+  // Update card content
+  const icon = document.getElementById('mood-advice-icon');
+  if (icon) icon.textContent = mood.emoji;
+  const title = document.getElementById('mood-advice-title');
+  if (title) title.textContent = mood.title;
+  const badge = document.getElementById('mood-advice-badge');
+  if (badge) badge.textContent = mood.badge;
+  const desc = document.getElementById('mood-advice-desc');
+  if (desc) desc.textContent = mood.desc;
+  const lbl = document.getElementById('mood-wheel-action-lbl');
+  if (lbl) lbl.textContent = mood.wheelLabel;
+
+  if (!silent) {
+    // Auto sync to beProfile status in Sổ tay nàng
+    beProfile.status = mood.statusText;
+    try { localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile)); } catch(e){}
+    renderProfile();
+
+    // Switch wheel preset automatically
+    applyPreset(mood.wheelPreset);
+    showToast(mood.tipToast);
+  }
+}
+
+function applyMoodToWheel() {
+  const mood = moodProfiles[selectedMoodIdx] || moodProfiles[0];
+  applyPreset(mood.wheelPreset);
+  navigate('wheel');
+}
+
+function startQuizWithMood() {
+  cur = 1;
+  ans = [selectedMoodIdx];
+  sel = null;
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  const sc = document.getElementById('sc-quiz');
+  if (sc) sc.classList.add('active');
+  const hdrSub = document.getElementById('hdr-sub');
+  if (hdrSub) hdrSub.textContent = subs['quiz'] || '';
+  window.scrollTo(0,0);
+  renderQ();
+  showToast('Đã tự động chọn tâm trạng của bé! Hãy chọn tiếp cảm giác vị giác nhé ✨');
+}
 
 // ── Quiz ──
 const Qs=[
@@ -1356,7 +1483,16 @@ const Rs=[
 ];
 
 let cur=0,sel=null,ans=[];
-function initQuiz(){cur=0;sel=null;ans=[];renderQ();}
+function initQuiz(){
+  cur=0;
+  sel=null;
+  ans=[];
+  // Auto pre-fill Q1 with current selectedMoodIdx if available
+  if (selectedMoodIdx !== undefined && selectedMoodIdx !== null) {
+    ans[0] = selectedMoodIdx;
+  }
+  renderQ();
+}
 function renderQ(){
   const q=Qs[cur];
   document.getElementById('qstep').textContent=`Câu ${cur+1} / ${Qs.length}`;
@@ -1387,6 +1523,11 @@ function renderQ(){
     c.addEventListener('click',()=>selOpt(c,i));
     g.appendChild(c);
   });
+  // Auto highlight previously chosen answer
+  if (ans[cur] !== undefined && ans[cur] !== null) {
+    const cards = g.querySelectorAll('div[role="radio"]');
+    if (cards[ans[cur]]) selOpt(cards[ans[cur]], ans[cur]);
+  }
 }
 function selOpt(card,idx){
   document.querySelectorAll('#qopts > div').forEach(c=>{
@@ -1407,7 +1548,7 @@ function selOpt(card,idx){
 }
 function qNext(){
   if(sel===null){const f=document.querySelector('#qopts > div');if(f)selOpt(f,0);return;}
-  ans.push(sel);
+  ans[cur] = sel;
   if(cur<Qs.length-1){cur++;sel=null;renderQ();}
   else{
     const r=Rs[Math.floor(Math.random()*Rs.length)];
@@ -1421,7 +1562,13 @@ function qNext(){
     navigate('result');
   }
 }
-function qBack(){if(cur>0){cur--;sel=null;renderQ();}else navigate('home');}
+function qBack(){
+  if(cur>0){
+    cur--;
+    sel=ans[cur] !== undefined ? ans[cur] : null;
+    renderQ();
+  } else navigate('home');
+}
 
 // ── Wheel Dynamic Logic & Customizer ──
 const defaultWheelItems = [
@@ -3022,6 +3169,7 @@ initFloatingWheelWidget();
 renderProfile();
 renderFavList();
 renderBlackList();
+selectMood(0, true);
 </script>
 </body>
 </html>
