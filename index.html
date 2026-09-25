@@ -283,36 +283,48 @@
       <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Nàng muốn ăn món này <span class="font-bold text-primary">98%</span>! Không còn cảnh "gì cũng được" nữa nhé.</p>
     </div>
     <div class="px-margin space-y-space-xl">
-      <div class="bg-surface-container-lowest rounded-lg shadow-xl shadow-primary-container/10 p-space-md relative overflow-hidden">
-        <div class="absolute top-0 right-0 bg-gradient-to-l from-primary-container to-secondary-container text-on-primary font-label-sm text-label-sm font-bold px-3 py-1.5 rounded-bl-2xl flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">hotel_class</span> Chân Ái Số 1
-        </div>
-        <div class="relative w-full h-48 rounded-DEFAULT overflow-hidden mb-space-md shadow-inner bg-gradient-to-br from-secondary-fixed to-tertiary-fixed flex items-center justify-center">
-          <span class="text-[80px]" id="r-emoji">🍲</span>
-        </div>
-        <div class="mb-space-md">
-          <span class="font-label-sm text-label-sm bg-primary/90 text-on-primary px-2.5 py-0.5 rounded-full inline-block mb-1" id="r-badge">Ngon nhức nách</span>
-          <h2 class="font-headline-md text-headline-md text-on-surface" id="r-dish">Lẩu Thái Tom Yum Hải Sản</h2>
-        </div>
-        <div class="bg-surface-container-low rounded-DEFAULT p-space-md mb-space-md">
-          <div class="flex items-start gap-space-sm">
-            <div class="w-7 h-7 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 mt-0.5">
-              <span class="material-symbols-outlined text-on-secondary-container text-[16px]" style="font-variation-settings:'FILL' 1">psychology</span>
-            </div>
-            <div>
-              <span class="font-label-md text-label-md text-secondary font-bold block mb-0.5">Tâm lý học vị giác của nàng:</span>
-              <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" id="r-analysis">Bé đang thèm cơn ăn thật đã miệng!</p>
-            </div>
+      <!-- Main Result Card -->
+      <div class="bg-surface-container-lowest rounded-2xl shadow-xl shadow-primary-container/10 relative overflow-hidden border border-outline-variant/20">
+        <!-- Hero Banner with Emoji (Flush to top, no overlap glitch) -->
+        <div class="relative w-full h-52 bg-gradient-to-br from-secondary-fixed via-primary-fixed/50 to-tertiary-fixed flex items-center justify-center overflow-hidden">
+          <div class="absolute -top-10 -left-10 w-36 h-36 bg-white/30 rounded-full blur-xl pointer-events-none"></div>
+          <span class="text-[88px] leading-none drop-shadow-md select-none transform hover:scale-110 transition-transform" id="r-emoji">🍲</span>
+
+          <!-- Floating Badge with High Z-Index -->
+          <div class="absolute top-3.5 right-3.5 bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-sm text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1 z-20">
+            <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">hotel_class</span>
+            <span>Chân Ái Số 1</span>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-space-sm mb-space-lg">
-          <div class="bg-surface-container rounded-DEFAULT p-space-sm flex items-center gap-space-sm">
-            <div class="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm shrink-0"><span class="material-symbols-outlined text-[20px]">near_me</span></div>
-            <div><span class="font-label-sm text-label-sm text-on-surface-variant block">Thời gian đi</span><span class="font-headline-sm text-headline-sm text-on-surface font-bold">~20 phút</span></div>
+
+        <!-- Card Body Content -->
+        <div class="p-space-md space-y-space-md">
+          <div>
+            <span class="font-label-sm text-label-sm bg-primary/90 text-on-primary px-2.5 py-0.5 rounded-full inline-block mb-1 shadow-2xs" id="r-badge">Ngon nhức nách</span>
+            <h2 class="font-headline-md text-headline-md text-on-surface font-bold" id="r-dish">Lẩu Thái Tom Yum Hải Sản</h2>
           </div>
-          <div class="bg-surface-container rounded-DEFAULT p-space-sm flex items-center gap-space-sm">
-            <div class="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center text-secondary shadow-sm shrink-0"><span class="material-symbols-outlined text-[20px]">payments</span></div>
-            <div><span class="font-label-sm text-label-sm text-on-surface-variant block">Túi tiền đôi ta</span><span class="font-headline-sm text-headline-sm text-on-surface font-bold">150k-200k</span></div>
+
+          <div class="bg-surface-container-low rounded-xl p-space-md">
+            <div class="flex items-start gap-space-sm">
+              <div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 mt-0.5 text-on-secondary-container">
+                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">psychology</span>
+              </div>
+              <div class="min-w-0">
+                <span class="font-label-md text-label-md text-secondary font-bold block mb-0.5">Tâm lý học vị giác của nàng:</span>
+                <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" id="r-analysis">Bé đang mệt mỏi sau ngày dài, thèm xì xụp nước lèo béo thơm ấm nóng và cần vị chua cay nồng nàn để sạc lại 100% năng lượng!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-space-sm">
+            <div class="bg-surface-container-low rounded-xl p-3 flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-xs shrink-0"><span class="material-symbols-outlined text-[20px]">near_me</span></div>
+              <div class="min-w-0"><span class="font-label-sm text-[11px] text-on-surface-variant block truncate">Thời gian đi</span><span class="font-headline-sm text-sm text-on-surface font-bold">~20 phút</span></div>
+            </div>
+            <div class="bg-surface-container-low rounded-xl p-3 flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center text-secondary shadow-xs shrink-0"><span class="material-symbols-outlined text-[20px]">payments</span></div>
+              <div class="min-w-0"><span class="font-label-sm text-[11px] text-on-surface-variant block truncate">Túi tiền đôi ta</span><span class="font-headline-sm text-sm text-on-surface font-bold">150k - 200k</span></div>
+            </div>
           </div>
         </div>
       </div>
