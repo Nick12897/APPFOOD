@@ -1,0 +1,2724 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+  <title>Ăn Gì Bé Ơi 💕</title>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "inverse-primary":"#ffb3b0","surface-variant":"#e4e2de","tertiary-fixed":"#f8ddd6",
+            "inverse-on-surface":"#f2f0ed","on-primary-fixed-variant":"#8c1520","surface-bright":"#fbf9f5",
+            "on-primary":"#ffffff","on-surface-variant":"#584140","surface-dim":"#dbdad6",
+            "surface-container-low":"#f5f3ef","surface-container-lowest":"#ffffff","surface":"#fbf9f5",
+            "on-secondary-container":"#763316","on-primary-container":"#6d0010","on-tertiary":"#ffffff",
+            "secondary-container":"#fd9e78","error-container":"#ffdad6","on-tertiary-container":"#402f2b",
+            "on-tertiary-fixed":"#261814","on-secondary":"#ffffff","outline-variant":"#e0bfbd",
+            "surface-container":"#efeeea","primary-container":"#ff6b6b","primary":"#ae2f34",
+            "on-error":"#ffffff","primary-fixed-dim":"#ffb3b0","inverse-surface":"#30312e",
+            "on-background":"#1b1c1a","tertiary-fixed-dim":"#dbc1ba","on-secondary-fixed-variant":"#763315",
+            "secondary-fixed-dim":"#ffb599","on-error-container":"#93000a","on-secondary-fixed":"#370e00",
+            "tertiary-container":"#ae9690","tertiary":"#6e5a55","on-surface":"#1b1c1a",
+            "surface-container-highest":"#e4e2de","on-primary-fixed":"#410006","primary-fixed":"#ffdad8",
+            "outline":"#8c706f","on-tertiary-fixed-variant":"#55433e","error":"#ba1a1a",
+            "secondary":"#934a2a","background":"#fbf9f5","surface-tint":"#ae2f34",
+            "secondary-fixed":"#ffdbce","surface-container-high":"#eae8e4"
+          },
+          borderRadius:{"DEFAULT":"1rem","lg":"2rem","xl":"3rem","full":"9999px"},
+          spacing:{"gutter":"1rem","space-lg":"1.5rem","margin":"1.25rem","space-xl":"2.25rem","space-xs":"0.25rem","space-sm":"0.5rem","space-md":"1rem"},
+          fontFamily:{"headline-lg-mobile":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"display":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"]},
+          fontSize:{
+            "headline-lg-mobile":["26px",{lineHeight:"34px",letterSpacing:"-0.01em",fontWeight:"700"}],
+            "label-lg":["14px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"600"}],
+            "headline-md":["22px",{lineHeight:"28px",fontWeight:"700"}],
+            "label-md":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"700"}],
+            "display":["36px",{lineHeight:"44px",letterSpacing:"-0.02em",fontWeight:"800"}],
+            "headline-sm":["18px",{lineHeight:"24px",fontWeight:"600"}],
+            "body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],
+            "label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.02em",fontWeight:"600"}],
+            "body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],
+            "headline-lg":["30px",{lineHeight:"38px",letterSpacing:"-0.015em",fontWeight:"700"}],
+            "body-sm":["12px",{lineHeight:"18px",fontWeight:"400"}]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @layer base {
+      html,body{width:100vw;margin:0;padding:0;background-color:#fbf9f5;}
+      body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;min-height:max(884px,100dvh);}
+      .pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}
+      .pt-safe{padding-top:env(safe-area-inset-top,0px);}
+      ::-webkit-scrollbar{display:none;}
+    }
+    .screen{display:none;}
+    .screen.active{display:flex;flex-direction:column;min-height:100dvh;}
+    .page-enter{animation:fadeUp .22s ease-out;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .nav-link.act{color:#ae2f34;font-weight:700;}
+    .nav-link.act .nav-icon{font-variation-settings:'FILL' 1;}
+    #food-wheel, #home-food-wheel{transition:transform 4.5s cubic-bezier(0.17,0.67,0.12,0.99);}
+    @keyframes confettiDrop{0%{transform:translateY(-30px) rotate(0deg);opacity:1;}100%{transform:translateY(320px) rotate(720deg);opacity:0;}}
+    .confetti-piece{position:absolute;width:9px;height:9px;pointer-events:none;border-radius:2px;animation:confettiDrop 2.6s ease-out forwards;z-index:60;}
+    @keyframes popIn{0%{transform:scale(0.5);opacity:0;}70%{transform:scale(1.05);}100%{transform:scale(1);opacity:1;}}
+    .animate-pop-in{animation:popIn 0.35s cubic-bezier(0.17,0.89,0.32,1.28) forwards;}
+    @keyframes spinSlow{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+    .animate-spin-slow{animation:spinSlow 12s linear infinite;}
+  </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+
+<!-- HEADER -->
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+  <div class="h-16 px-margin flex items-center justify-between">
+    <button onclick="navigate('home')" class="flex items-center gap-space-sm group">
+      <div class="w-10 h-10 rounded-full overflow-hidden shadow-sm border border-primary/20 group-hover:scale-105 transition-transform bg-white flex items-center justify-center shrink-0">
+        <img src="logo.png" alt="Ăn Gì Bé Ơi Logo" class="w-full h-full object-cover" />
+      </div>
+      <div class="flex flex-col text-left">
+        <span class="font-headline-sm text-headline-sm text-primary leading-none font-bold">Ăn Gì Bé Ơi</span>
+        <span id="hdr-sub" class="font-label-sm text-label-sm text-on-surface-variant font-normal opacity-80">Giải Mã</span>
+      </div>
+    </button>
+    <button onclick="navigate('notebook')" id="hdr-profile-btn" class="w-9 h-9 rounded-full overflow-hidden border border-primary/20 bg-secondary-fixed flex items-center justify-center shadow-xs active:scale-90 transition-transform" title="Sổ tay của bé">
+      <span id="hdr-avatar-content" class="text-xl flex items-center justify-center w-full h-full">🐰</span>
+    </button>
+  </div>
+</header>
+
+<!-- ══ SCREEN: HOME ══ -->
+<main id="sc-home" class="screen active pt-16 pb-28 bg-surface">
+  <div class="flex flex-col w-full px-margin space-y-space-lg">
+    <section class="flex flex-col pt-space-sm space-y-space-xs">
+      <div class="inline-flex items-center gap-1.5 self-start px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed">
+        <span class="material-symbols-outlined text-[15px]" style="font-variation-settings:'FILL' 1">favorite</span>
+        <span class="font-label-sm text-label-sm uppercase tracking-wider">Hẹn hò vui vẻ</span>
+      </div>
+      <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Chào hai bạn! 💕</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">Hôm nay bé yêu của bạn đang có tâm trạng thế nào nè?</p>
+    </section>
+    <!-- Mood -->
+    <section class="flex flex-col space-y-space-sm">
+      <div class="flex items-center justify-between">
+        <span class="font-label-md text-label-md text-tertiary uppercase tracking-wider">Chọn tâm trạng của bé</span>
+        <span class="font-label-sm text-label-sm text-primary flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">touch_app</span> Chạm để chọn</span>
+      </div>
+      <div class="flex gap-space-sm overflow-x-auto pb-2 -mx-margin px-margin" id="mood-row">
+        <button class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary-container text-on-primary shadow-sm transition-all active:scale-95">
+          <span class="text-base">☀️</span><span class="font-label-lg text-label-lg whitespace-nowrap">Dễ thương vui vẻ</span>
+        </button>
+        <button class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
+          <span class="text-base">😾</span><span class="font-label-lg text-label-lg whitespace-nowrap">Hơi dỗi nhẹ</span>
+        </button>
+        <button class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
+          <span class="text-base">🥱</span><span class="font-label-lg text-label-lg whitespace-nowrap">Căng thẳng mệt mỏi</span>
+        </button>
+        <button class="mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
+          <span class="text-base">🤤</span><span class="font-label-lg text-label-lg whitespace-nowrap">Thèm cả thế giới</span>
+        </button>
+      </div>
+    </section>
+    <!-- Hero quiz card -->
+    <section class="relative w-full rounded-lg bg-surface-container-lowest p-space-lg shadow-md overflow-hidden">
+      <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-secondary-fixed/40 blur-2xl pointer-events-none"></div>
+      <div class="absolute -left-8 -bottom-8 w-36 h-36 rounded-full bg-primary-fixed/50 blur-xl pointer-events-none"></div>
+      <div class="relative z-10 flex flex-col space-y-space-md">
+        <div class="flex items-start justify-between gap-space-sm">
+          <div class="flex flex-col space-y-1">
+            <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container w-fit">
+              <span class="material-symbols-outlined text-[13px]" style="font-variation-settings:'FILL' 1">bolt</span>
+              <span class="font-label-sm text-label-sm">Nhanh &amp; Chuẩn gu</span>
+            </div>
+            <h2 class="font-headline-md text-headline-md text-on-surface pt-1">Giải Mã Cơn Thèm ✨</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Chỉ 3 câu hỏi trắc nghiệm siêu tốc. Tạm biệt điệp khúc "Ăn gì cũng được"!</p>
+          </div>
+          <div class="w-20 h-20 flex-shrink-0 rounded-2xl bg-white p-1 shadow-sm border border-primary/20 flex items-center justify-center overflow-hidden">
+            <img src="logo.png" alt="Ăn Gì Bé Ơi Logo" class="w-full h-full object-contain" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-space-sm">
+          <div class="flex items-center gap-2 p-2.5 rounded-DEFAULT bg-surface-container-low">
+            <span class="material-symbols-outlined text-primary text-[18px]">timer</span>
+            <div><span class="font-label-sm text-label-sm text-on-surface font-bold block">30 giây</span><span class="font-body-sm text-body-sm text-tertiary">Chốt món ngay</span></div>
+          </div>
+          <div class="flex items-center gap-2 p-2.5 rounded-DEFAULT bg-surface-container-low">
+            <span class="material-symbols-outlined text-secondary text-[18px]">sentiment_very_satisfied</span>
+            <div><span class="font-label-sm text-label-sm text-on-surface font-bold block">99.8%</span><span class="font-body-sm text-body-sm text-tertiary">Bé gật đầu</span></div>
+          </div>
+        </div>
+        <button onclick="navigate('quiz')" class="w-full py-3.5 rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform">
+          <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1">magic_button</span>
+          Bắt đầu giải mã ngay
+        </button>
+      </div>
+    </section>
+    <!-- Shortcuts -->
+    <section class="flex flex-col space-y-space-md pb-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-headline-sm text-headline-sm text-on-surface">Cứu nguy tức thì</h3>
+        <span class="font-label-sm text-label-sm text-on-surface-variant">Chọn nhanh cho tiện</span>
+      </div>
+      <div onclick="navigate('wheel')" class="flex items-center justify-between p-4 rounded-lg bg-surface-container-lowest shadow-sm cursor-pointer active:bg-surface-container-low transition-colors">
+        <div class="flex items-center gap-space-md min-w-0">
+          <div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center flex-shrink-0 text-on-secondary-container">
+            <span class="material-symbols-outlined text-[28px]" style="font-variation-settings:'FILL' 1">casino</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="font-label-lg text-label-lg text-on-surface font-bold">Vòng quay cứu nguy tức thì</span>
+              <span class="px-2 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Quay là chốt</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant truncate">Bé chưa biết ăn gì? Bấm để vào vòng quay may mắn ngay!</p>
+          </div>
+        </div>
+        <span class="material-symbols-outlined text-[22px] text-secondary">arrow_forward</span>
+      </div>
+      <div class="flex flex-col p-4 rounded-lg bg-surface-container-lowest shadow-sm space-y-space-sm">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant">
+              <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">bookmark_heart</span>
+            </div>
+            <span class="font-label-lg text-label-lg text-on-surface">Món quen nàng dặn</span>
+          </div>
+          <button onclick="navigate('notebook')" class="font-label-sm text-label-sm text-primary">Xem 8 món</button>
+        </div>
+        <div class="flex gap-2 overflow-x-auto py-1">
+          <div class="flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-surface-container-low flex-shrink-0">
+            <span class="text-2xl">🍛</span>
+            <div><span class="font-label-md text-label-md text-on-surface block leading-tight">Cơm tấm sườn</span><span class="font-body-sm text-body-sm text-on-surface-variant text-[11px]">Nhiều bì ớt rim</span></div>
+          </div>
+          <div class="flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-surface-container-low flex-shrink-0">
+            <span class="text-2xl">🍜</span>
+            <div><span class="font-label-md text-label-md text-on-surface block leading-tight">Bún đậu</span><span class="font-body-sm text-body-sm text-on-surface-variant text-[11px]">Đậu giòn mắm tôm</span></div>
+          </div>
+          <div class="flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-surface-container-low flex-shrink-0">
+            <span class="text-2xl">🧋</span>
+            <div><span class="font-label-md text-label-md text-on-surface block leading-tight">Trà sữa</span><span class="font-body-sm text-body-sm text-on-surface-variant text-[11px]">50% đường ít đá</span></div>
+          </div>
+        </div>
+      </div>
+      <div onclick="navigate('notebook')" class="flex items-center justify-between p-4 rounded-lg bg-surface-container-high cursor-pointer active:scale-[0.99] transition-transform">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary flex-shrink-0">
+            <span class="material-symbols-outlined text-[20px]">healing</span>
+          </div>
+          <div>
+            <span class="font-label-lg text-label-lg text-on-surface font-bold block">Bí kíp dỗ người yêu khi dỗi</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Top đồ ngọt êm bụng, sinh tố mát lạnh hạ hoả 🔥</span>
+          </div>
+        </div>
+        <span class="material-symbols-outlined text-outline text-[20px]">chevron_right</span>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ══ SCREEN: QUIZ ══ -->
+<main id="sc-quiz" class="screen pt-16 pb-28 bg-surface">
+  <div class="flex flex-col w-full max-w-lg mx-auto px-margin space-y-space-md">
+    <div class="flex flex-col space-y-space-xs mt-space-sm">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-space-xs">
+          <span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider bg-primary-fixed/50 px-2.5 py-0.5 rounded-full">Trắc nghiệm thèm gì</span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant font-medium" id="qstep">Câu 1 / 3</span>
+        </div>
+        <div class="flex items-center gap-1.5" id="qhearts"></div>
+      </div>
+      <div class="relative w-full h-2.5 bg-surface-container rounded-full overflow-hidden p-0.5">
+        <div class="h-full bg-gradient-to-r from-secondary-container to-primary rounded-full transition-all duration-500" id="qprog" style="width:33%"></div>
+      </div>
+    </div>
+    <div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col space-y-1 relative overflow-hidden">
+      <div class="absolute -right-4 -bottom-4 opacity-10 pointer-events-none">
+        <span class="material-symbols-outlined text-[100px] text-primary" id="qicon">restaurant</span>
+      </div>
+      <div class="flex items-center gap-space-xs text-primary">
+        <span class="material-symbols-outlined text-[20px]">psychology_alt</span>
+        <span class="font-label-md text-label-md text-secondary" id="qcat">Giải mã tín hiệu bao tử</span>
+      </div>
+      <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface" id="qqn">Câu hỏi?</h1>
+      <p class="font-body-sm text-body-sm text-on-surface-variant" id="qsub">Lắng nghe trực giác của bé yêu nhé!</p>
+    </div>
+    <div class="flex flex-col space-y-space-sm" id="qopts" role="radiogroup"></div>
+    <div class="bg-surface-container-high/60 rounded-xl p-3 flex items-center gap-space-sm">
+      <div class="w-7 h-7 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 text-on-secondary-fixed">
+        <span class="material-symbols-outlined text-[16px]">tune</span>
+      </div>
+      <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Câu trả lời sẽ đối chiếu với <strong class="text-secondary font-bold">Sổ tay nàng</strong> để tạo độ tương thích!</span>
+    </div>
+    <div class="pb-2 flex items-center gap-space-sm">
+      <button id="qback" onclick="qBack()" class="flex items-center justify-center gap-1.5 h-12 px-space-md rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg active:scale-95 shrink-0">
+        <span class="material-symbols-outlined text-[20px]">arrow_back</span> Quay lại
+      </button>
+      <button id="qnext" onclick="qNext()" class="flex-1 flex items-center justify-center gap-2 h-12 px-space-md rounded-full bg-gradient-to-r from-primary-container to-secondary-container text-on-primary font-label-lg text-label-lg shadow-[0_10px_20px_-4px_rgba(255,107,107,0.3)] active:scale-98 transition-all">
+        <span id="qnextlbl">Tiếp tục</span>
+        <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- ══ SCREEN: RESULT ══ -->
+<main id="sc-result" class="screen pt-16 pb-28 bg-surface">
+  <div class="flex flex-col w-full pb-10">
+    <div class="relative px-margin pt-space-md pb-space-sm flex flex-col items-center text-center">
+      <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-72 h-72 bg-gradient-to-b from-secondary-fixed/50 via-primary-fixed/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10"></div>
+      <div class="inline-flex items-center gap-space-xs bg-surface-container-lowest shadow-sm px-3.5 py-1.5 rounded-full mb-space-sm">
+        <span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">favorite</span>
+        <span class="font-label-sm text-label-sm text-primary font-bold uppercase">AI Tình Yêu Phân Tích</span>
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-primary-container animate-ping"></span>
+      </div>
+      <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-space-xs">🎉 Giải mã thành công!</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Nàng muốn ăn món này <span class="font-bold text-primary">98%</span>! Không còn cảnh "gì cũng được" nữa nhé.</p>
+    </div>
+    <div class="px-margin space-y-space-xl">
+      <div class="bg-surface-container-lowest rounded-lg shadow-xl shadow-primary-container/10 p-space-md relative overflow-hidden">
+        <div class="absolute top-0 right-0 bg-gradient-to-l from-primary-container to-secondary-container text-on-primary font-label-sm text-label-sm font-bold px-3 py-1.5 rounded-bl-2xl flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">hotel_class</span> Chân Ái Số 1
+        </div>
+        <div class="relative w-full h-48 rounded-DEFAULT overflow-hidden mb-space-md shadow-inner bg-gradient-to-br from-secondary-fixed to-tertiary-fixed flex items-center justify-center">
+          <span class="text-[80px]" id="r-emoji">🍲</span>
+        </div>
+        <div class="mb-space-md">
+          <span class="font-label-sm text-label-sm bg-primary/90 text-on-primary px-2.5 py-0.5 rounded-full inline-block mb-1" id="r-badge">Ngon nhức nách</span>
+          <h2 class="font-headline-md text-headline-md text-on-surface" id="r-dish">Lẩu Thái Tom Yum Hải Sản</h2>
+        </div>
+        <div class="bg-surface-container-low rounded-DEFAULT p-space-md mb-space-md">
+          <div class="flex items-start gap-space-sm">
+            <div class="w-7 h-7 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-on-secondary-container text-[16px]" style="font-variation-settings:'FILL' 1">psychology</span>
+            </div>
+            <div>
+              <span class="font-label-md text-label-md text-secondary font-bold block mb-0.5">Tâm lý học vị giác của nàng:</span>
+              <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" id="r-analysis">Bé đang thèm cơn ăn thật đã miệng!</p>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-space-sm mb-space-lg">
+          <div class="bg-surface-container rounded-DEFAULT p-space-sm flex items-center gap-space-sm">
+            <div class="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm shrink-0"><span class="material-symbols-outlined text-[20px]">near_me</span></div>
+            <div><span class="font-label-sm text-label-sm text-on-surface-variant block">Thời gian đi</span><span class="font-headline-sm text-headline-sm text-on-surface font-bold">~20 phút</span></div>
+          </div>
+          <div class="bg-surface-container rounded-DEFAULT p-space-sm flex items-center gap-space-sm">
+            <div class="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center text-secondary shadow-sm shrink-0"><span class="material-symbols-outlined text-[20px]">payments</span></div>
+            <div><span class="font-label-sm text-label-sm text-on-surface-variant block">Túi tiền đôi ta</span><span class="font-headline-sm text-headline-sm text-on-surface font-bold">150k-200k</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center justify-between mb-space-sm">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-[20px]">alt_route</span> Phương án dự phòng</h3>
+          <span class="font-label-sm text-label-sm text-primary font-bold">Tỷ lệ duyệt &gt; 85%</span>
+        </div>
+        <div class="space-y-space-sm">
+          <div class="bg-surface-container-lowest p-space-md rounded-DEFAULT shadow-sm flex items-center justify-between">
+            <div class="flex items-center gap-space-md">
+              <div class="w-12 h-12 rounded-DEFAULT bg-primary-fixed flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-[24px]">ramen_dining</span></div>
+              <div><span class="font-label-sm text-label-sm text-primary font-bold block">LỰA CHỌN SỐ 2 (91%)</span><h4 class="font-headline-sm text-headline-sm text-on-surface text-[15px]" id="r-b1">Phở Bò Tái Lăn Bát Đá</h4></div>
+            </div>
+            <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+          </div>
+          <div class="bg-surface-container-lowest p-space-md rounded-DEFAULT shadow-sm flex items-center justify-between">
+            <div class="flex items-center gap-space-md">
+              <div class="w-12 h-12 rounded-DEFAULT bg-secondary-fixed flex items-center justify-center text-secondary shrink-0"><span class="material-symbols-outlined text-[24px]">soup_kitchen</span></div>
+              <div><span class="font-label-sm text-label-sm text-secondary font-bold block">LỰA CHỌN SỐ 3 (86%)</span><h4 class="font-headline-sm text-headline-sm text-on-surface text-[15px]" id="r-b2">Bún Riêu Cua Bắp Bò</h4></div>
+            </div>
+            <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gradient-to-br from-tertiary-fixed/30 to-surface-container p-space-md rounded-DEFAULT flex items-center gap-space-md">
+        <div class="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm shrink-0"><span class="material-symbols-outlined text-[22px]">tips_and_updates</span></div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant" id="r-tip"><strong class="text-on-surface">Mẹo nhỏ chàng ơi:</strong> Nhớ dặn cay vừa và gọi thêm trà sữa thái đỏ cho nàng nhé!</p>
+      </div>
+    </div>
+    <div class="mt-space-xl px-margin space-y-space-sm">
+      <button onclick="navigate('map')" class="w-full bg-gradient-to-r from-primary-container to-secondary-container text-on-primary py-3.5 px-6 rounded-full font-label-lg text-label-lg shadow-lg flex items-center justify-center gap-2 active:scale-98 transition-all">
+        <span class="material-symbols-outlined text-[20px]">two_wheeler</span> Chốt &amp; Tìm quán gần đây <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+      </button>
+      <button onclick="navigate('wheel')" class="w-full bg-surface-container-high text-on-surface py-3 px-6 rounded-full font-label-lg text-label-lg flex items-center justify-center gap-2 active:scale-98 transition-all">
+        <span class="material-symbols-outlined text-secondary text-[20px]">casino</span> Bé vẫn phụng phịu? Quay vòng may mắn 🎡
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- ══ SCREEN: WHEEL ══ -->
+<main id="sc-wheel" class="screen pt-16 pb-28 bg-surface">
+  <div class="flex flex-col w-full px-margin pb-space-xl">
+    <div class="flex flex-col items-center text-center mt-space-md mb-space-lg">
+      <div class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-error-container text-on-error-container shadow-sm mb-space-sm animate-pulse">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">emergency_home</span>
+        <span class="font-label-sm text-label-sm uppercase tracking-wider font-extrabold">CỨU NGUY CỰC HẠN 🆘</span>
+      </div>
+      <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-1">Vòng Quay "Bé Không Quạu" 🎡</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Quay trúng món nào là ăn món đó, cấm đổi ý nha người yêu ơi!</p>
+    </div>
+    <!-- Categories Bar & Custom Dishes Option -->
+    <div class="w-full mb-space-xs -mx-margin px-margin overflow-x-auto flex items-center gap-2 pb-1">
+      <button data-preset="default" onclick="applyPreset('default')" class="wfp whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-label-md text-label-md shadow-sm bg-primary text-on-primary transition-all active:scale-95">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">restaurant_menu</span>
+        <span>Tất cả món ngon</span>
+      </button>
+      <button id="pill-custom" data-preset="custom" onclick="applyPreset('custom')" class="wfp whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-label-md text-label-md shadow-sm bg-surface-container-low text-on-surface-variant hover:text-on-surface transition-all active:scale-95 border border-primary/20">
+        <span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings:'FILL' 1">stars</span>
+        <span>⭐ Món tự thêm (<span id="custom-pill-count">0</span>)</span>
+      </button>
+      <button data-preset="soup" onclick="applyPreset('soup')" class="wfp whitespace-nowrap px-3.5 py-1.5 rounded-full font-label-md text-label-md shadow-sm bg-surface-container-low text-on-surface-variant hover:text-on-surface transition-all active:scale-95">🍜 Đồ nước nóng hổi</button>
+      <button data-preset="grill" onclick="applyPreset('grill')" class="wfp whitespace-nowrap px-3.5 py-1.5 rounded-full font-label-md text-label-md shadow-sm bg-surface-container-low text-on-surface-variant hover:text-on-surface transition-all active:scale-95">🥘 Đồ nướng / Lẩu</button>
+      <button data-preset="snack" onclick="applyPreset('snack')" class="wfp whitespace-nowrap px-3.5 py-1.5 rounded-full font-label-md text-label-md shadow-sm bg-surface-container-low text-on-surface-variant hover:text-on-surface transition-all active:scale-95">🧋 Ăn vặt / Trà sữa</button>
+    </div>
+
+    <!-- Tùy chọn giữ lại món tự thêm khi chọn chủ đề -->
+    <div class="flex items-center justify-between px-1 mb-2">
+      <label class="inline-flex items-center gap-1.5 cursor-pointer text-on-surface select-none font-label-sm text-label-sm font-semibold">
+        <input type="checkbox" id="keep-custom-toggle" checked onchange="toggleKeepCustom()" class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" />
+        <span>Luôn giữ món tự thêm khi chọn chủ đề</span>
+      </label>
+      <span class="text-[11px] text-primary font-bold bg-primary-fixed/60 px-2 py-0.5 rounded-full">✨ Không lo mất món</span>
+    </div>
+
+    <!-- Quick Add Input with Emoji Selector -->
+    <div class="w-full bg-surface-container-lowest p-2 rounded-full shadow-sm flex items-center gap-2 mb-1.5 border border-outline-variant/30">
+      <button type="button" id="quick-icon-btn" onclick="openEmojiPicker('quick')" class="w-9 h-9 rounded-full bg-secondary-fixed/50 hover:bg-secondary-fixed flex items-center justify-center text-xl shrink-0 transition-transform active:scale-90 border border-outline-variant/30 shadow-xs" title="Bấm để chọn icon khác cho món">
+        <span id="quick-selected-emoji">🍲</span>
+      </button>
+      <input id="quick-wheel-input" type="text" placeholder="Thêm món bé thích (VD: Nước ép, Hải sản...)" class="flex-1 bg-transparent border-none outline-none font-body-sm text-body-sm text-on-surface placeholder:text-outline" onkeydown="if(event.key==='Enter') quickAddWheelItem()" />
+      <button onclick="quickAddWheelItem()" class="bg-primary text-on-primary px-3.5 py-1.5 rounded-full font-label-sm text-label-sm font-bold shadow-sm active:scale-95 transition-transform flex items-center gap-1 shrink-0">
+        <span>+ Thêm</span>
+      </button>
+    </div>
+
+    <!-- Quick Food Emoji Row (1-click to append icon) -->
+    <div class="w-full flex items-center gap-1.5 overflow-x-auto pb-1.5 mb-2 -mx-margin px-margin select-none">
+      <span class="text-[11px] font-bold text-on-surface-variant whitespace-nowrap pl-1">Chọn icon:</span>
+      <div class="flex items-center gap-1" id="quick-emoji-row">
+        <!-- Rendered by initQuickEmojiBars() -->
+      </div>
+      <button type="button" onclick="openEmojiPicker('quick')" class="whitespace-nowrap px-2 py-0.5 rounded-full bg-surface-container-high hover:bg-surface-variant text-[11px] font-bold text-primary flex items-center gap-0.5 border border-primary/20 shrink-0 active:scale-95">
+        <span class="material-symbols-outlined text-[13px]">add_reaction</span>
+        <span>Kho icon 🎨</span>
+      </button>
+    </div>
+
+    <!-- Active Dishes Chips (Direct Edit & Delete) -->
+    <div class="w-full bg-surface-container-lowest p-3 rounded-2xl shadow-sm border border-outline-variant/20 mb-space-sm space-y-2">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1.5">
+          <span class="font-label-sm text-label-sm font-bold text-on-surface flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px] text-primary">format_list_bulleted</span>
+            <span>Các món trên vòng quay (<span id="inline-wheel-count" class="text-primary font-bold">8</span> món):</span>
+          </span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button onclick="resetWheelDishes()" class="text-[11px] font-semibold text-on-surface-variant hover:text-primary flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-surface-container-high hover:bg-surface-variant active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-[13px]">restart_alt</span> Đặt lại
+          </button>
+          <button onclick="clearAllWheelDishes()" class="text-[11px] font-semibold text-error hover:bg-error-container/50 px-2 py-0.5 rounded-full bg-surface-container-high active:scale-95 transition-all">
+            Xóa hết
+          </button>
+        </div>
+      </div>
+      
+      <!-- Tags list with Edit ✏️ and Remove ❌ directly visible -->
+      <div class="flex flex-wrap gap-1.5" id="inline-dishes-chips">
+        <!-- Generated dynamically by renderWheel() -->
+      </div>
+      <p class="text-[11px] text-on-surface-variant/70 italic flex items-center gap-1 pt-0.5">
+        <span class="material-symbols-outlined text-[14px] text-primary">touch_app</span>
+        <span>Bấm biểu tượng <strong>✏️</strong> để sửa tên món, bấm <strong>✕</strong> để xóa bỏ khỏi vòng quay.</span>
+      </p>
+    </div>
+
+    <!-- Wheel -->
+    <div class="relative w-full flex flex-col items-center justify-center my-space-sm">
+      <div class="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-primary-container/25 via-secondary-container/20 to-tertiary-fixed/30 blur-2xl -z-10 pointer-events-none"></div>
+      <div class="relative z-20 -mb-5 flex flex-col items-center drop-shadow-md">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-b from-primary to-primary-container text-on-primary flex items-center justify-center shadow-lg">
+          <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1">favorite</span>
+        </div>
+        <div class="w-0 h-0 border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-t-[12px] border-t-primary -mt-1"></div>
+      </div>
+      <div class="relative w-80 h-80 rounded-full p-2.5 bg-surface-container-lowest shadow-[0_12px_36px_-6px_rgba(255,107,107,0.22)] flex items-center justify-center">
+        <div class="w-full h-full rounded-full overflow-hidden relative" id="food-wheel" style="transform:rotate(0deg)">
+          <svg class="w-full h-full" id="food-wheel-svg" viewBox="0 0 320 320">
+            <!-- Dynamically rendered by renderWheel() -->
+          </svg>
+        </div>
+        <button id="spin-btn" class="absolute z-20 w-24 h-24 rounded-full bg-gradient-to-br from-primary-container via-primary to-on-primary-fixed-variant text-on-primary flex flex-col items-center justify-center shadow-[0_8px_20px_rgba(174,47,52,0.35)] active:scale-95 transition-transform">
+          <span class="material-symbols-outlined text-[24px]" style="font-variation-settings:'FILL' 1">stars</span>
+          <span class="font-label-md text-label-md font-bold uppercase tracking-wider text-center leading-tight mt-0.5">QUAY<br/>NGAY 🎯</span>
+        </button>
+      </div>
+      <!-- Result Toast -->
+      <div class="hidden opacity-0 translate-y-3 transition-all duration-300 w-full mt-space-md bg-surface-container-lowest p-space-md rounded-lg shadow-[0_10px_28px_rgba(255,107,107,0.18)] flex items-center justify-between" id="wheel-toast">
+        <div class="flex items-center gap-space-sm min-w-0">
+          <div class="w-11 h-11 rounded-full bg-primary-fixed flex items-center justify-center flex-shrink-0 text-primary">
+            <span class="material-symbols-outlined text-[24px]" style="font-variation-settings:'FILL' 1">check_circle</span>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="font-label-sm text-label-sm text-primary font-bold">VŨ TRỤ ĐÃ CHỐT HẠ:</span>
+            <span class="font-headline-sm text-headline-sm text-on-surface truncate" id="wheel-result">Bún bò Huế giò nạc</span>
+          </div>
+        </div>
+        <button onclick="navigate('map')" class="px-space-md py-1.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-bold flex-shrink-0 shadow-sm active:scale-95">Đi ăn liền! 🚗</button>
+      </div>
+    </div>
+    <!-- Rule -->
+    <div class="mt-space-lg w-full bg-tertiary-fixed/40 p-space-md rounded-lg flex items-start gap-space-sm shadow-sm">
+      <div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center flex-shrink-0 text-primary">
+        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">favorite</span>
+      </div>
+      <div><span class="font-label-sm text-label-sm text-on-tertiary-container font-bold uppercase block">Luật hẹn hò dễ thương</span><p class="font-body-sm text-body-sm text-on-surface leading-snug mt-0.5">Quay trúng là đi ngay! Nếu đổi ý sẽ bị <strong class="text-primary">phạt thơm má 3 cái</strong> và bao trọn bữa nha! 💋</p></div>
+    </div>
+    <div class="mt-space-md flex flex-col gap-space-sm w-full">
+      <button id="spin-cta" class="w-full py-space-md px-space-lg rounded-full bg-gradient-to-r from-primary-container via-primary to-primary text-on-primary font-label-lg text-label-lg font-bold shadow-[0_8px_24px_-4px_rgba(255,107,107,0.35)] flex items-center justify-center gap-space-sm active:scale-[0.98]">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1">casino</span> Thử vận may của nàng ngay 🎯
+      </button>
+      <!-- Customizer trigger button -->
+      <button onclick="openWheelCustomizer()" class="w-full py-2.5 px-space-md rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md flex items-center justify-between shadow-xs hover:bg-surface-container-low transition-colors">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-primary">tune</span>
+          <span class="font-bold">Tùy chỉnh danh sách món trong vòng quay</span>
+        </div>
+        <div class="flex items-center gap-1 text-on-surface-variant">
+          <span class="font-label-sm text-label-sm bg-primary-fixed text-on-primary-fixed px-2.5 py-0.5 rounded-full font-bold" id="wheel-count-badge">8 món</span>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        </div>
+      </button>
+      <div class="w-full py-2.5 px-space-md rounded-full bg-surface-container-low text-on-surface flex items-center justify-between shadow-xs">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-green-700" style="font-variation-settings:'FILL' 1">verified_user</span>
+          <span class="font-label-sm text-label-sm truncate">Đã loại bỏ món có hành &amp; ngò gai</span>
+        </div>
+        <span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold flex-shrink-0">Đang bật</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══ SCREEN: MAP ══ -->
+<main id="sc-map" class="screen pt-16 pb-28 bg-surface">
+  <div class="flex flex-col w-full">
+    <section class="px-margin pt-space-xs pb-space-sm flex flex-col gap-space-sm">
+      <div class="flex items-center justify-between gap-space-sm">
+        <button id="area-btn" class="flex items-center gap-1.5 bg-surface-container-lowest px-3 py-2 rounded-full shadow-sm active:scale-95">
+          <span class="material-symbols-outlined text-primary text-[18px]">location_on</span>
+          <span class="font-label-sm text-label-sm text-primary font-bold flex items-center gap-1"><span id="area-lbl">Quận 1, TP. HCM</span><span class="material-symbols-outlined text-[14px]">expand_more</span></span>
+        </button>
+        <button class="flex items-center gap-1.5 bg-primary-fixed text-on-primary-fixed-variant px-3 py-2 rounded-full shadow-sm active:scale-95">
+          <span class="material-symbols-outlined text-[18px] text-primary animate-pulse">radar</span>
+          <span class="font-label-sm text-label-sm font-bold">&lt; 2km quanh Bé</span>
+        </button>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex-1 flex items-center bg-surface-container-lowest px-3.5 py-2.5 rounded-full shadow-sm">
+          <span class="material-symbols-outlined text-outline text-[20px] mr-2">search</span>
+          <input class="w-full bg-transparent border-none outline-none font-body-sm text-body-sm text-on-surface placeholder:text-outline" placeholder="Tìm quán bún, lẩu, trà sữa nàng mê..." type="text"/>
+        </div>
+        <button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">tune</span></button>
+      </div>
+    </section>
+    <div class="w-full overflow-x-auto px-margin py-space-xs flex items-center gap-2">
+      <button class="mchip flex-shrink-0 px-3.5 py-1.5 rounded-full font-label-md text-label-md active:scale-95 shadow-sm bg-primary-container text-on-primary">Tất cả (24)</button>
+      <button class="mchip flex-shrink-0 px-3.5 py-1.5 rounded-full font-label-md text-label-md active:scale-95 bg-surface-container-lowest text-on-surface-variant shadow-sm">Quán ruột của Bé 💖</button>
+      <button class="mchip flex-shrink-0 px-3.5 py-1.5 rounded-full font-label-md text-label-md active:scale-95 bg-surface-container-lowest text-on-surface-variant shadow-sm">Quán chill ngắm phố 🍃</button>
+      <button class="mchip flex-shrink-0 px-3.5 py-1.5 rounded-full font-label-md text-label-md active:scale-95 bg-surface-container-lowest text-on-surface-variant shadow-sm">Hàng vỉa hè ngon rẻ 🥢</button>
+      <button class="mchip flex-shrink-0 px-3.5 py-1.5 rounded-full font-label-md text-label-md active:scale-95 bg-surface-container-lowest text-on-surface-variant shadow-sm">Có điều hòa mát rượi ❄️</button>
+    </div>
+    <div class="px-margin pt-space-xs pb-space-sm">
+      <div class="relative w-full h-[260px] rounded-lg overflow-hidden shadow-md" style="background:linear-gradient(135deg,#c8e6c9 0%,#b2dfdb 30%,#bbdefb 60%,#c8e6c9 100%)">
+        <div class="absolute inset-0 opacity-20" style="background:repeating-linear-gradient(0deg,#888 0,#888 1px,transparent 1px,transparent 50px),repeating-linear-gradient(90deg,#888 0,#888 1px,transparent 1px,transparent 70px)"></div>
+        <!-- Roads -->
+        <div class="absolute top-1/2 w-full h-3 bg-gray-200/50 -translate-y-1/2"></div>
+        <div class="absolute left-1/2 h-full w-3 bg-gray-200/50 -translate-x-1/2"></div>
+        <div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+        <!-- Controls -->
+        <div class="absolute top-3 right-3 flex flex-col gap-2 z-20">
+          <button class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90"><span class="material-symbols-outlined text-[20px]">my_location</span></button>
+          <button class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-on-surface-variant active:scale-90"><span class="material-symbols-outlined text-[20px]">traffic</span></button>
+        </div>
+        <!-- Pins -->
+        <div class="absolute top-[30%] left-[44%] -translate-x-1/2 -translate-y-full z-30">
+          <div class="flex flex-col items-center">
+            <div class="bg-primary text-on-primary px-2 py-1 rounded-full shadow-lg flex items-center gap-1 animate-bounce">
+              <span class="material-symbols-outlined text-[13px]">local_fire_department</span>
+              <span class="font-label-sm text-label-sm font-bold text-[10px]">Lẩu Thái⭐4.9</span>
+            </div>
+            <div class="w-6 h-6 -mt-0.5 rounded-full bg-primary shadow-md flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[14px]">restaurant</span></div>
+            <div class="w-2 h-2 rounded-full bg-primary/40 -mt-0.5"></div>
+          </div>
+        </div>
+        <div class="absolute top-[65%] left-[20%] -translate-x-1/2 -translate-y-full z-20">
+          <div class="flex flex-col items-center">
+            <div class="bg-surface-container-lowest/90 text-on-surface px-2 py-0.5 rounded-full shadow-md flex items-center gap-1">
+              <span class="font-label-sm text-label-sm font-bold text-[10px]">Maycha⭐4.8</span>
+            </div>
+            <div class="w-6 h-6 -mt-0.5 rounded-full bg-secondary-container shadow-sm flex items-center justify-center"><span class="material-symbols-outlined text-on-secondary-container text-[13px]">local_cafe</span></div>
+          </div>
+        </div>
+        <div class="absolute top-[22%] right-[18%] -translate-x-1/2 -translate-y-full z-20">
+          <div class="flex flex-col items-center">
+            <div class="bg-surface-container-lowest/90 text-on-surface px-2 py-0.5 rounded-full shadow-md flex items-center gap-1">
+              <span class="font-label-sm text-label-sm font-bold text-[10px]">Bún chả Cô Nga⭐4.9</span>
+            </div>
+            <div class="w-6 h-6 -mt-0.5 rounded-full bg-tertiary-fixed shadow-sm flex items-center justify-center"><span class="material-symbols-outlined text-on-tertiary-fixed text-[13px]">ramen_dining</span></div>
+          </div>
+        </div>
+        <!-- User -->
+        <div class="absolute bottom-[30%] left-[52%] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
+          <div class="relative flex items-center justify-center">
+            <div class="absolute w-8 h-8 rounded-full bg-primary-container/40 animate-ping"></div>
+            <div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center shadow-lg"><span class="material-symbols-outlined text-on-primary text-[12px]">favorite</span></div>
+          </div>
+          <span class="bg-surface-container-lowest/95 text-on-surface px-2 py-0.5 rounded-full text-[10px] shadow-sm mt-1 whitespace-nowrap">2 đứa mình 💕</span>
+        </div>
+      </div>
+    </div>
+    <section class="px-margin -mt-2 mb-space-sm z-30">
+      <div class="w-full bg-gradient-to-r from-primary-container via-secondary-container to-primary text-on-primary p-3 rounded-lg shadow-lg flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-full bg-surface-container-lowest/20 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-on-primary text-[22px]">add_location_alt</span></div>
+          <div><span class="font-headline-sm text-[15px] font-bold block leading-tight">Thêm quán tủ của hai bạn</span><span class="font-label-sm text-[11px] text-on-primary/90">Lưu lại để sau đỡ phải "Ăn gì cũng được"!</span></div>
+        </div>
+        <button class="bg-surface-container-lowest text-primary px-3 py-1.5 rounded-full font-label-sm text-label-sm font-bold flex-shrink-0 shadow-sm active:scale-95">+ Thêm</button>
+      </div>
+    </section>
+    <section class="px-margin pb-space-md">
+      <div class="bg-surface-container-lowest p-4 rounded-lg shadow-md flex flex-col gap-3">
+        <div class="flex gap-3">
+          <div class="relative w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 shadow-sm bg-tertiary-fixed flex items-center justify-center text-5xl">
+            🍲<span class="absolute bottom-1 right-1 bg-surface-container-lowest/90 px-1.5 py-0.5 rounded-full text-[10px] text-primary font-bold">1.2 km</span>
+          </div>
+          <div class="flex-1 flex flex-col min-w-0 justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-1">
+                <h3 class="font-headline-sm text-headline-sm text-on-surface truncate font-bold">Koh Yam Thai Bistro</h3>
+                <button class="text-primary"><span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1">bookmark</span></button>
+              </div>
+              <span class="bg-primary-fixed text-on-primary-fixed font-label-sm text-[11px] px-2 py-0.5 rounded-full inline-block mt-0.5">Bàn đôi view lãng mạn</span>
+            </div>
+            <div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm mt-1">
+              <span class="flex items-center text-primary font-bold"><span class="material-symbols-outlined text-[15px] mr-0.5">star</span> 4.9</span>
+              <span>•</span><span>128 cặp đôi</span><span>•</span><span>~5p xe máy</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-surface-container-low p-2.5 rounded-DEFAULT flex items-start gap-2">
+          <span class="material-symbols-outlined text-secondary text-[18px] flex-shrink-0 mt-0.5">tips_and_updates</span>
+          <p class="font-body-sm text-body-sm text-on-surface-variant"><strong class="text-on-surface">Mẹo chiều nàng:</strong> Bé thích ngồi tầng 2 góc ban công, lẩu cay vừa và trà Thái đỏ ít ngọt nhé!</p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button class="flex items-center justify-center gap-1.5 bg-surface-container-high text-on-surface-variant py-2.5 px-3 rounded-full font-label-md text-label-md active:scale-95"><span class="material-symbols-outlined text-[18px]">favorite</span> Lưu Quán Ruột</button>
+          <button onclick="navigate('map')" class="flex items-center justify-center gap-1.5 bg-primary text-on-primary py-2.5 px-3 rounded-full font-label-md text-label-md shadow-md active:scale-95"><span class="material-symbols-outlined text-[18px]">navigation</span> Chỉ đường 🗺️</button>
+        </div>
+      </div>
+    </section>
+    <section class="px-margin flex flex-col gap-space-sm pb-space-lg">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-[20px]">recommend</span><h2 class="font-headline-sm text-headline-sm text-on-surface">Quán mới hai bạn thêm gần đây</h2></div>
+        <a class="font-label-sm text-label-sm text-primary font-bold" href="#">Xem hết</a>
+      </div>
+      <div class="flex flex-col gap-2.5">
+        <div class="bg-surface-container-lowest p-3 rounded-lg shadow-sm flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-14 h-14 rounded-full bg-secondary-fixed flex items-center justify-center text-2xl flex-shrink-0">🥟</div>
+            <div class="min-w-0">
+              <span class="font-label-lg text-label-lg text-on-surface font-bold truncate block">Bánh tráng nướng dì Mai</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant truncate block">Hẻm 48 Nguyễn Gia Trí • 900m</span>
+              <span class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 inline-block">Bạn thêm 2 ngày trước 📝</span>
+            </div>
+          </div>
+          <button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary flex-shrink-0"><span class="material-symbols-outlined text-[18px]">arrow_forward_ios</span></button>
+        </div>
+        <div class="bg-surface-container-lowest p-3 rounded-lg shadow-sm flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center text-2xl flex-shrink-0">🐚</div>
+            <div class="min-w-0">
+              <span class="font-label-lg text-label-lg text-on-surface font-bold truncate block">Ốc Luộc &amp; Nướng Cô Ba</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant truncate block">Bờ kè Hoàng Sa • 1.6km</span>
+              <span class="bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 inline-block">Bé khen nước mắm gừng 10đ 🤤</span>
+            </div>
+          </div>
+          <button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary flex-shrink-0"><span class="material-symbols-outlined text-[18px]">arrow_forward_ios</span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ══ SCREEN: NOTEBOOK ══ -->
+<main id="sc-notebook" class="screen pt-16 pb-28 bg-surface">
+  <div class="flex flex-col w-full max-w-md mx-auto px-margin space-y-space-lg pb-12">
+    <div class="flex items-center justify-between bg-primary-fixed text-on-primary-fixed px-space-md py-space-sm rounded-full shadow-sm mt-space-sm">
+      <div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings:'FILL' 1">favorite</span><span class="font-label-sm text-label-sm font-semibold">Tỉ lệ hiểu bé tháng này: 96%</span></div>
+      <span class="font-label-sm text-label-sm bg-primary text-on-primary px-space-xs py-0.5 rounded-full">Level: Bạn Trai Điểm 10</span>
+    </div>
+    <div><span class="font-headline-lg-mobile text-headline-lg-mobile text-primary block">Sổ tay: Ăn Gì Bé Không Quạu 📖</span><p class="font-body-md text-body-md text-on-surface-variant mt-1">Lưu lại để không bao giờ bị hỏi: "Sao anh không nhớ em thích gì?"</p></div>
+    <!-- Profile Card (Editable) -->
+    <div class="relative bg-surface-container-lowest rounded-2xl p-space-lg shadow-md space-y-space-md overflow-hidden border border-outline-variant/15">
+      <div class="absolute -top-10 -right-10 w-32 h-32 bg-secondary-fixed/40 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="flex items-center justify-between relative z-10">
+        <div class="flex items-center gap-space-md">
+          <div class="relative cursor-pointer" onclick="openProfileEditModal()" title="Bấm để đổi avatar">
+            <div id="nb-avatar" class="w-16 h-16 rounded-full bg-secondary-fixed flex items-center justify-center text-4xl shadow-sm hover:scale-105 transition-transform overflow-hidden">🐰</div>
+            <span class="absolute -bottom-1 -right-1 bg-primary text-on-primary text-[14px] w-6 h-6 flex items-center justify-center rounded-full shadow-sm">👑</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-space-xs">
+              <span id="nb-name" class="font-headline-sm text-headline-sm text-on-surface font-bold">Bé Heo</span>
+              <span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">verified</span>
+            </div>
+            <span id="nb-status" class="font-label-sm text-label-sm text-on-surface-variant block mt-0.5">Hôm nay: Dễ thương nhưng đói bụng 🐰</span>
+          </div>
+        </div>
+        <button onclick="openProfileEditModal()" class="w-9 h-9 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary flex items-center justify-center text-on-surface-variant active:scale-95 transition-colors shadow-2xs" title="Chỉnh sửa thông tin bé">
+          <span class="material-symbols-outlined text-[20px]">edit_note</span>
+        </button>
+      </div>
+
+      <!-- Gu ăn uống & Cay -->
+      <div class="grid grid-cols-2 gap-space-sm">
+        <div class="bg-surface-container-low rounded-xl p-space-sm cursor-pointer hover:bg-surface-container transition-colors" onclick="openProfileEditModal()" title="Bấm để sửa gu ăn uống">
+          <div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+            <span class="font-semibold">🍜 Gu chính</span>
+            <span id="nb-water-label" class="text-primary font-bold">70% Nước</span>
+          </div>
+          <div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden flex mt-1.5">
+            <div id="nb-water-bar" class="bg-primary h-full rounded-full transition-all" style="width: 70%"></div>
+            <div id="nb-dry-bar" class="bg-secondary-container h-full transition-all" style="width: 30%"></div>
+          </div>
+          <div class="flex justify-between font-label-sm text-[11px] text-on-surface-variant opacity-80 pt-1">
+            <span id="nb-water-sub">Đồ nước (70%)</span>
+            <span id="nb-dry-sub">Đồ khô (30%)</span>
+          </div>
+        </div>
+
+        <div class="bg-surface-container-low rounded-xl p-space-sm cursor-pointer hover:bg-surface-container transition-colors" onclick="openProfileEditModal()" title="Bấm để sửa cấp độ cay">
+          <div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+            <span class="font-semibold">🌶️ Cấp độ cay</span>
+            <span id="nb-spicy-label" class="text-secondary font-bold">2/5</span>
+          </div>
+          <div id="nb-spicy-fires" class="flex items-center gap-1 pt-1">
+            <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+            <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+            <span class="material-symbols-outlined text-surface-container-highest text-[20px]">local_fire_department</span>
+            <span class="material-symbols-outlined text-surface-container-highest text-[20px]">local_fire_department</span>
+            <span class="material-symbols-outlined text-surface-container-highest text-[20px]">local_fire_department</span>
+          </div>
+          <span id="nb-spicy-note" class="block font-label-sm text-[11px] text-on-surface-variant opacity-80 truncate mt-0.5">Quá cay là quăng đũa liền!</span>
+        </div>
+      </div>
+
+      <!-- Trà sữa -->
+      <div class="bg-tertiary-fixed/30 rounded-xl p-space-sm flex items-start gap-space-sm cursor-pointer hover:bg-tertiary-fixed/40 transition-colors" onclick="openProfileEditModal()" title="Bấm để sửa công thức trà sữa">
+        <div class="w-9 h-9 rounded-full bg-secondary text-on-secondary flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[20px]">coffee</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <span class="font-label-md text-label-md text-on-surface font-bold block leading-tight">Công thức Trà Sữa Chuẩn Chỉ 🧋</span>
+          <p id="nb-milktea-text" class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Luôn <strong class="text-primary">30% đường</strong>, <strong class="text-primary">50% đá</strong>, thêm <strong class="text-primary">trân châu hoàng kim</strong> mềm dẻo.</p>
+        </div>
+      </div>
+
+      <!-- Vùng cấm địa -->
+      <div class="bg-error-container/25 rounded-xl p-space-sm flex items-start gap-space-sm cursor-pointer hover:bg-error-container/35 transition-colors" onclick="openProfileEditModal()" title="Bấm để sửa vùng cấm địa">
+        <div class="w-9 h-9 rounded-full bg-error text-on-error flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[20px]">do_not_disturb_on</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <span class="font-label-md text-label-md text-on-surface font-bold block leading-tight">Vùng cấm địa (Tuyệt đối nhớ kỹ!)</span>
+          <div id="nb-blacklist-tags" class="flex flex-wrap gap-1.5 pt-1.5">
+            <span class="bg-error text-on-error px-2 py-0.5 rounded-full font-label-sm text-xs font-semibold">🚫 Không ăn hành lá sống</span>
+            <span class="bg-error text-on-error px-2 py-0.5 rounded-full font-label-sm text-xs font-semibold">🚫 Không ăn ngò gai</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex p-1 bg-surface-container-high rounded-full">
+      <button id="tab-fav" onclick="nbTab('fav')" class="flex-1 py-2 rounded-full font-label-md text-label-md transition-all text-on-primary bg-primary shadow-sm flex items-center justify-center gap-1">
+        <span class="material-symbols-outlined text-[18px]">favorite</span> Quán Ruột Nàng Mê
+      </button>
+      <button id="tab-black" onclick="nbTab('black')" class="flex-1 py-2 rounded-full font-label-md text-label-md transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1">
+        <span class="material-symbols-outlined text-[18px]">sentiment_very_dissatisfied</span> Blacklist Né Gấp
+      </button>
+    </div>
+
+    <!-- Favorites Tab Content -->
+    <div id="nb-fav">
+      <div class="flex items-center justify-between mb-3">
+        <span class="font-headline-sm text-headline-sm text-on-surface font-bold">Bộ sưu tập Quán Ruột ❤️</span>
+        <div class="flex items-center gap-2">
+          <span class="font-label-sm text-label-sm text-primary font-bold" id="fav-count">3 quán ruột</span>
+          <button onclick="openAddFavModal()" class="px-3 py-1 rounded-full bg-primary text-on-primary hover:brightness-105 font-label-sm text-xs font-bold flex items-center gap-1 shadow-sm active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-[15px]">add</span>
+            <span>Thêm quán</span>
+          </button>
+        </div>
+      </div>
+      <div id="fav-list" class="space-y-3">
+        <!-- Rendered dynamically by renderFavList() -->
+      </div>
+    </div>
+
+    <!-- Blacklist Tab Content -->
+    <div id="nb-black" class="hidden space-y-space-md">
+      <div class="flex items-center justify-between mb-3">
+        <span class="font-headline-sm text-headline-sm text-error font-bold">Blacklist (Né Gấp!) 💣</span>
+        <div class="flex items-center gap-2">
+          <span class="font-label-sm text-label-sm bg-error-container text-on-error-container px-2 py-0.5 rounded-full font-bold" id="black-count">3 món</span>
+          <button onclick="openAddBlackModal()" class="px-3 py-1 rounded-full bg-error text-on-error hover:brightness-105 font-label-sm text-xs font-bold flex items-center gap-1 shadow-sm active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-[15px]">add</span>
+            <span>Thêm cấm</span>
+          </button>
+        </div>
+      </div>
+      <div id="black-list" class="space-y-3">
+        <!-- Rendered dynamically by renderBlackList() -->
+      </div>
+    </div>
+
+    <div class="bg-secondary-fixed/50 rounded-xl p-space-md flex items-center gap-space-md">
+      <span class="text-3xl">💡</span>
+      <div>
+        <span class="font-label-md text-label-md text-on-secondary-fixed font-bold block">Mẹo vàng dỗ dành</span>
+        <p class="font-body-sm text-body-sm text-on-secondary-fixed-variant">Lúc bé nói "Ăn gì cũng được" nhưng mặt suy tư, mở sổ tay này và chốt ngay món nước nóng hổi nhé!</p>
+      </div>
+    </div>
+
+    <button onclick="openAddFavModal()" class="w-full bg-primary text-on-primary py-3.5 px-space-md rounded-full shadow-md flex items-center justify-center gap-space-xs active:scale-[0.98] transition-transform font-label-lg text-label-lg font-bold">
+      <span class="material-symbols-outlined text-[22px]">add_circle</span> + Ghi chú món/quán ruột mới của bé
+    </button>
+  </div>
+</main>
+
+<!-- ══ FLOATING DRAGGABLE MINI WHEEL WIDGET ══ -->
+<div id="floating-wheel-widget" class="fixed z-40 touch-none select-none cursor-grab active:cursor-grabbing flex flex-col items-center group transition-shadow" style="right: 18px; bottom: 92px;">
+  <!-- Badge Label -->
+  <div class="px-2.5 py-0.5 mb-1 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary text-[10px] font-bold shadow-md tracking-tight flex items-center gap-1 animate-bounce pointer-events-none whitespace-nowrap border border-white/60">
+    <span>Vòng quay</span>
+    <span class="text-[11px]">🎯</span>
+  </div>
+
+  <!-- Mini Wheel Bubble Container -->
+  <div class="relative w-16 h-16 rounded-full p-1 bg-white shadow-[0_8px_24px_rgba(174,47,52,0.35)] border-2 border-primary/40 flex items-center justify-center hover:scale-105 transition-transform">
+    <!-- Pointer Pin -->
+    <div class="absolute -top-2.5 z-20 flex flex-col items-center pointer-events-none drop-shadow-sm">
+      <div class="w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[9px] shadow-xs">
+        ❤️
+      </div>
+      <div class="w-0 h-0 border-l-[3.5px] border-l-transparent border-r-[3.5px] border-r-transparent border-t-[6px] border-t-primary -mt-0.5"></div>
+    </div>
+
+    <!-- Mini Wheel Graphics with Slow Rotation -->
+    <div class="w-full h-full rounded-full overflow-hidden animate-spin-slow pointer-events-none shadow-inner">
+      <svg class="w-full h-full" viewBox="0 0 100 100">
+        <!-- 8 slices with appetizing colors -->
+        <path d="M 50 50 L 50 0 A 50 50 0 0 1 85.35 14.64 Z" fill="#ffb3b0"/>
+        <path d="M 50 50 L 85.35 14.64 A 50 50 0 0 1 100 50 Z" fill="#ffd5c7"/>
+        <path d="M 50 50 L 100 50 A 50 50 0 0 1 85.35 85.35 Z" fill="#fef3c7"/>
+        <path d="M 50 50 L 85.35 85.35 A 50 50 0 0 1 50 100 Z" fill="#dcfce7"/>
+        <path d="M 50 50 L 50 100 A 50 50 0 0 1 14.64 85.35 Z" fill="#fed7e2"/>
+        <path d="M 50 50 L 14.64 85.35 A 50 50 0 0 1 0 50 Z" fill="#e0e7ff"/>
+        <path d="M 50 50 L 0 50 A 50 50 0 0 1 14.64 14.64 Z" fill="#ffedd5"/>
+        <path d="M 50 50 L 14.64 14.64 A 50 50 0 0 1 50 0 Z" fill="#ccfbf1"/>
+        <!-- Inner ring -->
+        <circle cx="50" cy="50" r="48" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.9"/>
+      </svg>
+    </div>
+
+    <!-- Center Center Hub Pin -->
+    <div class="absolute z-10 w-6 h-6 rounded-full bg-gradient-to-tr from-primary to-primary-container text-white flex items-center justify-center shadow-sm pointer-events-none text-[11px] font-black">
+      🎡
+    </div>
+  </div>
+
+  <span class="text-[9px] font-semibold text-on-surface-variant/80 mt-0.5 tracking-tight pointer-events-none bg-surface/90 px-1.5 py-0.2 rounded-full shadow-2xs">Kéo để dời</span>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_-4px_24px_rgba(255,107,107,0.1)]">
+  <div class="flex justify-around items-center h-20 px-space-xs max-w-md mx-auto">
+    <button onclick="navigate('home')" class="nav-link flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1 px-2 transition-all text-on-surface-variant" data-s="home">
+      <span class="material-symbols-outlined text-[24px] nav-icon">auto_awesome</span><span class="font-label-sm text-label-sm">Giải mã</span>
+    </button>
+    <button onclick="navigate('result')" class="nav-link flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1 px-2 transition-all text-on-surface-variant" data-s="result">
+      <span class="material-symbols-outlined text-[24px] nav-icon">bookmark_heart</span><span class="font-label-sm text-label-sm">Món đã chọn</span>
+    </button>
+    <button onclick="navigate('map')" class="nav-link flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1 px-2 transition-all text-on-surface-variant" data-s="map">
+      <span class="material-symbols-outlined text-[24px] nav-icon">storefront</span><span class="font-label-sm text-label-sm">Quán xinh</span>
+    </button>
+    <button onclick="navigate('notebook')" class="nav-link flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1 px-2 transition-all text-on-surface-variant" data-s="notebook">
+      <span class="material-symbols-outlined text-[24px] nav-icon">menu_book</span><span class="font-label-sm text-label-sm">Sổ tay nàng</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══ PROFILE EDIT MODAL ══ -->
+<div id="profile-edit-modal" class="fixed inset-0 z-50 bg-inverse-surface/50 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[88vh] overflow-y-auto flex flex-col shadow-2xl space-y-4">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-primary text-xl">
+          🎀
+        </div>
+        <div>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Chỉnh sửa hồ sơ Bé Yêu</h3>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">Cập nhật sở thích &amp; thói quen ăn uống</span>
+        </div>
+      </div>
+      <button onclick="closeProfileEditModal()" class="w-8 h-8 rounded-full bg-surface-container hover:bg-surface-variant flex items-center justify-center text-on-surface-variant">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Tên bé -->
+    <div class="space-y-1">
+      <label class="font-label-md text-label-md text-on-surface font-bold block">Biệt danh của bé</label>
+      <input id="edit-profile-name" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Bé Heo, Công chúa, Bé Mèo..." />
+    </div>
+
+    <!-- Chọn Avatar -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <label class="font-label-md text-label-md text-on-surface font-bold block">Biểu tượng Avatar của bé</label>
+        <!-- Nút tải ảnh từ thiết bị -->
+        <label for="custom-avatar-file" class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed hover:bg-primary hover:text-white text-primary text-xs font-bold transition-all shadow-2xs active:scale-95">
+          <span class="material-symbols-outlined text-[16px]">add_photo_alternate</span>
+          <span>Tải ảnh từ máy 📷</span>
+        </label>
+        <input type="file" id="custom-avatar-file" accept="image/*" class="hidden" onchange="handleCustomAvatarUpload(event)" />
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <div id="edit-profile-avatar-preview" class="w-14 h-14 rounded-full bg-secondary-fixed flex items-center justify-center shadow-xs shrink-0 border-2 border-primary/30 overflow-hidden text-2xl relative">
+          🐰
+        </div>
+        <div class="flex gap-1.5 overflow-x-auto py-1 flex-1" id="profile-avatar-options">
+          <!-- Avatars populated by JS -->
+        </div>
+      </div>
+
+      <div id="custom-avatar-info" class="hidden items-center justify-between px-3 py-1.5 rounded-xl bg-secondary-fixed/40 text-xs border border-secondary-fixed">
+        <span class="text-on-secondary-fixed-variant flex items-center gap-1.5 font-semibold">
+          <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span> Đang dùng ảnh từ thiết bị
+        </span>
+        <button type="button" onclick="removeCustomAvatar()" class="text-error font-bold hover:underline flex items-center gap-0.5">
+          <span class="material-symbols-outlined text-[14px]">delete</span> Dùng lại emoji
+        </button>
+      </div>
+    </div>
+
+    <!-- Trạng thái / Cảm xúc -->
+    <div class="space-y-1">
+      <label class="font-label-md text-label-md text-on-surface font-bold block">Tâm trạng / Cảm xúc hôm nay</label>
+      <input id="edit-profile-status" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Dễ thương nhưng đói bụng 🐰" />
+    </div>
+
+    <!-- Gu chính (% Nước vs % Khô) -->
+    <div class="space-y-1.5 bg-surface-container-low p-3 rounded-xl border border-outline-variant/20">
+      <div class="flex items-center justify-between">
+        <label class="font-label-md text-label-md text-on-surface font-bold">🍜 Gu ăn uống chính</label>
+        <span id="edit-water-percent-lbl" class="font-label-md text-primary font-bold">70% Đồ nước</span>
+      </div>
+      <input id="edit-profile-water" type="range" min="0" max="100" step="5" value="70" class="w-full accent-primary cursor-pointer" oninput="updateProfileWaterLabel(this.value)" />
+      <div class="flex justify-between text-[11px] text-on-surface-variant font-semibold">
+        <span>Đồ khô (Cơm, Bánh...)</span>
+        <span>Đồ nước (Bún, Phở, Lẩu...)</span>
+      </div>
+    </div>
+
+    <!-- Cấp độ cay -->
+    <div class="space-y-1.5 bg-surface-container-low p-3 rounded-xl border border-outline-variant/20">
+      <div class="flex items-center justify-between">
+        <label class="font-label-md text-label-md text-on-surface font-bold">🌶️ Khả năng ăn cay</label>
+        <span id="edit-spicy-lbl" class="font-label-md text-secondary font-bold">2/5 (Cay vừa)</span>
+      </div>
+      <div class="flex gap-2" id="spicy-level-btns">
+        <!-- 5 buttons populated by JS -->
+      </div>
+      <input id="edit-profile-spicy-note" type="text" class="w-full bg-surface text-on-surface px-3 py-1.5 rounded-lg text-xs focus:outline-none border border-outline-variant/30 mt-1" placeholder="Ghi chú về cay (VD: Quá cay là quăng đũa liền!)" />
+    </div>
+
+    <!-- Công thức trà sữa -->
+    <div class="space-y-1">
+      <label class="font-label-md text-label-md text-on-surface font-bold block">🧋 Công thức Trà Sữa Chuẩn Chỉ</label>
+      <input id="edit-profile-milktea" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Luôn 30% đường, 50% đá, thêm trân châu hoàng kim..." />
+    </div>
+
+    <!-- Vùng cấm địa -->
+    <div class="space-y-1">
+      <label class="font-label-md text-label-md text-on-surface font-bold block">⛔ Vùng cấm địa (Các mục bé ghét / dị ứng)</label>
+      <input id="edit-profile-blacklist" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="Cách nhau bằng dấu phẩy, VD: Không ăn hành, Không ngò gai..." />
+      <span class="text-[11px] text-on-surface-variant block">Nhập các món/gia vị cách nhau bằng dấu phẩy (,).</span>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex gap-2 pt-2 border-t border-surface-container-high">
+      <button onclick="closeProfileEditModal()" class="flex-1 py-2.5 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-bold">Hủy bỏ</button>
+      <button onclick="saveProfileChanges()" class="flex-1 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold shadow-md active:scale-95 transition-transform">Lưu hồ sơ bé 💕</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FAV DISH ADD / EDIT MODAL ══ -->
+<div id="fav-dish-modal" class="fixed inset-0 z-50 bg-inverse-surface/50 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[85vh] overflow-y-auto flex flex-col shadow-2xl space-y-4">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-primary text-xl" id="fav-modal-icon-badge">
+          🍜
+        </div>
+        <div>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold" id="fav-modal-title">Thêm Quán Ruột Của Nàng</h3>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">Lưu lại để chiều đúng gu bé yêu</span>
+        </div>
+      </div>
+      <button onclick="closeFavModal()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Chọn Icon món -->
+    <div class="space-y-1.5">
+      <label class="font-label-md text-label-md text-on-surface font-bold block">Biểu tượng món ăn</label>
+      <div class="flex gap-1.5 overflow-x-auto py-1" id="fav-emoji-options">
+        <!-- Quick food emoji picks -->
+      </div>
+    </div>
+
+    <!-- Tên món / quán -->
+    <div class="space-y-1">
+      <label class="font-label-md text-label-md text-on-surface font-bold block">Tên quán hoặc món ăn <span class="text-error">*</span></label>
+      <input id="fav-input-title" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Quán bún chả cô Nga, Trà sữa Maycha..." />
+    </div>
+
+    <!-- Địa chỉ / Vị trí -->
+    <div class="space-y-1">
+      <label class="font-label-md text-label-md text-on-surface font-bold block">Địa chỉ hoặc chi nhánh</label>
+      <input id="fav-input-address" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: 42 Hàng Mành, Hoàn Kiếm hoặc 115 Nguyễn Gia Trí..." />
+    </div>
+
+    <!-- Huy hiệu / Dịp ăn -->
+    <div class="space-y-1">
+      <label class="font-label-md text-label-md text-on-surface font-bold block">Huy hiệu đánh giá / Dịp ăn</label>
+      <input id="fav-input-badge" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Điểm hài lòng: 10/10, Uống mỗi khi dỗi, Quán kỷ niệm..." />
+    </div>
+
+    <!-- Lưu ý chi tiết của bé -->
+    <div class="space-y-1">
+      <label class="font-label-md text-label-md text-on-surface font-bold block">Lưu ý dặn dò của Bé</label>
+      <textarea id="fav-input-note" rows="2" class="w-full bg-surface-container-low text-on-surface p-3 rounded-xl font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Gọi thêm chả viên nướng, nước chấm xin thêm ớt băm riêng, không hành..."></textarea>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="flex gap-2 pt-2 border-t border-surface-container-high">
+      <button onclick="closeFavModal()" class="flex-1 py-2.5 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-bold">Hủy bỏ</button>
+      <button onclick="saveFavDishItem()" class="flex-1 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold shadow-md active:scale-95 transition-transform" id="fav-modal-submit-btn">Lưu quán ruột ❤️</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-space-md py-space-sm rounded-full font-label-md text-label-md shadow-lg hidden z-50 flex items-center gap-space-xs">
+  <span class="material-symbols-outlined text-secondary-fixed text-[18px]">check_circle</span>
+  <span id="toast-txt">Đã lưu! 🥰</span>
+</div>
+
+<!-- ══ WHEEL WIN POP-UP MODAL (DRAGGABLE) ══ -->
+<div id="wheel-win-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-md hidden items-center justify-center p-space-md flex overflow-hidden">
+  <div id="confetti-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+  <div id="wheel-win-card" class="relative z-10 w-full max-w-sm touch-none select-none">
+    <div class="bg-surface-container-lowest rounded-2xl p-space-lg w-full space-y-space-md shadow-2xl relative overflow-hidden animate-pop-in border-2 border-primary/25 text-center select-auto">
+      <div class="absolute -top-12 -right-12 w-36 h-36 bg-primary-fixed/40 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-secondary-fixed/40 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Drag Handle -->
+      <div id="popup-drag-handle" class="w-full flex flex-col items-center justify-center pt-0 pb-1 cursor-grab active:cursor-grabbing select-none -mt-2 group">
+        <div class="w-12 h-1.5 rounded-full bg-outline-variant/60 group-hover:bg-primary/50 transition-colors mb-1"></div>
+        <span class="text-[10px] text-on-surface-variant/70 font-semibold tracking-wide flex items-center gap-1 pointer-events-none">
+          <span class="material-symbols-outlined text-[13px]">drag_indicator</span> Kéo để di chuyển
+        </span>
+      </div>
+
+      <div class="text-5xl animate-bounce pt-0.5">🎉</div>
+      
+      <div class="inline-flex items-center gap-1.5 bg-primary-fixed text-on-primary-fixed px-3.5 py-1 rounded-full font-label-sm text-label-sm font-bold shadow-xs">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">stars</span>
+        <span>VŨ TRỤ ĐÃ CHỐT HẠ!</span>
+      </div>
+
+      <div class="space-y-1">
+        <h3 class="font-headline-md text-primary text-2xl font-black leading-tight drop-shadow-sm px-2" id="popup-win-dish">Lẩu Thái Tom Yum 🍲</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Không chần chừ nữa, dắt tay bé đi ăn ngay thôi nào!</p>
+      </div>
+
+      <!-- Romantic pledge box -->
+      <div class="bg-secondary-fixed/40 rounded-xl p-3 text-left flex items-start gap-2.5">
+        <span class="text-2xl flex-shrink-0">📜</span>
+        <div class="text-[12px] text-on-secondary-fixed-variant leading-snug">
+          <strong class="font-bold text-on-secondary-fixed">Lời thề hẹn hò:</strong> Đã quay trúng thì không được đổi ý nha! Đổi ý là bị phạt thơm má 3 cái và bao trọn bữa! 💋
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="space-y-2 pt-1">
+        <button onclick="goToMapForDish()" class="w-full bg-gradient-to-r from-primary-container via-primary to-primary text-on-primary py-3 rounded-full font-label-lg text-label-lg font-bold shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform hover:brightness-105">
+          <span class="material-symbols-outlined text-[20px]">near_me</span>
+          <span>Chốt món &amp; Tìm quán gần đây 🚗</span>
+        </button>
+        <div class="flex gap-2">
+          <button onclick="addWinDishToNotebook()" class="flex-1 bg-surface-container-high text-on-surface py-2.5 rounded-full font-label-md text-label-md font-bold flex items-center justify-center gap-1 active:scale-95 transition-transform hover:bg-surface-variant">
+            <span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">bookmark</span>
+            <span>Lưu sổ tay</span>
+          </button>
+          <button onclick="closeWinModalAndSpinAgain()" class="flex-1 bg-surface-container-high text-on-surface py-2.5 rounded-full font-label-md text-label-md font-bold flex items-center justify-center gap-1 active:scale-95 transition-transform hover:bg-surface-variant">
+            <span class="material-symbols-outlined text-[18px]">replay</span>
+            <span>Quay lại</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Close icon -->
+      <button onclick="closeWinModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-90">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WHEEL CUSTOMIZER MODAL ══ -->
+<div id="wheel-customizer-modal" class="fixed inset-0 z-50 bg-inverse-surface/50 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[85vh] flex flex-col shadow-2xl space-y-space-md">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[22px]">tune</span>
+        </div>
+        <div>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Tùy chỉnh vòng quay 🎡</h3>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">Thêm, bớt món theo sở thích của bé</span>
+        </div>
+      </div>
+      <button onclick="closeWheelCustomizer()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Input to add item -->
+    <div class="flex gap-2">
+      <input id="custom-dish-input" type="text" placeholder="Nhập tên món mới (VD: Bánh mì chảo...)" class="flex-1 bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/40" onkeydown="if(event.key==='Enter') addDishToWheel()" />
+      <button onclick="addDishToWheel()" class="bg-primary text-on-primary px-4 py-2.5 rounded-full font-label-md text-label-md font-bold shadow-sm active:scale-95 transition-transform flex items-center gap-1 shrink-0">
+        <span class="material-symbols-outlined text-[18px]">add</span>
+        <span>Thêm</span>
+      </button>
+    </div>
+
+    <!-- Preset quick picks -->
+    <div class="flex flex-col gap-1.5">
+      <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Gợi ý danh sách theo gu:</span>
+      <div class="flex flex-wrap gap-1.5">
+        <button onclick="applyPreset('default')" class="px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-surface-variant text-[11px] font-semibold text-on-surface transition-colors active:scale-95">✨ Mặc định</button>
+        <button onclick="applyPreset('soup')" class="px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-surface-variant text-[11px] font-semibold text-on-surface transition-colors active:scale-95">🍜 Đồ nước</button>
+        <button onclick="applyPreset('grill')" class="px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-surface-variant text-[11px] font-semibold text-on-surface transition-colors active:scale-95">🥘 Lẩu &amp; Nướng</button>
+        <button onclick="applyPreset('snack')" class="px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-surface-variant text-[11px] font-semibold text-on-surface transition-colors active:scale-95">🧋 Trà sữa &amp; Ăn vặt</button>
+        <button onclick="applyPreset('notebook')" class="px-2.5 py-1 rounded-full bg-primary-fixed hover:bg-primary-fixed-dim text-[11px] font-semibold text-on-primary-fixed transition-colors active:scale-95">💖 Quán ruột nàng</button>
+      </div>
+    </div>
+
+    <!-- Dish List -->
+    <div class="flex-1 overflow-y-auto space-y-1.5 pr-1 max-h-56" id="wheel-items-list">
+      <!-- Generated by JS -->
+    </div>
+
+    <!-- Footer actions -->
+    <div class="pt-2 border-t border-surface-container-high flex items-center justify-between gap-2">
+      <button onclick="resetWheelDishes()" class="text-on-surface-variant text-label-sm text-[12px] hover:text-error flex items-center gap-1 py-1 px-2 rounded-lg">
+        <span class="material-symbols-outlined text-[16px]">restart_alt</span>
+        <span>Đặt lại 8 món gốc</span>
+      </button>
+      <button onclick="closeWheelCustomizer()" class="bg-primary text-on-primary px-5 py-2 rounded-full font-label-md text-label-md font-bold shadow-md active:scale-95">
+        Hoàn tất
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT DISH MODAL ══ -->
+<div id="edit-dish-modal" class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-xs space-y-space-md shadow-2xl animate-pop-in border border-outline-variant/30">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-primary text-[20px]">edit_note</span>
+        <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Sửa tên món ăn</h4>
+      </div>
+      <button onclick="closeEditDishModal()" class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined text-[16px]">close</span>
+      </button>
+    </div>
+    <div class="space-y-1.5">
+      <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Tên món mới:</label>
+      <input id="edit-dish-input" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/40" onkeydown="if(event.key==='Enter') saveEditedDish()" />
+      <div class="flex items-center justify-between pt-1">
+        <span class="text-[11px] font-bold text-on-surface-variant">Chọn nhanh icon:</span>
+        <button type="button" onclick="openEmojiPicker('edit')" class="text-primary text-[11px] font-bold hover:underline flex items-center gap-0.5">
+          <span class="material-symbols-outlined text-[13px]">add_reaction</span>
+          <span>Kho icon 🎨</span>
+        </button>
+      </div>
+      <div class="flex items-center gap-1 overflow-x-auto pb-1 select-none" id="edit-quick-emoji-row">
+        <!-- Rendered by initQuickEmojiBars() -->
+      </div>
+    </div>
+    <div class="flex gap-2 pt-1">
+      <button onclick="deleteCurrentEditedDish()" class="bg-error-container text-error px-3.5 py-2.5 rounded-full font-label-md text-label-md font-bold flex items-center justify-center gap-1 active:scale-95 transition-transform">
+        <span class="material-symbols-outlined text-[16px]">delete</span> Xóa món
+      </button>
+      <button onclick="saveEditedDish()" class="flex-1 bg-primary text-on-primary py-2.5 rounded-full font-label-md text-label-md font-bold shadow-sm active:scale-95 transition-transform">
+        Lưu thay đổi ✨
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FULL FOOD EMOJI PICKER MODAL ══ -->
+<div id="emoji-picker-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-sm max-h-[85vh] flex flex-col space-y-space-sm shadow-2xl animate-pop-in border border-outline-variant/30">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🍱</span>
+        <div>
+          <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Kho icon món ăn</h4>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">Chạm vào icon để gắn vào món</span>
+        </div>
+      </div>
+      <button onclick="closeEmojiPicker()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Category tabs for emoji -->
+    <div class="flex gap-1 overflow-x-auto pb-1" id="emoji-cat-tabs">
+      <button onclick="renderEmojiCategory('soup')" class="em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary text-on-primary">🍲 Đồ nước</button>
+      <button onclick="renderEmojiCategory('meat')" class="em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-surface-container-high text-on-surface-variant">🍗 Nướng/Mặn</button>
+      <button onclick="renderEmojiCategory('snack')" class="em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-surface-container-high text-on-surface-variant">🥟 Ăn vặt</button>
+      <button onclick="renderEmojiCategory('seafood')" class="em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-surface-container-high text-on-surface-variant">🦀 Hải sản</button>
+      <button onclick="renderEmojiCategory('drink')" class="em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-surface-container-high text-on-surface-variant">🧋 Đồ uống</button>
+      <button onclick="renderEmojiCategory('sweet')" class="em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-surface-container-high text-on-surface-variant">🍧 Tráng miệng</button>
+      <button onclick="renderEmojiCategory('fruit')" class="em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-surface-container-high text-on-surface-variant">🍓 Trái cây</button>
+    </div>
+
+    <!-- Emoji Grid -->
+    <div class="grid grid-cols-6 gap-2 p-2 bg-surface-container-low rounded-xl max-h-56 overflow-y-auto" id="emoji-grid">
+      <!-- Generated by JS -->
+    </div>
+
+    <div class="pt-2 text-center border-t border-surface-container-high">
+      <span class="text-[11px] text-on-surface-variant">Chạm vào icon bất kỳ để gắn vào món của bạn! 💕</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Navigation ──
+const subs={home:'Giải Mã',quiz:'Trắc Nghiệm',result:'Kết Quả',wheel:'Vòng Quay',map:'Bản Đồ Quán',notebook:'Sổ Tay Nàng'};
+function navigate(s){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  const sc=document.getElementById('sc-'+s);
+  sc.classList.add('active');
+  sc.style.animation='none';
+  sc.offsetHeight;
+  sc.style.animation='fadeUp .22s ease-out';
+  document.getElementById('hdr-sub').textContent=subs[s]||'';
+  document.querySelectorAll('.nav-link').forEach(l=>{
+    l.classList.toggle('act',l.dataset.s===s);
+  });
+  if(s==='quiz')initQuiz();
+  const floatWidget = document.getElementById('floating-wheel-widget');
+  if (floatWidget) {
+    floatWidget.style.display = (s === 'wheel') ? 'none' : 'flex';
+  }
+  window.scrollTo(0,0);
+}
+
+// ── Mood ──
+document.querySelectorAll('.mood-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.mood-btn').forEach(x=>{
+      x.className='mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant transition-all active:scale-95';
+    });
+    b.className='mood-btn flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary-container text-on-primary shadow-sm transition-all active:scale-95';
+  });
+});
+
+// ── Quiz ──
+const Qs=[
+  {cat:'Giải mã tâm trạng của bé',icon:'mood',q:'Hôm nay bé đang có tâm trạng thế nào? 🌸',sub:'Chọn cảm xúc gần nhất với bé yêu lúc này nhé!',opts:[
+    {l:'Vui vẻ dễ thương, muốn thử món mới 😊',d:'Hôm nay bé mood đỉnh, sẵn sàng phiêu lưu ẩm thực!',e:'Ví dụ: Sushi fusion, Poke bowl, món Hàn mới lạ'},
+    {l:'Hơi dỗi, cần được dỗ dành 😾',d:'Bé cần món quen thuộc và được yêu chiều đặc biệt.',e:'Ví dụ: Món bé hay order, trà sữa yêu thích'},
+    {l:'Căng thẳng mệt mỏi sau ngày dài 🥱',d:'Bé cần món ấm nóng, dễ ăn để sạc lại năng lượng.',e:'Ví dụ: Phở bò, cháo gà, lẩu nhẹ'},
+    {l:'Thèm ăn kinh khủng, đói lả 🤤',d:'Bé đang đói không chịu được, cần chốt ngay!',e:'Ví dụ: Đồ ăn nhanh, cơm phần đầy đặn'}
+  ]},
+  {cat:'Giải mã tín hiệu bao tử',icon:'restaurant',q:'Cảm giác vòm họng lúc này? 👅',sub:'Lắng nghe trực giác của bé yêu nhé!',opts:[
+    {l:'Xì xụp nóng hổi, ngập nước 🍲',d:'Phù hợp khi vừa đi mưa về hoặc lười nhai khô khan.',e:'Ví dụ: Phở bò tái lăn, Lẩu thái tomyum'},
+    {l:'Cay tê lưỡi, kích thích vị giác 🌶️',d:'Cần xả stress, ăn đến đâu tỉnh người đến đó!',e:'Ví dụ: Mì cay 7 cấp độ, Gà rán sốt cay Hàn'},
+    {l:'Giòn rụm béo ngậy, rôm rốp 🍗',d:'Thèm đồ chiên vàng ruộm ngập dầu, cắn miếng nào đã đời.',e:'Ví dụ: Nem chua rán, Gà giòn sốt phô mai'},
+    {l:'Thanh mát healthy, nhẹ bụng 🥗',d:'Ăn thanh cảnh giải nhiệt, tươi ngon không lo tăng cân.',e:'Ví dụ: Gỏi cuốn tôm thịt, Poke bowl cá hồi'}
+  ]},
+  {cat:'Chốt hạ ngân sách hẹn hò',icon:'payments',q:'Hôm nay hai bạn định chi khoảng bao nhiêu? 💰',sub:'Để AI tìm đúng quán vừa ngon vừa phù hợp túi tiền nhé!',opts:[
+    {l:'Bình dân dưới 100k/người 🥢',d:'Hàng vỉa hè ngon, quán bình dân thoải mái.',e:'Ví dụ: Bún, Phở, Bánh mì, Cơm bình dân'},
+    {l:'Tầm trung 100-200k/người 🍜',d:'Quán có không gian đẹp, chất lượng ổn, check-in được.',e:'Ví dụ: Lẩu thái, Cơm tấm đặc biệt, Trà sữa cao cấp'},
+    {l:'Sang chảnh 200-500k/người 🍽️',d:'Nhà hàng đẹp, phục vụ tốt, bé được cưng chiều!',e:'Ví dụ: Buffet BBQ, Sushi nhà hàng, Fine dining'},
+    {l:'Hôm nay flex luôn, không giới hạn 💸',d:'Bé xứng đáng được đãi thật xịn, chọn nơi tốt nhất!',e:'Ví dụ: Omakase, Hotpot premium, Sky bar dining'}
+  ]}
+];
+const Rs=[
+  {e:'🍲',dish:'Lẩu Thái Tom Yum Hải Sản',badge:'Ngon nhức nách',analysis:'Bé đang hơi mệt mỏi sau ngày dài, thèm xì xụp nước lèo béo thơm ấm nóng và cần vị chua cay nồng nàn để sạc lại 100% năng lượng!',b1:'Phở Bò Tái Lăn Bát Đá',b2:'Bún Riêu Cua Bắp Bò Full Topping',tip:'Khi gọi món, nhớ dặn bếp làm cay vừa phải và gọi thêm một ly trà thái đỏ sữa cho nàng nhé!'},
+  {e:'🍛',dish:'Cơm Tấm Sườn Bì Chả Đặc Biệt',badge:'Gu bé chuẩn chỉ',analysis:'Bé đang vui vẻ và sẵn sàng thưởng thức món quen thuộc. Cơm tấm chuẩn vị với sườn nướng thơm lừng là lựa chọn hoàn hảo!',b1:'Bún Chả Hàng Mành Cô Nga',b2:'Bánh Mì Thịt Nướng Đặc Biệt',tip:'Nhớ gọi thêm ly trà đá chanh muối và xin thêm mỡ hành bên ngoài cho bé nhé!'},
+  {e:'🧋',dish:'Trà Sữa Maycha Full Topping',badge:'Bé vỗ tay rồi đấy',analysis:'Bé đang cần được dỗ dành, một ly trà sữa yêu thích với đủ topping sẽ làm tan mây mù ngay lập tức!',b1:'Kem Bơ Xoài Trân Châu',b2:'Sinh Tố Bơ Sữa Tươi Béo Ngậy',tip:'Đặt 30% đường 50% đá, thêm trân châu đen và cheese foam cho đúng formula bí truyền của nàng!'},
+  {e:'🍗',dish:'Gà Rán Cay Sốt Hàn Quốc',badge:'Cay đã nóc nhà',analysis:'Bé đang thèm cảm giác giòn rụm kích thích! Gà rán cay sốt đặc biệt là đúng gu để "bung nóc" sau ngày mệt mỏi.',b1:'Pizza Phô Mai Thịt Bò Cay',b2:'Mì Cay Hàn 5 Cấp Độ',tip:'Gọi thêm khoai tây chiên giòn và coca nhiều đá cho bé nhé, nhớ order ít cay trước đã!'}
+];
+
+let cur=0,sel=null,ans=[];
+function initQuiz(){cur=0;sel=null;ans=[];renderQ();}
+function renderQ(){
+  const q=Qs[cur];
+  document.getElementById('qstep').textContent=`Câu ${cur+1} / ${Qs.length}`;
+  document.getElementById('qprog').style.width=((cur+1)/Qs.length*100)+'%';
+  document.getElementById('qicon').textContent=q.icon;
+  document.getElementById('qcat').textContent=q.cat;
+  document.getElementById('qqn').textContent=q.q;
+  document.getElementById('qsub').textContent=q.sub;
+  document.getElementById('qnextlbl').textContent=cur<Qs.length-1?'Tiếp tục':'Giải mã ngay! ✨';
+  document.getElementById('qback').style.display=cur===0?'none':'flex';
+  // Hearts
+  const h=document.getElementById('qhearts');h.innerHTML='';
+  for(let i=0;i<Qs.length;i++){
+    const s=document.createElement('span');
+    s.className='material-symbols-outlined text-[18px]';s.textContent='favorite';
+    if(i<cur){s.className+=' text-primary';s.style.fontVariationSettings="'FILL' 1";}
+    else if(i===cur){s.className+=' text-primary animate-pulse';s.style.fontVariationSettings="'FILL' 1";}
+    else{s.className+=' text-outline-variant/60';}
+    h.appendChild(s);
+  }
+  // Options
+  const g=document.getElementById('qopts');g.innerHTML='';sel=null;
+  q.opts.forEach((o,i)=>{
+    const c=document.createElement('div');
+    c.className='relative rounded-lg p-space-md cursor-pointer transition-all duration-200 bg-surface-container-low shadow-sm';
+    c.setAttribute('aria-checked','false');c.setAttribute('role','radio');
+    c.innerHTML=`<div class="flex items-start gap-space-sm"><div class="opt-ind w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 transition-all"><span class="material-symbols-outlined text-outline text-[18px]">favorite</span></div><div class="flex flex-col flex-1 min-w-0 space-y-1"><span class="font-headline-sm text-headline-sm text-on-surface font-bold">${o.l}</span><p class="font-body-md text-body-md text-on-surface-variant leading-snug">${o.d}</p><div class="flex items-center gap-1.5 pt-1"><span class="material-symbols-outlined text-[14px] text-tertiary">lightbulb</span><span class="font-label-sm text-label-sm text-on-surface-variant">${o.e}</span></div></div></div>`;
+    c.addEventListener('click',()=>selOpt(c,i));
+    g.appendChild(c);
+  });
+}
+function selOpt(card,idx){
+  document.querySelectorAll('#qopts > div').forEach(c=>{
+    c.setAttribute('aria-checked','false');
+    c.classList.replace('bg-surface-container-lowest','bg-surface-container-low');
+    c.classList.remove('shadow-[0_8px_24px_rgba(255,107,107,0.18)]');
+    const ind=c.querySelector('.opt-ind');
+    ind.className='opt-ind w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 transition-all';
+    ind.innerHTML='<span class="material-symbols-outlined text-outline text-[18px]">favorite</span>';
+  });
+  card.setAttribute('aria-checked','true');
+  card.classList.replace('bg-surface-container-low','bg-surface-container-lowest');
+  card.classList.add('shadow-[0_8px_24px_rgba(255,107,107,0.18)]');
+  const ind=card.querySelector('.opt-ind');
+  ind.className='opt-ind w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 scale-105 transition-all';
+  ind.innerHTML='<span class="material-symbols-outlined text-on-primary text-[20px]" style="font-variation-settings:\'FILL\' 1">favorite</span>';
+  sel=idx;
+}
+function qNext(){
+  if(sel===null){const f=document.querySelector('#qopts > div');if(f)selOpt(f,0);return;}
+  ans.push(sel);
+  if(cur<Qs.length-1){cur++;sel=null;renderQ();}
+  else{
+    const r=Rs[Math.floor(Math.random()*Rs.length)];
+    document.getElementById('r-emoji').textContent=r.e;
+    document.getElementById('r-dish').textContent=r.dish;
+    document.getElementById('r-badge').textContent=r.badge;
+    document.getElementById('r-analysis').textContent=r.analysis;
+    document.getElementById('r-b1').textContent=r.b1;
+    document.getElementById('r-b2').textContent=r.b2;
+    document.getElementById('r-tip').innerHTML='<strong class="text-on-surface">Mẹo nhỏ chàng ơi:</strong> '+r.tip;
+    navigate('result');
+  }
+}
+function qBack(){if(cur>0){cur--;sel=null;renderQ();}else navigate('home');}
+
+// ── Wheel Dynamic Logic & Customizer ──
+const defaultWheelItems = [
+  'Bún Bò 🍲', 'Trà Sữa 🧋', 'Gà Rán 🍗', 'Bánh Tráng 🥟',
+  'Haidilao 🍲', 'Bún Chả 🥢', 'Cơm Tấm 🍛', 'Sushi 🍣'
+];
+
+const wheelPresets = {
+  default: [...defaultWheelItems],
+  soup: ['Phở Bò Tái 🍲', 'Bún Bò Huế 🍜', 'Bánh Canh Cua 🍲', 'Bún Riêu Cua 🥣', 'Mì Quảng 🍜', 'Hủ Tiếu Nam Vang 🍲'],
+  grill: ['Haidilao 🍲', 'Nướng Hàn Quốc 🥩', 'Lẩu Thái Tom Yum 🍲', 'Bò Tơ Nướng 🥩', 'Lẩu Gà Lá É 🍲', 'Gà Rán Giòn 🍗'],
+  snack: ['Trà Sữa Maycha 🧋', 'Bánh Tráng Nướng 🥟', 'Ốc Luộc Cô Ba 🐚', 'Nem Chua Rán 🍡', 'Trà Đào Cam Sả 🍑', 'Kem Bơ Sầu Riêng 🍧'],
+  notebook: ['Bún chả cô Nga 🍜', 'Trà sữa Maycha 🧋', 'Bánh canh cua Út Lệ 🍲', 'Bánh tráng nướng dì Mai 🥟', 'Ốc Luộc Cô Ba 🐚']
+};
+
+let customDishes = [];
+try {
+  customDishes = JSON.parse(localStorage.getItem('an_gi_custom_dishes') || '[]');
+} catch(e) { customDishes = []; }
+
+let keepCustomDishes = true;
+let wheelItems = [...defaultWheelItems];
+if (customDishes.length > 0) {
+  customDishes.forEach(d => {
+    if (!wheelItems.includes(d)) wheelItems.push(d);
+  });
+}
+let rot = 0, spinning = false, lastWonDish = '';
+
+const slicePalette = [
+  { fill: '#ffdad8', text: '#8c1520' },
+  { fill: '#ffdbce', text: '#763316' },
+  { fill: '#fef3c7', text: '#92400e' },
+  { fill: '#dcfce7', text: '#166534' },
+  { fill: '#fed7e2', text: '#831843' },
+  { fill: '#e0e7ff', text: '#3730a3' },
+  { fill: '#ffedd5', text: '#9a3412' },
+  { fill: '#f1f5f9', text: '#334155' },
+  { fill: '#ffe4e6', text: '#9f1239' },
+  { fill: '#ccfbf1', text: '#115e59' },
+  { fill: '#fef9c3', text: '#854d0e' },
+  { fill: '#e2e8f0', text: '#1e293b' }
+];
+
+function renderWheel() {
+  const svg = document.getElementById('food-wheel-svg');
+  if (!svg) return;
+  const N = wheelItems.length;
+  const R = 160;
+  const step = (2 * Math.PI) / N;
+  const sliceDeg = 360 / N;
+  let html = `
+    <defs>
+      <linearGradient id="sg1" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#ffb3b0"/><stop offset="100%" stop-color="#ffdad8"/></linearGradient>
+      <linearGradient id="sg2" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#ffd5c7"/><stop offset="100%" stop-color="#ffdbce"/></linearGradient>
+      <linearGradient id="sg3" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#e8f3ee"/><stop offset="100%" stop-color="#d4ebdf"/></linearGradient>
+      <linearGradient id="sg4" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#fdf0d5"/><stop offset="100%" stop-color="#fce2b6"/></linearGradient>
+    </defs>
+  `;
+
+  for (let i = 0; i < N; i++) {
+    const a1 = i * step;
+    const a2 = (i + 1) * step;
+    const x1 = 160 + R * Math.sin(a1);
+    const y1 = 160 - R * Math.cos(a1);
+    const x2 = 160 + R * Math.sin(a2);
+    const y2 = 160 - R * Math.cos(a2);
+    const largeArc = (step > Math.PI) ? 1 : 0;
+    const d = `M 160 160 L ${x1.toFixed(3)} ${y1.toFixed(3)} A 160 160 0 ${largeArc} 1 ${x2.toFixed(3)} ${y2.toFixed(3)} Z`;
+
+    const color = slicePalette[i % slicePalette.length];
+    const midDeg = (i + 0.5) * sliceDeg;
+    let label = wheelItems[i];
+    if (label.length > 14) label = label.substring(0, 13) + '…';
+
+    const fontSize = N > 9 ? 9 : (N > 6 ? 10.5 : 12);
+
+    html += `
+      <g>
+        <path d="${d}" fill="${color.fill}" stroke="#ffffff" stroke-width="1.5" />
+        <g transform="rotate(${midDeg.toFixed(2)} 160 160)">
+          <text x="160" y="65" fill="${color.text}" font-family="Plus Jakarta Sans" font-size="${fontSize}" font-weight="700" text-anchor="middle" transform="rotate(90 160 65)">${label}</text>
+        </g>
+      </g>
+    `;
+  }
+
+  // Outer border & dots
+  html += `<circle cx="160" cy="160" fill="none" opacity="0.65" r="158" stroke="#ffffff" stroke-width="4"/>`;
+  for (let i = 0; i < N; i++) {
+    const a = i * step;
+    const dotX = 160 + 152 * Math.sin(a);
+    const dotY = 160 - 152 * Math.cos(a);
+    html += `<circle cx="${dotX.toFixed(2)}" cy="${dotY.toFixed(2)}" fill="#ffffff" r="3.2"/>`;
+  }
+
+  svg.innerHTML = html;
+  const homeSvg = document.getElementById('home-food-wheel-svg');
+  if (homeSvg) homeSvg.innerHTML = html;
+
+  // Update badge & counts
+  const badge = document.getElementById('wheel-count-badge');
+  if (badge) badge.textContent = `${N} món`;
+  const inlineCount = document.getElementById('inline-wheel-count');
+  if (inlineCount) inlineCount.textContent = N;
+
+  renderInlineChips();
+  renderCustomizerList();
+}
+
+function renderInlineChips() {
+  const container = document.getElementById('inline-dishes-chips');
+  if (!container) return;
+  container.innerHTML = '';
+  wheelItems.forEach((item, idx) => {
+    const chip = document.createElement('div');
+    chip.className = 'inline-flex items-center gap-1.5 pl-3 pr-1.5 py-1 rounded-full text-xs font-semibold bg-surface-container-high text-on-surface border border-outline-variant/30 hover:border-primary/50 transition-all shadow-xs';
+    chip.innerHTML = `
+      <span class="truncate max-w-[140px] sm:max-w-none cursor-pointer" onclick="openEditDishModal(${idx})" title="Bấm để sửa tên món">${item}</span>
+      <button onclick="openEditDishModal(${idx})" class="w-5 h-5 rounded-full hover:bg-primary-fixed hover:text-primary flex items-center justify-center text-outline transition-colors" title="Sửa món này">
+        <span class="material-symbols-outlined text-[13px]">edit</span>
+      </button>
+      <button onclick="removeWheelItem(${idx})" class="w-5 h-5 rounded-full hover:bg-error hover:text-white flex items-center justify-center text-outline transition-colors" title="Bỏ món này">
+        <span class="material-symbols-outlined text-[14px]">close</span>
+      </button>
+    `;
+    container.appendChild(chip);
+  });
+}
+
+function renderCustomizerList() {
+  const listEl = document.getElementById('wheel-items-list');
+  if (!listEl) return;
+  listEl.innerHTML = '';
+  wheelItems.forEach((item, idx) => {
+    const row = document.createElement('div');
+    row.className = 'flex items-center justify-between p-2.5 rounded-xl bg-surface-container-low shadow-2xs border border-outline-variant/20';
+    row.innerHTML = `
+      <div class="flex items-center gap-2 min-w-0 flex-1 mr-2">
+        <span class="w-6 h-6 rounded-full bg-primary-fixed text-primary text-[11px] font-bold flex items-center justify-center shrink-0">${idx + 1}</span>
+        <span class="font-body-md text-on-surface font-semibold truncate text-[13px] flex-1">${item}</span>
+      </div>
+      <div class="flex items-center gap-1 shrink-0">
+        <button onclick="openEditDishModal(${idx})" class="w-8 h-8 rounded-full hover:bg-primary-fixed hover:text-primary text-outline flex items-center justify-center transition-colors" title="Sửa tên">
+          <span class="material-symbols-outlined text-[18px]">edit</span>
+        </button>
+        <button onclick="removeWheelItem(${idx})" class="w-8 h-8 rounded-full hover:bg-error-container hover:text-error text-outline flex items-center justify-center transition-colors" title="Xóa bỏ">
+          <span class="material-symbols-outlined text-[18px]">delete</span>
+        </button>
+      </div>
+    `;
+    listEl.appendChild(row);
+  });
+}
+
+let editingDishIdx = -1;
+
+function openEditDishModal(idx) {
+  editingDishIdx = idx;
+  const input = document.getElementById('edit-dish-input');
+  if (input) {
+    input.value = wheelItems[idx] || '';
+  }
+  document.getElementById('edit-dish-modal').classList.remove('hidden');
+  setTimeout(() => input && input.focus(), 60);
+}
+
+function closeEditDishModal() {
+  document.getElementById('edit-dish-modal').classList.add('hidden');
+  editingDishIdx = -1;
+}
+
+function updateCustomBadge() {
+  const badge = document.getElementById('custom-pill-count');
+  if (badge) badge.textContent = customDishes.length;
+}
+
+function addCustomDishRecord(val) {
+  if (!customDishes.includes(val)) {
+    customDishes.push(val);
+    try { localStorage.setItem('an_gi_custom_dishes', JSON.stringify(customDishes)); } catch(e){}
+  }
+  updateCustomBadge();
+}
+
+function toggleKeepCustom() {
+  const chk = document.getElementById('keep-custom-toggle');
+  keepCustomDishes = chk ? chk.checked : true;
+  showToast(keepCustomDishes ? 'Đã bật: Luôn giữ món tự thêm khi chọn chủ đề! ✨' : 'Đã tắt: Chỉ tải món theo chủ đề mẫu.');
+}
+
+function saveEditedDish() {
+  if (editingDishIdx < 0 || editingDishIdx >= wheelItems.length) return;
+  const input = document.getElementById('edit-dish-input');
+  const val = input.value.trim();
+  if (!val) {
+    showToast('Tên món không được để trống nha!');
+    return;
+  }
+  const oldVal = wheelItems[editingDishIdx];
+  wheelItems[editingDishIdx] = val;
+  const cIdx = customDishes.indexOf(oldVal);
+  if (cIdx !== -1) {
+    customDishes[cIdx] = val;
+  } else {
+    customDishes.push(val);
+  }
+  try { localStorage.setItem('an_gi_custom_dishes', JSON.stringify(customDishes)); } catch(e){}
+  updateCustomBadge();
+
+  renderWheel();
+  closeEditDishModal();
+  showToast(`Đã sửa thành "${val}"! ✨`);
+}
+
+function deleteCurrentEditedDish() {
+  if (editingDishIdx >= 0) {
+    const idx = editingDishIdx;
+    closeEditDishModal();
+    removeWheelItem(idx);
+  }
+}
+
+function clearAllWheelDishes() {
+  wheelItems = ['Món 1 🍲', 'Món 2 🧋'];
+  customDishes = [];
+  try { localStorage.setItem('an_gi_custom_dishes', JSON.stringify(customDishes)); } catch(e){}
+  updateCustomBadge();
+  renderWheel();
+  showToast('Đã làm trống vòng quay! Hãy nhập các món của hai bạn nhé.');
+}
+
+// ── Food Emoji Picker Logic ──
+const foodEmojis = {
+  soup: ['🍲', '🍜', '🥣', '🥘', '🍛', '🍱', '🍚', '🥢', '🍢', '🍙', '🫕', '🥟'],
+  meat: ['🍗', '🥩', '🍖', '🥓', '🌭', '🍔', '🍕', '🥪', '🌮', '🌯', '🍳', '🧀'],
+  snack: ['🥟', '🍤', '🍥', '🍡', '🍘', '🍣', '🥠', '🥡', '🫔', '🍟', '🍿', '🥨'],
+  seafood: ['🦀', '🦞', '🦐', '🦑', '🐙', '🐚', '🐟', '🐠', '🐡', '🦪'],
+  drink: ['🧋', '🥤', '🍵', '☕', '🍹', '🍺', '🧃', '🥛', '🍷', '🍸', '🥥', '🍶', '🍻', '🥂'],
+  sweet: ['🍧', '🍨', '🍦', '🍰', '🎂', '🍮', '🥞', '🧇', '🍩', '🍪', '🍫', '🍬', '🍭'],
+  fruit: ['🍓', '🥑', '🥭', '🍉', '🍇', '🍑', '🍒', '🍍', '🍌', '🥗', '🌽', '🍎', '🍋', '🥝']
+};
+
+const popularQuickEmojis = ['🍲', '🍜', '🧋', '🥤', '🦀', '🍗', '🥩', '🍕', '🥟', '🍣', '🐚', '🍹', '🍧', '🍓', '🥑', '🥗', '🍔', '🍦'];
+let selectedQuickEmoji = '🍲';
+let emojiPickerTarget = 'quick'; // 'quick' or 'edit'
+
+function selectEmoji(emoji) {
+  if (emojiPickerTarget === 'quick') {
+    selectedQuickEmoji = emoji;
+    const badge = document.getElementById('quick-selected-emoji');
+    if (badge) badge.textContent = emoji;
+
+    const input = document.getElementById('quick-wheel-input');
+    if (input) {
+      let text = input.value.trim();
+      text = text.replace(/[\p{Extended_Pictographic}\uFE0F\u200D]+$/u, '').trim();
+      if (text) {
+        input.value = text + ' ' + emoji;
+      }
+      input.focus();
+    }
+  } else if (emojiPickerTarget === 'edit') {
+    const input = document.getElementById('edit-dish-input');
+    if (input) {
+      let text = input.value.trim();
+      text = text.replace(/[\p{Extended_Pictographic}\uFE0F\u200D]+$/u, '').trim();
+      input.value = (text ? text + ' ' : '') + emoji;
+      input.focus();
+    }
+  }
+  closeEmojiPicker();
+}
+
+function openEmojiPicker(target) {
+  emojiPickerTarget = target || 'quick';
+  document.getElementById('emoji-picker-modal').classList.remove('hidden');
+  renderEmojiCategory('soup');
+}
+
+function closeEmojiPicker() {
+  document.getElementById('emoji-picker-modal').classList.add('hidden');
+}
+
+function renderEmojiCategory(cat) {
+  document.querySelectorAll('.em-cat-btn').forEach(b => {
+    b.className = 'em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-surface-container-high text-on-surface-variant';
+  });
+  if (typeof event !== 'undefined' && event && event.target && event.target.classList.contains('em-cat-btn')) {
+    event.target.className = 'em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary text-on-primary';
+  } else {
+    const defaultBtn = document.querySelector(`.em-cat-btn[onclick*="${cat}"]`);
+    if (defaultBtn) defaultBtn.className = 'em-cat-btn whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary text-on-primary';
+  }
+
+  const grid = document.getElementById('emoji-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const list = foodEmojis[cat] || foodEmojis.soup;
+  list.forEach(em => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'w-11 h-11 rounded-xl bg-surface-container-lowest hover:bg-primary-fixed/60 flex items-center justify-center text-2xl transition-transform active:scale-90 shadow-2xs border border-outline-variant/20';
+    btn.textContent = em;
+    btn.onclick = () => selectEmoji(em);
+    grid.appendChild(btn);
+  });
+}
+
+function initQuickEmojiBars() {
+  const row = document.getElementById('quick-emoji-row');
+  if (row) {
+    row.innerHTML = '';
+    popularQuickEmojis.forEach(em => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'w-7 h-7 rounded-full bg-surface-container-lowest hover:bg-secondary-fixed flex items-center justify-center text-base shrink-0 active:scale-90 transition-transform shadow-2xs border border-outline-variant/30';
+      b.textContent = em;
+      b.onclick = () => {
+        emojiPickerTarget = 'quick';
+        selectEmoji(em);
+      };
+      row.appendChild(b);
+    });
+  }
+
+  const editRow = document.getElementById('edit-quick-emoji-row');
+  if (editRow) {
+    editRow.innerHTML = '';
+    popularQuickEmojis.slice(0, 10).forEach(em => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'w-8 h-8 rounded-full bg-surface-container-low hover:bg-secondary-fixed flex items-center justify-center text-lg shrink-0 active:scale-90 transition-transform shadow-2xs border border-outline-variant/20';
+      b.textContent = em;
+      b.onclick = () => {
+        emojiPickerTarget = 'edit';
+        selectEmoji(em);
+      };
+      editRow.appendChild(b);
+    });
+  }
+}
+
+function quickAddWheelItem() {
+  const input = document.getElementById('quick-wheel-input');
+  let val = input.value.trim();
+  if (!val) return;
+  if (wheelItems.length >= 16) {
+    showToast('Tối đa 16 món để vòng quay hiển thị đẹp nhất nha!');
+    return;
+  }
+  // If user didn't enter an emoji, automatically append selectedQuickEmoji
+  const hasEmoji = /[\p{Extended_Pictographic}\uFE0F\u200D]/u.test(val);
+  if (!hasEmoji) {
+    val = val + ' ' + selectedQuickEmoji;
+  }
+  wheelItems.push(val);
+  addCustomDishRecord(val);
+  input.value = '';
+  renderWheel();
+  showToast(`Đã thêm "${val}" vào vòng quay! 🎉`);
+}
+
+function openWheelCustomizer() {
+  document.getElementById('wheel-customizer-modal').classList.remove('hidden');
+  renderCustomizerList();
+}
+
+function closeWheelCustomizer() {
+  document.getElementById('wheel-customizer-modal').classList.add('hidden');
+}
+
+function addDishToWheel() {
+  const input = document.getElementById('custom-dish-input');
+  let val = input.value.trim();
+  if (!val) return;
+  if (wheelItems.length >= 16) {
+    showToast('Tối đa 16 món để vòng quay dễ nhìn nha!');
+    return;
+  }
+  const hasEmoji = /[\p{Extended_Pictographic}\uFE0F\u200D]/u.test(val);
+  if (!hasEmoji) {
+    val = val + ' ' + selectedQuickEmoji;
+  }
+  wheelItems.push(val);
+  addCustomDishRecord(val);
+  input.value = '';
+  renderWheel();
+  showToast(`Đã thêm "${val}" vào vòng quay! 🎡`);
+}
+
+function removeWheelItem(idx) {
+  if (wheelItems.length <= 2) {
+    showToast('Cần ít nhất 2 món để quay nha!');
+    return;
+  }
+  const removed = wheelItems.splice(idx, 1)[0];
+  const cIdx = customDishes.indexOf(removed);
+  if (cIdx !== -1) {
+    customDishes.splice(cIdx, 1);
+    try { localStorage.setItem('an_gi_custom_dishes', JSON.stringify(customDishes)); } catch(e){}
+    updateCustomBadge();
+  }
+  renderWheel();
+  showToast(`Đã xóa bỏ "${removed}" khỏi vòng quay! 🗑️`);
+}
+
+function resetWheelDishes() {
+  wheelItems = [...defaultWheelItems];
+  if (keepCustomDishes && customDishes.length > 0) {
+    customDishes.forEach(d => {
+      if (!wheelItems.includes(d)) wheelItems.push(d);
+    });
+  }
+  renderWheel();
+  updatePillStyles('default');
+  showToast('Đã khôi phục danh sách món! ✨');
+}
+
+function updatePillStyles(activeName) {
+  document.querySelectorAll('.wfp').forEach(btn => {
+    if (btn.dataset.preset === activeName) {
+      btn.className = 'wfp whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-label-md text-label-md shadow-sm bg-primary text-on-primary transition-all active:scale-95';
+    } else {
+      btn.className = 'wfp whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-label-md text-label-md shadow-sm bg-surface-container-low text-on-surface-variant hover:text-on-surface transition-all active:scale-95';
+    }
+  });
+}
+
+function applyPreset(name) {
+  updatePillStyles(name);
+
+  if (name === 'custom') {
+    if (customDishes.length === 0) {
+      showToast('Chưa có món tự thêm nào! Bạn hãy gõ tên món vào ô phía dưới nhé.');
+      return;
+    }
+    wheelItems = customDishes.length >= 2 ? [...customDishes] : [...customDishes, 'Thêm món nữa 🍲'];
+    renderWheel();
+    showToast(`Đã chọn danh sách ${customDishes.length} món tự thêm của hai bạn! ⭐`);
+    return;
+  }
+
+  let base = wheelPresets[name] ? [...wheelPresets[name]] : [...defaultWheelItems];
+  if (keepCustomDishes && customDishes.length > 0) {
+    customDishes.forEach(d => {
+      if (!base.includes(d)) base.push(d);
+    });
+  }
+  wheelItems = base;
+  renderWheel();
+  const label = name === 'soup' ? 'Đồ nước' : (name === 'grill' ? 'Lẩu & Nướng' : (name === 'snack' ? 'Ăn vặt' : 'Tất cả món'));
+  showToast(`Đã chọn chủ đề "${label}"${keepCustomDishes && customDishes.length > 0 ? ` (đã giữ lại ${customDishes.length} món bạn tự thêm)` : ''}! 🎯`);
+}
+
+function doSpin() {
+  if (spinning) return;
+  if (wheelItems.length < 2) {
+    showToast('Vui lòng thêm ít nhất 2 món vào vòng quay!');
+    return;
+  }
+  spinning = true;
+  const wheelToast = document.getElementById('wheel-toast');
+  if (wheelToast) wheelToast.classList.add('hidden', 'opacity-0', 'translate-y-3');
+
+  const N = wheelItems.length;
+  const sliceDeg = 360 / N;
+  const chosenIndex = Math.floor(Math.random() * N);
+
+  // Target degree to land precisely on 12 o'clock pointer
+  const midDeg = (chosenIndex + 0.5) * sliceDeg;
+  const targetMod = (360 - (midDeg % 360)) % 360;
+  const extraSpins = (5 + Math.floor(Math.random() * 3)) * 360;
+  rot += extraSpins + (targetMod - (rot % 360));
+
+  const wheel = document.getElementById('food-wheel');
+  if (wheel) wheel.style.transform = `rotate(${rot}deg)`;
+  const homeWheel = document.getElementById('home-food-wheel');
+  if (homeWheel) homeWheel.style.transform = `rotate(${rot}deg)`;
+
+  const btn = document.getElementById('spin-btn');
+  const cta = document.getElementById('spin-cta');
+  const homeBtn = document.getElementById('home-spin-btn');
+  const homeCta = document.getElementById('home-spin-cta');
+
+  if (btn) btn.classList.add('opacity-80', 'pointer-events-none');
+  if (cta) cta.classList.add('opacity-80', 'pointer-events-none');
+  if (homeBtn) homeBtn.classList.add('opacity-80', 'pointer-events-none');
+  if (homeCta) homeCta.classList.add('opacity-80', 'pointer-events-none');
+
+  setTimeout(() => {
+    spinning = false;
+    if (btn) btn.classList.remove('opacity-80', 'pointer-events-none');
+    if (cta) cta.classList.remove('opacity-80', 'pointer-events-none');
+    if (homeBtn) homeBtn.classList.remove('opacity-80', 'pointer-events-none');
+    if (homeCta) homeCta.classList.remove('opacity-80', 'pointer-events-none');
+
+    lastWonDish = wheelItems[chosenIndex];
+    const resEl = document.getElementById('wheel-result');
+    if (resEl) resEl.textContent = lastWonDish;
+    if (wheelToast) {
+      wheelToast.classList.remove('hidden');
+      requestAnimationFrame(() => wheelToast.classList.remove('opacity-0', 'translate-y-3'));
+    }
+
+    // Open Win Pop-up Modal with sound and confetti!
+    openWinModal(lastWonDish);
+  }, 4700);
+}
+
+const sBtn = document.getElementById('spin-btn');
+if (sBtn) sBtn.addEventListener('click', doSpin);
+const sCta = document.getElementById('spin-cta');
+if (sCta) sCta.addEventListener('click', doSpin);
+const hBtn = document.getElementById('home-spin-btn');
+if (hBtn) hBtn.addEventListener('click', doSpin);
+const hCta = document.getElementById('home-spin-cta');
+if (hCta) hCta.addEventListener('click', doSpin);
+
+// Pop-up modal handlers & Draggable functionality
+function initDraggablePopup() {
+  const card = document.getElementById('wheel-win-card');
+  const handle = document.getElementById('popup-drag-handle');
+  if (!card) return;
+
+  let isDragging = false;
+  let startX = 0, startY = 0;
+  let currentTranslateX = 0, currentTranslateY = 0;
+  let prevTranslateX = 0, prevTranslateY = 0;
+
+  function onPointerDown(e) {
+    if (e.target.closest('button, a, input, select, textarea')) return;
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    card.style.transition = 'none';
+    if (handle) handle.style.cursor = 'grabbing';
+    card.style.cursor = 'grabbing';
+    try { card.setPointerCapture(e.pointerId); } catch(err) {}
+  }
+
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    currentTranslateX = prevTranslateX + dx;
+    currentTranslateY = prevTranslateY + dy;
+    card.style.transform = `translate3d(${currentTranslateX}px, ${currentTranslateY}px, 0)`;
+  }
+
+  function onPointerUp(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    prevTranslateX = currentTranslateX;
+    prevTranslateY = currentTranslateY;
+    card.style.transition = '';
+    if (handle) handle.style.cursor = 'grab';
+    card.style.cursor = '';
+    try { card.releasePointerCapture(e.pointerId); } catch(err) {}
+  }
+
+  card.addEventListener('pointerdown', onPointerDown);
+  card.addEventListener('pointermove', onPointerMove);
+  card.addEventListener('pointerup', onPointerUp);
+  card.addEventListener('pointercancel', onPointerUp);
+
+  window.resetPopupDrag = function() {
+    currentTranslateX = 0;
+    currentTranslateY = 0;
+    prevTranslateX = 0;
+    prevTranslateY = 0;
+    card.style.transform = 'translate3d(0px, 0px, 0px)';
+  };
+}
+
+function openWinModal(dishName) {
+  document.getElementById('popup-win-dish').textContent = dishName;
+  if (window.resetPopupDrag) window.resetPopupDrag();
+  const modal = document.getElementById('wheel-win-modal');
+  modal.classList.remove('hidden');
+  fireConfetti();
+  playCelebrationSound();
+}
+
+function closeWinModal() {
+  document.getElementById('wheel-win-modal').classList.add('hidden');
+}
+
+function closeWinModalAndSpinAgain() {
+  closeWinModal();
+  setTimeout(() => doSpin(), 300);
+}
+
+
+function goToMapForDish() {
+  closeWinModal();
+  navigate('map');
+  const searchInput = document.querySelector('#sc-map input[type="text"]');
+  if (searchInput && lastWonDish) {
+    searchInput.value = lastWonDish.replace(/[^\p{L}\p{N}\s]/gu, '').trim();
+  }
+}
+
+function addWinDishToNotebook() {
+  if (!lastWonDish) return;
+  const newFav = {
+    id: 'fav_' + Date.now(),
+    icon: '🎡',
+    title: lastWonDish,
+    address: 'Vừa quay trúng từ Vòng Quay May Mắn',
+    badge: 'Vũ trụ đã duyệt ⭐',
+    note: 'Đã quay trúng thì không được đổi ý nha! Đi ăn liền thôi!'
+  };
+  favDishes.unshift(newFav);
+  saveFavDishesToStorage();
+  renderFavList();
+  closeWinModal();
+  showToast(`Đã lưu "${lastWonDish}" vào Sổ tay nàng! 💕`);
+}
+
+function fireConfetti() {
+  const container = document.getElementById('confetti-container');
+  if (!container) return;
+  container.innerHTML = '';
+  const colors = ['#ae2f34', '#ff6b6b', '#fd9e78', '#f8ddd6', '#fbbf24', '#34d399', '#60a5fa', '#f472b6'];
+  for (let i = 0; i < 35; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const left = Math.random() * 100;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const delay = Math.random() * 0.7;
+    const size = 6 + Math.random() * 8;
+    piece.style.left = left + '%';
+    piece.style.top = '-10px';
+    piece.style.backgroundColor = color;
+    piece.style.width = size + 'px';
+    piece.style.height = size + 'px';
+    piece.style.animationDelay = delay + 's';
+    container.appendChild(piece);
+  }
+}
+
+function playCelebrationSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.12, ctx.currentTime + idx * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.1 + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + idx * 0.1);
+      osc.stop(ctx.currentTime + idx * 0.1 + 0.4);
+    });
+  } catch (e) {}
+}
+
+// Wheel filter pills
+document.querySelectorAll('.wfp').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.wfp').forEach(x=>{x.className='wfp whitespace-nowrap px-4 py-2 rounded-full font-label-md text-label-md shadow-sm bg-surface-container-low text-on-surface-variant';});
+    p.className='wfp whitespace-nowrap flex items-center gap-1.5 px-4 py-2 rounded-full font-label-md text-label-md shadow-sm bg-primary text-on-primary';
+  });
+});
+
+// Map chips
+document.querySelectorAll('.mchip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.mchip').forEach(x=>{x.classList.remove('bg-primary-container','text-on-primary');x.classList.add('bg-surface-container-lowest','text-on-surface-variant');});
+    c.classList.add('bg-primary-container','text-on-primary');c.classList.remove('bg-surface-container-lowest','text-on-surface-variant');
+  });
+});
+
+// Area cycling
+const areas=['Quận 1, TP. HCM','Bình Thạnh, TP. HCM','Cầu Giấy, Hà Nội','Hải Châu, Đà Nẵng'];let ai=0;
+document.getElementById('area-btn').addEventListener('click',()=>{ai=(ai+1)%areas.length;document.getElementById('area-lbl').textContent=areas[ai];});
+
+// ── Notebook tabs ──
+function nbTab(t){
+  const fa='flex-1 py-2 rounded-full font-label-md text-label-md transition-all text-on-primary bg-primary shadow-sm flex items-center justify-center gap-1';
+  const in_='flex-1 py-2 rounded-full font-label-md text-label-md transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1';
+  if(t==='fav'){
+    document.getElementById('tab-fav').className=fa;document.getElementById('tab-black').className=in_;
+    document.getElementById('nb-fav').classList.remove('hidden');document.getElementById('nb-black').classList.add('hidden');
+  }else{
+    document.getElementById('tab-black').className=fa;document.getElementById('tab-fav').className=in_;
+    document.getElementById('nb-black').classList.remove('hidden');document.getElementById('nb-fav').classList.add('hidden');
+  }
+}
+
+// ── Profile Management ──
+const defaultProfile = {
+  name: 'Bé Heo',
+  avatar: '🐰',
+  status: 'Hôm nay: Dễ thương nhưng đói bụng 🐰',
+  waterPercent: 70,
+  spicyLevel: 2,
+  spicyNote: 'Quá cay là quăng đũa liền!',
+  milkTeaFormula: 'Luôn 30% đường, 50% đá, thêm trân châu hoàng kim mềm dẻo.',
+  blacklistTags: ['Không ăn hành lá sống', 'Không ăn ngò gai']
+};
+
+let beProfile = { ...defaultProfile };
+try {
+  const saved = localStorage.getItem('an_gi_be_profile');
+  if (saved) beProfile = { ...defaultProfile, ...JSON.parse(saved) };
+} catch(e) { beProfile = { ...defaultProfile }; }
+
+const avatarList = ['🐰', '🐱', '🐻', '🐶', '🦊', '🐼', '🐹', '🦄', '👸', '🌸', '🍓', '🥑', '🍧', '🧋', '👑', '🐣', '🦋'];
+let selectedAvatar = beProfile.avatar || '🐰';
+let editingSpicyLevel = beProfile.spicyLevel || 2;
+
+function isImageAvatar(av) {
+  return typeof av === 'string' && (av.startsWith('data:image') || av.startsWith('http://') || av.startsWith('https://') || av.startsWith('blob:') || av.includes('.png') || av.includes('.jpg') || av.includes('.jpeg') || av.includes('.webp'));
+}
+
+function renderProfile() {
+  const avEl = document.getElementById('nb-avatar');
+  if (avEl) {
+    if (isImageAvatar(beProfile.avatar)) {
+      avEl.innerHTML = `<img src="${beProfile.avatar}" alt="Avatar" class="w-full h-full object-cover rounded-full" />`;
+    } else {
+      avEl.innerHTML = beProfile.avatar || '🐰';
+    }
+  }
+
+  const hdrAv = document.getElementById('hdr-avatar-content');
+  if (hdrAv) {
+    if (isImageAvatar(beProfile.avatar)) {
+      hdrAv.innerHTML = `<img src="${beProfile.avatar}" alt="Avatar" class="w-full h-full object-cover rounded-full" />`;
+    } else {
+      hdrAv.textContent = beProfile.avatar || '🐰';
+    }
+  }
+
+  const nameEl = document.getElementById('nb-name');
+  if (nameEl) nameEl.textContent = beProfile.name || 'Bé Heo';
+  const statusEl = document.getElementById('nb-status');
+  if (statusEl) statusEl.textContent = beProfile.status || 'Hôm nay: Dễ thương nhưng đói bụng 🐰';
+
+  const waterPercent = Math.min(100, Math.max(0, parseInt(beProfile.waterPercent) || 70));
+  const dryPercent = 100 - waterPercent;
+  const wLbl = document.getElementById('nb-water-label');
+  if (wLbl) wLbl.textContent = `${waterPercent}% Nước`;
+  const wBar = document.getElementById('nb-water-bar');
+  if (wBar) wBar.style.width = `${waterPercent}%`;
+  const dBar = document.getElementById('nb-dry-bar');
+  if (dBar) dBar.style.width = `${dryPercent}%`;
+  const wSub = document.getElementById('nb-water-sub');
+  if (wSub) wSub.textContent = `Đồ nước (${waterPercent}%)`;
+  const dSub = document.getElementById('nb-dry-sub');
+  if (dSub) dSub.textContent = `Đồ khô (${dryPercent}%)`;
+
+  const sLbl = document.getElementById('nb-spicy-label');
+  if (sLbl) sLbl.textContent = `${beProfile.spicyLevel}/5`;
+  const sFires = document.getElementById('nb-spicy-fires');
+  if (sFires) {
+    sFires.innerHTML = '';
+    for (let i = 1; i <= 5; i++) {
+      const active = i <= (beProfile.spicyLevel || 2);
+      sFires.innerHTML += `<span class="material-symbols-outlined text-[20px] ${active ? 'text-primary' : 'text-surface-container-highest'}" style="${active ? "font-variation-settings:'FILL' 1" : ''}">local_fire_department</span>`;
+    }
+  }
+  const sNote = document.getElementById('nb-spicy-note');
+  if (sNote) sNote.textContent = beProfile.spicyNote || 'Quá cay là quăng đũa liền!';
+
+  const mtText = document.getElementById('nb-milktea-text');
+  if (mtText) {
+    mtText.innerHTML = beProfile.milkTeaFormula || 'Luôn 30% đường, 50% đá, thêm trân châu hoàng kim mềm dẻo.';
+  }
+
+  const blTags = document.getElementById('nb-blacklist-tags');
+  if (blTags) {
+    blTags.innerHTML = '';
+    const tags = Array.isArray(beProfile.blacklistTags) ? beProfile.blacklistTags : ['Không ăn hành lá sống', 'Không ăn ngò gai'];
+    tags.forEach(t => {
+      blTags.innerHTML += `<span class="bg-error text-on-error px-2.5 py-0.5 rounded-full font-label-sm text-xs font-semibold">🚫 ${t}</span>`;
+    });
+  }
+}
+
+function updateAvatarPreview() {
+  const prev = document.getElementById('edit-profile-avatar-preview');
+  const infoRow = document.getElementById('custom-avatar-info');
+  if (!prev) return;
+  if (isImageAvatar(selectedAvatar)) {
+    prev.innerHTML = `<img src="${selectedAvatar}" alt="Preview" class="w-full h-full object-cover rounded-full" />`;
+    if (infoRow) {
+      infoRow.classList.remove('hidden');
+      infoRow.classList.add('flex');
+    }
+  } else {
+    prev.innerHTML = selectedAvatar || '🐰';
+    if (infoRow) {
+      infoRow.classList.add('hidden');
+      infoRow.classList.remove('flex');
+    }
+  }
+}
+
+function handleCustomAvatarUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    showToast('Vui lòng chọn tệp hình ảnh hợp lệ nhé! 🖼️');
+    return;
+  }
+
+  if (file.size > 15 * 1024 * 1024) {
+    showToast('Ảnh quá lớn (>15MB), vui lòng chọn ảnh khác nhỏ hơn nhé!');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      // Compress and resize using canvas to max 256x256 to fit in localStorage safely
+      const maxDim = 256;
+      let width = img.width;
+      let height = img.height;
+      if (width > height) {
+        if (width > maxDim) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        }
+      } else {
+        if (height > maxDim) {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      try {
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        selectedAvatar = compressedDataUrl;
+        updateAvatarPreview();
+        renderProfileAvatarOptions();
+        showToast('Đã tải ảnh lên! Đừng quên nhấn "Lưu thay đổi" nhé 📸');
+      } catch (err) {
+        console.error('Error compressing image:', err);
+        showToast('Không thể xử lý ảnh này, thử lại ảnh khác nhé!');
+      }
+    };
+    img.onerror = function() {
+      showToast('Không thể đọc file ảnh này!');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function removeCustomAvatar() {
+  selectedAvatar = '🐰';
+  updateAvatarPreview();
+  renderProfileAvatarOptions();
+  showToast('Đã quay lại avatar emoji 🐰');
+}
+
+function openProfileEditModal() {
+  document.getElementById('edit-profile-name').value = beProfile.name || 'Bé Heo';
+  document.getElementById('edit-profile-status').value = beProfile.status || '';
+  document.getElementById('edit-profile-water').value = beProfile.waterPercent || 70;
+  updateProfileWaterLabel(beProfile.waterPercent || 70);
+  document.getElementById('edit-profile-spicy-note').value = beProfile.spicyNote || '';
+  document.getElementById('edit-profile-milktea').value = beProfile.milkTeaFormula || '';
+  document.getElementById('edit-profile-blacklist').value = (beProfile.blacklistTags || []).join(', ');
+
+  selectedAvatar = beProfile.avatar || '🐰';
+  updateAvatarPreview();
+  renderProfileAvatarOptions();
+
+  editingSpicyLevel = beProfile.spicyLevel || 2;
+  renderSpicyLevelButtons();
+
+  document.getElementById('profile-edit-modal').classList.remove('hidden');
+}
+
+function closeProfileEditModal() {
+  document.getElementById('profile-edit-modal').classList.add('hidden');
+}
+
+function renderProfileAvatarOptions() {
+  const container = document.getElementById('profile-avatar-options');
+  if (!container) return;
+  container.innerHTML = '';
+  avatarList.forEach(av => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = `w-9 h-9 rounded-full flex items-center justify-center text-xl shrink-0 transition-transform active:scale-90 ${av === selectedAvatar ? 'bg-primary text-white ring-2 ring-primary ring-offset-2' : 'bg-surface-container hover:bg-secondary-fixed'}`;
+    b.textContent = av;
+    b.onclick = () => {
+      selectedAvatar = av;
+      updateAvatarPreview();
+      renderProfileAvatarOptions();
+    };
+    container.appendChild(b);
+  });
+}
+
+function updateProfileWaterLabel(val) {
+  const lbl = document.getElementById('edit-water-percent-lbl');
+  if (lbl) lbl.textContent = `${val}% Đồ nước (${100 - val}% Đồ khô)`;
+}
+
+function renderSpicyLevelButtons() {
+  const container = document.getElementById('spicy-level-btns');
+  if (!container) return;
+  container.innerHTML = '';
+  const labels = ['', '1 (Hơi the)', '2 (Vừa miệng)', '3 (Cay tê)', '4 (Cay xé)', '5 (Cấp cứu 🚒)'];
+  for (let i = 1; i <= 5; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    const active = i <= editingSpicyLevel;
+    b.className = `flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${active ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant'}`;
+    b.textContent = '🌶️ ' + i;
+    b.onclick = () => {
+      editingSpicyLevel = i;
+      document.getElementById('edit-spicy-lbl').textContent = `${i}/5 (${labels[i]})`;
+      renderSpicyLevelButtons();
+    };
+    container.appendChild(b);
+  }
+  document.getElementById('edit-spicy-lbl').textContent = `${editingSpicyLevel}/5 (${labels[editingSpicyLevel]})`;
+}
+
+function saveProfileChanges() {
+  const name = document.getElementById('edit-profile-name').value.trim() || 'Bé Heo';
+  const status = document.getElementById('edit-profile-status').value.trim() || 'Hôm nay: Dễ thương nhưng đói bụng 🐰';
+  const waterPercent = parseInt(document.getElementById('edit-profile-water').value) || 70;
+  const spicyNote = document.getElementById('edit-profile-spicy-note').value.trim() || 'Quá cay là quăng đũa liền!';
+  const milkTeaFormula = document.getElementById('edit-profile-milktea').value.trim() || 'Luôn 30% đường, 50% đá, thêm trân châu hoàng kim mềm dẻo.';
+  const blRaw = document.getElementById('edit-profile-blacklist').value.trim();
+  const blacklistTags = blRaw ? blRaw.split(',').map(s => s.trim()).filter(Boolean) : ['Không ăn hành lá sống', 'Không ăn ngò gai'];
+
+  beProfile = {
+    name,
+    avatar: selectedAvatar,
+    status,
+    waterPercent,
+    spicyLevel: editingSpicyLevel,
+    spicyNote,
+    milkTeaFormula,
+    blacklistTags
+  };
+
+  try {
+    localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile));
+  } catch(e) {
+    console.error('Storage error:', e);
+    showToast('Lỗi lưu trữ! Dung lượng bộ nhớ trình duyệt có thể đã đầy.');
+    return;
+  }
+
+  renderProfile();
+  closeProfileEditModal();
+  showToast('Đã lưu thông tin của bé yêu thành công! 🥰');
+}
+
+// ── Favorites Management (Quán Ruột Nàng Mê) ──
+const defaultFavDishes = [
+  {
+    id: 'f1',
+    icon: '🍜',
+    title: 'Quán bún chả cô Nga',
+    badge: 'Điểm hài lòng: 10/10',
+    address: '42 Hàng Mành, Hoàn Kiếm',
+    note: 'Gọi thêm chả viên nướng, nước chấm xin thêm ớt băm riêng'
+  },
+  {
+    id: 'f2',
+    icon: '🧋',
+    title: 'Trà sữa Maycha',
+    badge: 'Uống mỗi khi dỗi',
+    address: '115 Nguyễn Gia Trí, Bình Thạnh',
+    note: 'Trân châu đen dai mềm, không dùng trân châu trắng vì mỏi răng'
+  },
+  {
+    id: 'f3',
+    icon: '🍲',
+    title: 'Bánh canh cua Út Lệ',
+    badge: 'Quán kỷ niệm hẹn hò',
+    address: '210 Tô Hiến Thành, Q.10',
+    note: 'Luôn lấy thêm quẩy giòn và vắt đúng 1 miếng chanh mỏng'
+  }
+];
+
+let favDishes = [];
+try {
+  const saved = localStorage.getItem('an_gi_fav_dishes');
+  favDishes = saved ? JSON.parse(saved) : [...defaultFavDishes];
+} catch(e) { favDishes = [...defaultFavDishes]; }
+
+function saveFavDishesToStorage() {
+  try {
+    localStorage.setItem('an_gi_fav_dishes', JSON.stringify(favDishes));
+  } catch(e) {}
+}
+
+const favFoodIcons = ['🍜', '🍲', '🧋', '🍛', '🍗', '🥩', '🥟', '🍣', '🍕', '🦀', '🍧', '🍦', '☕', '🍔', '🥖', '🍢'];
+let currentEditingFavId = null;
+let currentSelectedFavIcon = '🍜';
+
+function renderFavList() {
+  const list = document.getElementById('fav-list');
+  const countEl = document.getElementById('fav-count');
+  if (countEl) countEl.textContent = `${favDishes.length} quán ruột`;
+  if (!list) return;
+
+  if (favDishes.length === 0) {
+    list.innerHTML = `
+      <div class="p-6 rounded-2xl bg-surface-container-lowest text-center space-y-2 border border-dashed border-outline-variant/50">
+        <span class="text-4xl block">🍽️</span>
+        <span class="font-headline-sm text-on-surface font-bold block text-sm">Chưa có quán ruột nào</span>
+        <p class="font-body-sm text-xs text-on-surface-variant">Bấm "Thêm quán" để lưu lại những quán ăn bé mê nhất nhé!</p>
+        <button onclick="openAddFavModal()" class="px-4 py-1.5 rounded-full bg-primary text-on-primary text-xs font-bold inline-flex items-center gap-1 shadow-sm mt-1">
+          <span class="material-symbols-outlined text-[16px]">add</span> Thêm quán đầu tiên
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = '';
+  favDishes.forEach(dish => {
+    const card = document.createElement('div');
+    card.className = 'bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm overflow-hidden border border-outline-variant/15 hover:border-primary/30 transition-all';
+    card.innerHTML = `
+      <div class="flex gap-space-md items-start">
+        <div class="w-16 h-16 rounded-2xl bg-secondary-fixed flex items-center justify-center text-3xl shrink-0 shadow-2xs">
+          ${dish.icon || '🍜'}
+        </div>
+        <div class="flex flex-col justify-between flex-1 min-w-0">
+          <div class="flex items-start justify-between gap-1">
+            <div class="min-w-0 flex-1">
+              <span class="font-headline-sm text-headline-sm text-on-surface font-bold block truncate">${dish.title}</span>
+              ${dish.address ? `<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5 truncate text-xs"><span class="material-symbols-outlined text-[14px] text-primary">location_on</span> ${dish.address}</span>` : ''}
+            </div>
+            <div class="flex items-center gap-1 shrink-0 ml-1">
+              <button onclick="openEditFavModal('${dish.id}')" class="w-7 h-7 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary flex items-center justify-center text-outline transition-colors" title="Chỉnh sửa quán này">
+                <span class="material-symbols-outlined text-[15px]">edit</span>
+              </button>
+              <button onclick="deleteFavDish('${dish.id}')" class="w-7 h-7 rounded-full bg-surface-container hover:bg-error-container hover:text-error flex items-center justify-center text-outline transition-colors" title="Xóa khỏi quán ruột">
+                <span class="material-symbols-outlined text-[15px]">delete</span>
+              </button>
+            </div>
+          </div>
+          ${dish.badge ? `<span class="font-label-sm text-[11px] bg-primary-fixed text-on-primary-fixed px-2 py-0.5 rounded-full inline-block self-start font-semibold mt-1">${dish.badge}</span>` : ''}
+        </div>
+      </div>
+      ${dish.note ? `
+      <div class="bg-surface-container-low rounded-xl p-2.5 px-3 flex items-start gap-2 border border-outline-variant/10">
+        <span class="material-symbols-outlined text-primary text-[17px] mt-0.5 shrink-0">lightbulb</span>
+        <p class="font-body-sm text-xs text-on-surface italic"><strong class="font-bold text-primary not-italic">Lưu ý của Bé:</strong> "${dish.note}"</p>
+      </div>` : ''}
+    `;
+    list.appendChild(card);
+  });
+}
+
+function renderFavIconOptions() {
+  const container = document.getElementById('fav-emoji-options');
+  if (!container) return;
+  container.innerHTML = '';
+  favFoodIcons.forEach(ic => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = `w-9 h-9 rounded-xl flex items-center justify-center text-xl shrink-0 transition-all ${ic === currentSelectedFavIcon ? 'bg-primary text-white shadow-sm ring-2 ring-primary ring-offset-1' : 'bg-surface-container-low hover:bg-primary-fixed'}`;
+    b.textContent = ic;
+    b.onclick = () => {
+      currentSelectedFavIcon = ic;
+      document.getElementById('fav-modal-icon-badge').textContent = ic;
+      renderFavIconOptions();
+    };
+    container.appendChild(b);
+  });
+}
+
+function openAddFavModal() {
+  currentEditingFavId = null;
+  currentSelectedFavIcon = '🍜';
+  document.getElementById('fav-modal-title').textContent = 'Thêm Quán Ruột Của Nàng';
+  document.getElementById('fav-modal-submit-btn').textContent = 'Thêm vào Quán Ruột ❤️';
+  document.getElementById('fav-modal-icon-badge').textContent = currentSelectedFavIcon;
+  document.getElementById('fav-input-title').value = '';
+  document.getElementById('fav-input-address').value = '';
+  document.getElementById('fav-input-badge').value = 'Bé vừa chấm điểm 10/10 ✨';
+  document.getElementById('fav-input-note').value = '';
+  renderFavIconOptions();
+  document.getElementById('fav-dish-modal').classList.remove('hidden');
+  document.getElementById('fav-input-title').focus();
+}
+
+function openEditFavModal(id) {
+  const item = favDishes.find(d => d.id === id);
+  if (!item) return;
+  currentEditingFavId = id;
+  currentSelectedFavIcon = item.icon || '🍜';
+  document.getElementById('fav-modal-title').textContent = 'Chỉnh Sửa Quán Ruột';
+  document.getElementById('fav-modal-submit-btn').textContent = 'Cập nhật quán ❤️';
+  document.getElementById('fav-modal-icon-badge').textContent = currentSelectedFavIcon;
+  document.getElementById('fav-input-title').value = item.title || '';
+  document.getElementById('fav-input-address').value = item.address || '';
+  document.getElementById('fav-input-badge').value = item.badge || '';
+  document.getElementById('fav-input-note').value = item.note || '';
+  renderFavIconOptions();
+  document.getElementById('fav-dish-modal').classList.remove('hidden');
+  document.getElementById('fav-input-title').focus();
+}
+
+function closeFavModal() {
+  document.getElementById('fav-dish-modal').classList.add('hidden');
+}
+
+function saveFavDishItem() {
+  const title = document.getElementById('fav-input-title').value.trim();
+  if (!title) {
+    showToast('Vui lòng nhập tên quán hoặc món ăn nhé!');
+    return;
+  }
+  const address = document.getElementById('fav-input-address').value.trim();
+  const badge = document.getElementById('fav-input-badge').value.trim();
+  const note = document.getElementById('fav-input-note').value.trim();
+
+  if (currentEditingFavId) {
+    const idx = favDishes.findIndex(d => d.id === currentEditingFavId);
+    if (idx !== -1) {
+      favDishes[idx] = {
+        ...favDishes[idx],
+        icon: currentSelectedFavIcon,
+        title,
+        address,
+        badge,
+        note
+      };
+      showToast(`Đã cập nhật quán "${title}"! ✨`);
+    }
+  } else {
+    const newDish = {
+      id: 'fav_' + Date.now(),
+      icon: currentSelectedFavIcon,
+      title,
+      address,
+      badge: badge || 'Quán Ruột Mới ❤️',
+      note
+    };
+    favDishes.unshift(newDish);
+    showToast(`Đã thêm "${title}" vào Quán Ruột nàng! 🥰`);
+  }
+
+  saveFavDishesToStorage();
+  renderFavList();
+  closeFavModal();
+  nbTab('fav');
+}
+
+function deleteFavDish(id) {
+  const idx = favDishes.findIndex(d => d.id === id);
+  if (idx !== -1) {
+    const removed = favDishes.splice(idx, 1)[0];
+    saveFavDishesToStorage();
+    renderFavList();
+    showToast(`Đã xóa "${removed.title}" khỏi danh sách! 🗑️`);
+  }
+}
+
+// ── Blacklist Management ──
+const defaultBlackDishes = [
+  { id: 'b1', title: 'Bún đậu không có mắm tôm', note: '"Mất hết cả linh hồn món ăn! Thà nhịn còn hơn."', consequence: 'Hậu quả: Mặt phụng phịu cả buổi chiều' },
+  { id: 'b2', title: 'Gỏi cuốn chấm tương ngọt', note: 'Bé chỉ chấm nước mắm tỏi ớt chua ngọt chuẩn vị nhà làm.', consequence: 'Hậu quả: Đẩy đĩa sang cho bạn trai ăn hết' },
+  { id: 'b3', title: 'Cháo lòng buổi tối', note: 'Dễ đầy bụng, mùi nội tạng ban đêm làm khó ngủ.', consequence: 'Hậu quả: "Sao anh chẳng tinh tế gì cả..."' }
+];
+
+let blackDishes = [];
+try {
+  const saved = localStorage.getItem('an_gi_black_dishes');
+  blackDishes = saved ? JSON.parse(saved) : [...defaultBlackDishes];
+} catch(e) { blackDishes = [...defaultBlackDishes]; }
+
+function saveBlackDishesToStorage() {
+  try {
+    localStorage.setItem('an_gi_black_dishes', JSON.stringify(blackDishes));
+  } catch(e) {}
+}
+
+function renderBlackList() {
+  const list = document.getElementById('black-list');
+  const countEl = document.getElementById('black-count');
+  if (countEl) countEl.textContent = `${blackDishes.length} món`;
+  if (!list) return;
+
+  if (blackDishes.length === 0) {
+    list.innerHTML = `
+      <div class="p-6 rounded-2xl bg-surface-container-lowest text-center space-y-2 border border-dashed border-outline-variant/50">
+        <span class="text-4xl block">✨</span>
+        <span class="font-headline-sm text-on-surface font-bold block text-sm">Chưa có món nào trong Blacklist</span>
+        <p class="font-body-sm text-xs text-on-surface-variant">Bé chưa cấm vận món nào cả, thật dễ nuôi! 🥰</p>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = '';
+  blackDishes.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-xs border border-outline-variant/15';
+    card.innerHTML = `
+      <div class="flex items-start gap-space-md">
+        <div class="w-12 h-12 rounded-full bg-error-container text-error flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">block</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start justify-between">
+            <span class="font-headline-sm text-headline-sm text-on-surface font-bold block truncate">${item.title}</span>
+            <button onclick="deleteBlackDish('${item.id}')" class="w-7 h-7 rounded-full bg-surface-container hover:bg-error-container hover:text-error flex items-center justify-center text-outline transition-colors shrink-0 ml-1" title="Xóa bỏ cấm vận">
+              <span class="material-symbols-outlined text-[15px]">delete</span>
+            </button>
+          </div>
+          <p class="font-body-md text-xs text-on-surface-variant pt-1">${item.note || 'Không thích ăn món này'}</p>
+        </div>
+      </div>
+      ${item.consequence ? `<span class="font-label-sm text-[11px] text-error font-semibold bg-error-container/50 px-2 py-0.5 rounded-full inline-block mt-1">${item.consequence}</span>` : ''}
+    `;
+    list.appendChild(card);
+  });
+}
+
+function openAddBlackModal() {
+  const title = prompt('Nhập tên món ăn cần đưa vào Blacklist (Cấm vận):');
+  if (!title || !title.trim()) return;
+  const note = prompt('Lý do bé không thích / Lưu ý:') || 'Không thích ăn món này';
+  const newB = {
+    id: 'b_' + Date.now(),
+    title: title.trim(),
+    note: note.trim(),
+    consequence: 'Đã đưa vào cấm vận 🚫'
+  };
+  blackDishes.unshift(newB);
+  saveBlackDishesToStorage();
+  renderBlackList();
+  nbTab('black');
+  showToast(`Đã đưa "${title}" vào Blacklist! 💣`);
+}
+
+function deleteBlackDish(id) {
+  const idx = blackDishes.findIndex(b => b.id === id);
+  if (idx !== -1) {
+    const removed = blackDishes.splice(idx, 1)[0];
+    saveBlackDishesToStorage();
+    renderBlackList();
+    showToast(`Đã gỡ "${removed.title}" khỏi Blacklist! ✨`);
+  }
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-txt').textContent=msg;
+  t.classList.remove('hidden');
+  setTimeout(()=>t.classList.add('hidden'),2800);
+}
+
+// Floating Draggable Mini Wheel Widget
+function initFloatingWheelWidget() {
+  const widget = document.getElementById('floating-wheel-widget');
+  if (!widget) return;
+
+  let isDragging = false;
+  let startX = 0, startY = 0;
+  let initialLeft = 0, initialTop = 0;
+  let hasMoved = false;
+
+  function ensureInitialPos() {
+    if (!widget.style.left || widget.style.left === 'auto') {
+      const rect = widget.getBoundingClientRect();
+      widget.style.left = `${rect.left}px`;
+      widget.style.top = `${rect.top}px`;
+      widget.style.right = 'auto';
+      widget.style.bottom = 'auto';
+    }
+  }
+
+  widget.addEventListener('pointerdown', (e) => {
+    isDragging = true;
+    hasMoved = false;
+    startX = e.clientX;
+    startY = e.clientY;
+
+    ensureInitialPos();
+    initialLeft = parseFloat(widget.style.left) || widget.offsetLeft;
+    initialTop = parseFloat(widget.style.top) || widget.offsetTop;
+
+    widget.classList.add('cursor-grabbing');
+    widget.classList.remove('cursor-grab');
+    try { widget.setPointerCapture(e.pointerId); } catch(err){}
+  });
+
+  widget.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+      hasMoved = true;
+    }
+
+    if (hasMoved) {
+      let newLeft = initialLeft + dx;
+      let newTop = initialTop + dy;
+
+      const w = widget.offsetWidth || 70;
+      const h = widget.offsetHeight || 95;
+      const maxLeft = window.innerWidth - w - 8;
+      const maxTop = window.innerHeight - h - 12;
+      newLeft = Math.max(8, Math.min(newLeft, maxLeft));
+      newTop = Math.max(50, Math.min(newTop, maxTop));
+
+      widget.style.left = `${newLeft}px`;
+      widget.style.top = `${newTop}px`;
+    }
+  });
+
+  function endDrag(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    widget.classList.remove('cursor-grabbing');
+    widget.classList.add('cursor-grab');
+    try { widget.releasePointerCapture(e.pointerId); } catch(err){}
+
+    // Only navigate if user tapped/clicked without dragging
+    if (!hasMoved) {
+      navigate('wheel');
+    }
+  }
+
+  widget.addEventListener('pointerup', endDrag);
+  widget.addEventListener('pointercancel', endDrag);
+}
+
+// Init
+navigate('home');
+renderWheel();
+updateCustomBadge();
+initQuickEmojiBars();
+initDraggablePopup();
+initFloatingWheelWidget();
+renderProfile();
+renderFavList();
+renderBlackList();
+</script>
+</body>
+</html>
