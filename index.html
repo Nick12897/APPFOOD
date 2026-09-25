@@ -401,11 +401,15 @@
       <span class="text-[11px] text-primary font-bold bg-primary-fixed/60 px-2 py-0.5 rounded-full">✨ Không lo mất món</span>
     </div>
 
-    <!-- Quick Add Input with Emoji Selector -->
+    <!-- Quick Add Input with Photo & Emoji Selector -->
     <div class="w-full bg-surface-container-lowest p-2 rounded-full shadow-sm flex items-center gap-2 mb-1.5 border border-outline-variant/30">
-      <button type="button" id="quick-icon-btn" onclick="openEmojiPicker('quick')" class="w-9 h-9 rounded-full bg-secondary-fixed/50 hover:bg-secondary-fixed flex items-center justify-center text-xl shrink-0 transition-transform active:scale-90 border border-outline-variant/30 shadow-xs" title="Bấm để chọn icon khác cho món">
-        <span id="quick-selected-emoji">🍲</span>
+      <button type="button" id="quick-icon-btn" onclick="openEmojiPicker('quick')" class="w-9 h-9 rounded-full bg-secondary-fixed/50 hover:bg-secondary-fixed flex items-center justify-center text-xl shrink-0 transition-transform active:scale-90 border border-outline-variant/30 shadow-xs overflow-hidden" title="Bấm để chọn icon hoặc ảnh cho món">
+        <span id="quick-selected-emoji" class="flex items-center justify-center w-full h-full">🍲</span>
       </button>
+      <label for="quick-wheel-photo-input" class="w-8 h-8 rounded-full bg-primary-fixed/60 hover:bg-primary-fixed flex items-center justify-center text-primary cursor-pointer active:scale-90 transition-all border border-primary/30 shadow-2xs shrink-0" title="Tải ảnh chụp thực tế cho món này">
+        <span class="material-symbols-outlined text-[17px]">add_a_photo</span>
+      </label>
+      <input type="file" id="quick-wheel-photo-input" accept="image/*" class="hidden" onchange="handleQuickWheelPhotoUpload(event)" />
       <input id="quick-wheel-input" type="text" placeholder="Thêm món bé thích (VD: Nước ép, Hải sản...)" class="flex-1 bg-transparent border-none outline-none font-body-sm text-body-sm text-on-surface placeholder:text-outline" onkeydown="if(event.key==='Enter') quickAddWheelItem()" />
       <button onclick="quickAddWheelItem()" class="bg-primary text-on-primary px-3.5 py-1.5 rounded-full font-label-sm text-label-sm font-bold shadow-sm active:scale-95 transition-transform flex items-center gap-1 shrink-0">
         <span>+ Thêm</span>
@@ -991,7 +995,7 @@
   <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[85vh] overflow-y-auto flex flex-col shadow-2xl space-y-4">
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
       <div class="flex items-center gap-2">
-        <div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-primary text-xl" id="fav-modal-icon-badge">
+        <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary text-xl overflow-hidden shrink-0 shadow-2xs border border-primary/20" id="fav-modal-icon-badge">
           🍜
         </div>
         <div>
@@ -1004,11 +1008,37 @@
       </button>
     </div>
 
-    <!-- Chọn Icon món -->
-    <div class="space-y-1.5">
-      <label class="font-label-md text-label-md text-on-surface font-bold block">Biểu tượng món ăn</label>
-      <div class="flex gap-1.5 overflow-x-auto py-1" id="fav-emoji-options">
-        <!-- Quick food emoji picks -->
+    <!-- Chọn Icon / Hình ảnh món -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <label class="font-label-md text-label-md text-on-surface font-bold block">Hình ảnh / Biểu tượng món</label>
+        <label for="fav-image-file-input" class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed hover:bg-primary hover:text-white text-primary text-xs font-bold transition-all shadow-2xs active:scale-95">
+          <span class="material-symbols-outlined text-[16px]">add_photo_alternate</span>
+          <span>Tải ảnh từ máy 📷</span>
+        </label>
+        <input type="file" id="fav-image-file-input" accept="image/*" class="hidden" onchange="handleFavImageUpload(event)" />
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <div id="fav-preview-box" class="w-14 h-14 rounded-2xl bg-secondary-fixed flex items-center justify-center shadow-xs shrink-0 border-2 border-primary/30 overflow-hidden text-2xl relative">
+          🍜
+        </div>
+        <div class="flex gap-1.5 overflow-x-auto py-1 flex-1" id="fav-emoji-options">
+          <!-- Quick food emoji picks -->
+        </div>
+        <button type="button" onclick="openEmojiPicker('fav')" class="px-2.5 py-1.5 rounded-xl bg-surface-container hover:bg-secondary-fixed text-xs font-bold text-primary shrink-0 transition-colors flex items-center gap-1 border border-primary/20 shadow-2xs" title="Mở kho icon đầy đủ">
+          <span class="material-symbols-outlined text-[16px]">add_reaction</span>
+          <span>Kho icon</span>
+        </button>
+      </div>
+
+      <div id="fav-custom-img-info" class="hidden items-center justify-between px-3 py-1.5 rounded-xl bg-secondary-fixed/40 text-xs border border-secondary-fixed">
+        <span class="text-on-secondary-fixed-variant flex items-center gap-1.5 font-semibold">
+          <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span> Đang dùng ảnh chụp thật
+        </span>
+        <button type="button" onclick="revertFavToEmoji()" class="text-error font-bold hover:underline flex items-center gap-0.5">
+          <span class="material-symbols-outlined text-[14px]">delete</span> Dùng lại emoji
+        </button>
       </div>
     </div>
 
@@ -1066,7 +1096,10 @@
         </span>
       </div>
 
-      <div class="text-5xl animate-bounce pt-0.5">🎉</div>
+      <!-- Winning visual (Emoji or Real photo) -->
+      <div id="popup-win-visual-container" class="flex justify-center pt-0.5">
+        <div id="popup-win-visual" class="text-5xl animate-bounce">🎉</div>
+      </div>
       
       <div class="inline-flex items-center gap-1.5 bg-primary-fixed text-on-primary-fixed px-3.5 py-1 rounded-full font-label-sm text-label-sm font-bold shadow-xs">
         <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">stars</span>
@@ -1220,6 +1253,24 @@
       <button onclick="closeEmojiPicker()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface">
         <span class="material-symbols-outlined text-[18px]">close</span>
       </button>
+    </div>
+
+    <!-- Tải ảnh món thực tế từ máy -->
+    <div class="p-2.5 rounded-xl bg-gradient-to-r from-primary-fixed/60 via-secondary-fixed/50 to-primary-fixed/40 border border-primary/20 flex items-center justify-between gap-2 shadow-2xs">
+      <div class="flex items-center gap-2 min-w-0">
+        <div class="w-8 h-8 rounded-full bg-white text-primary flex items-center justify-center shadow-xs shrink-0">
+          <span class="material-symbols-outlined text-[18px]">add_a_photo</span>
+        </div>
+        <div class="min-w-0">
+          <span class="font-label-sm text-xs font-bold text-on-surface block leading-tight truncate">Tải ảnh chụp món thực tế</span>
+          <span class="text-[10px] text-on-surface-variant block truncate">Dùng ảnh chụp thật thay cho icon</span>
+        </div>
+      </div>
+      <label for="picker-custom-photo-upload" class="cursor-pointer px-3 py-1.5 rounded-full bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-xs active:scale-95 transition-all shrink-0 flex items-center gap-1">
+        <span class="material-symbols-outlined text-[14px]">upload</span>
+        <span>Tải ảnh 📷</span>
+      </label>
+      <input type="file" id="picker-custom-photo-upload" accept="image/*" class="hidden" onchange="handlePickerPhotoUpload(event)" />
     </div>
 
     <!-- Category tabs for emoji -->
@@ -1391,6 +1442,18 @@ try {
   customDishes = JSON.parse(localStorage.getItem('an_gi_custom_dishes') || '[]');
 } catch(e) { customDishes = []; }
 
+let customDishImages = {};
+try {
+  const savedImages = localStorage.getItem('an_gi_custom_dish_images');
+  if (savedImages) customDishImages = JSON.parse(savedImages);
+} catch(e) { customDishImages = {}; }
+
+function saveCustomDishImages() {
+  try {
+    localStorage.setItem('an_gi_custom_dish_images', JSON.stringify(customDishImages));
+  } catch(e) {}
+}
+
 let keepCustomDishes = true;
 let wheelItems = [...defaultWheelItems];
 if (customDishes.length > 0) {
@@ -1487,8 +1550,11 @@ function renderInlineChips() {
   container.innerHTML = '';
   wheelItems.forEach((item, idx) => {
     const chip = document.createElement('div');
-    chip.className = 'inline-flex items-center gap-1.5 pl-3 pr-1.5 py-1 rounded-full text-xs font-semibold bg-surface-container-high text-on-surface border border-outline-variant/30 hover:border-primary/50 transition-all shadow-xs';
+    chip.className = 'inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-full text-xs font-semibold bg-surface-container-high text-on-surface border border-outline-variant/30 hover:border-primary/50 transition-all shadow-xs';
+    const dishImg = customDishImages[item];
+    const imgHtml = dishImg ? `<img src="${dishImg}" alt="${item}" class="w-5 h-5 rounded-full object-cover shrink-0 border border-primary/40 shadow-2xs" />` : '';
     chip.innerHTML = `
+      ${imgHtml}
       <span class="truncate max-w-[140px] sm:max-w-none cursor-pointer" onclick="openEditDishModal(${idx})" title="Bấm để sửa tên món">${item}</span>
       <button onclick="openEditDishModal(${idx})" class="w-5 h-5 rounded-full hover:bg-primary-fixed hover:text-primary flex items-center justify-center text-outline transition-colors" title="Sửa món này">
         <span class="material-symbols-outlined text-[13px]">edit</span>
@@ -1508,9 +1574,13 @@ function renderCustomizerList() {
   wheelItems.forEach((item, idx) => {
     const row = document.createElement('div');
     row.className = 'flex items-center justify-between p-2.5 rounded-xl bg-surface-container-low shadow-2xs border border-outline-variant/20';
+    const dishImg = customDishImages[item];
+    const visual = dishImg 
+      ? `<img src="${dishImg}" alt="${item}" class="w-7 h-7 rounded-lg object-cover shrink-0 border border-primary/30 shadow-2xs" />`
+      : `<span class="w-6 h-6 rounded-full bg-primary-fixed text-primary text-[11px] font-bold flex items-center justify-center shrink-0">${idx + 1}</span>`;
     row.innerHTML = `
       <div class="flex items-center gap-2 min-w-0 flex-1 mr-2">
-        <span class="w-6 h-6 rounded-full bg-primary-fixed text-primary text-[11px] font-bold flex items-center justify-center shrink-0">${idx + 1}</span>
+        ${visual}
         <span class="font-body-md text-on-surface font-semibold truncate text-[13px] flex-1">${item}</span>
       </div>
       <div class="flex items-center gap-1 shrink-0">
@@ -1616,13 +1686,126 @@ const foodEmojis = {
 
 const popularQuickEmojis = ['🍲', '🍜', '🧋', '🥤', '🦀', '🍗', '🥩', '🍕', '🥟', '🍣', '🐚', '🍹', '🍧', '🍓', '🥑', '🥗', '🍔', '🍦'];
 let selectedQuickEmoji = '🍲';
-let emojiPickerTarget = 'quick'; // 'quick' or 'edit'
+let emojiPickerTarget = 'quick'; // 'quick', 'edit', 'fav'
+
+function updateQuickIconBadge() {
+  const badge = document.getElementById('quick-selected-emoji');
+  if (!badge) return;
+  if (isImageAvatar(selectedQuickEmoji)) {
+    badge.innerHTML = `<img src="${selectedQuickEmoji}" alt="Photo" class="w-full h-full object-cover rounded-full" />`;
+  } else {
+    badge.textContent = selectedQuickEmoji || '🍲';
+  }
+}
+
+function handleQuickWheelPhotoUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    showToast('Vui lòng chọn file hình ảnh hợp lệ nhé! 🖼️');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const maxDim = 256;
+      let width = img.width, height = img.height;
+      if (width > height) {
+        if (width > maxDim) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        }
+      } else {
+        if (height > maxDim) {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      selectedQuickEmoji = canvas.toDataURL('image/jpeg', 0.85);
+      updateQuickIconBadge();
+      showToast('Đã nạp ảnh món thực tế! Nhập tên món rồi bấm "+ Thêm" nha 📸');
+      const input = document.getElementById('quick-wheel-input');
+      if (input) input.focus();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function handlePickerPhotoUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    showToast('Vui lòng chọn file hình ảnh hợp lệ nhé! 🖼️');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const maxDim = 256;
+      let width = img.width, height = img.height;
+      if (width > height) {
+        if (width > maxDim) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        }
+      } else {
+        if (height > maxDim) {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      const compressed = canvas.toDataURL('image/jpeg', 0.85);
+
+      if (emojiPickerTarget === 'fav') {
+        currentSelectedFavIcon = compressed;
+        updateFavModalIconPreview();
+        renderFavIconOptions();
+        closeEmojiPicker();
+        showToast('Đã chọn ảnh chụp thực tế cho quán ruột! 📸');
+      } else if (emojiPickerTarget === 'quick') {
+        selectedQuickEmoji = compressed;
+        updateQuickIconBadge();
+        closeEmojiPicker();
+        showToast('Đã chọn ảnh món ăn! Hãy nhập tên món và bấm "+ Thêm" nhé 📸');
+        const input = document.getElementById('quick-wheel-input');
+        if (input) input.focus();
+      } else if (emojiPickerTarget === 'edit') {
+        if (editingDishIdx >= 0 && editingDishIdx < wheelItems.length) {
+          const dName = wheelItems[editingDishIdx];
+          customDishImages[dName] = compressed;
+          saveCustomDishImages();
+          renderWheel();
+        }
+        closeEmojiPicker();
+        showToast('Đã cập nhật ảnh thực tế cho món! 📸');
+      } else {
+        closeEmojiPicker();
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
 
 function selectEmoji(emoji) {
   if (emojiPickerTarget === 'quick') {
     selectedQuickEmoji = emoji;
-    const badge = document.getElementById('quick-selected-emoji');
-    if (badge) badge.textContent = emoji;
+    updateQuickIconBadge();
 
     const input = document.getElementById('quick-wheel-input');
     if (input) {
@@ -1641,6 +1824,10 @@ function selectEmoji(emoji) {
       input.value = (text ? text + ' ' : '') + emoji;
       input.focus();
     }
+  } else if (emojiPickerTarget === 'fav') {
+    currentSelectedFavIcon = emoji;
+    updateFavModalIconPreview();
+    renderFavIconOptions();
   }
   closeEmojiPicker();
 }
@@ -1717,19 +1904,30 @@ function initQuickEmojiBars() {
 function quickAddWheelItem() {
   const input = document.getElementById('quick-wheel-input');
   let val = input.value.trim();
-  if (!val) return;
+  if (!val) {
+    showToast('Vui lòng nhập tên món ăn nhé!');
+    return;
+  }
   if (wheelItems.length >= 16) {
     showToast('Tối đa 16 món để vòng quay hiển thị đẹp nhất nha!');
     return;
   }
-  // If user didn't enter an emoji, automatically append selectedQuickEmoji
-  const hasEmoji = /[\p{Extended_Pictographic}\uFE0F\u200D]/u.test(val);
-  if (!hasEmoji) {
-    val = val + ' ' + selectedQuickEmoji;
+
+  if (isImageAvatar(selectedQuickEmoji)) {
+    customDishImages[val] = selectedQuickEmoji;
+    saveCustomDishImages();
+  } else {
+    const hasEmoji = /[\p{Extended_Pictographic}\uFE0F\u200D]/u.test(val);
+    if (!hasEmoji) {
+      val = val + ' ' + selectedQuickEmoji;
+    }
   }
+
   wheelItems.push(val);
   addCustomDishRecord(val);
   input.value = '';
+  selectedQuickEmoji = '🍲';
+  updateQuickIconBadge();
   renderWheel();
   showToast(`Đã thêm "${val}" vào vòng quay! 🎉`);
 }
@@ -1948,6 +2146,15 @@ function initDraggablePopup() {
 
 function openWinModal(dishName) {
   document.getElementById('popup-win-dish').textContent = dishName;
+  const visualEl = document.getElementById('popup-win-visual');
+  if (visualEl) {
+    const customImg = customDishImages[dishName];
+    if (customImg) {
+      visualEl.innerHTML = `<div class="w-20 h-20 rounded-2xl mx-auto shadow-md overflow-hidden border-2 border-primary/30"><img src="${customImg}" alt="${dishName}" class="w-full h-full object-cover" /></div>`;
+    } else {
+      visualEl.innerHTML = `<div class="text-5xl animate-bounce">🎉</div>`;
+    }
+  }
   if (window.resetPopupDrag) window.resetPopupDrag();
   const modal = document.getElementById('wheel-win-modal');
   modal.classList.remove('hidden');
@@ -1964,7 +2171,6 @@ function closeWinModalAndSpinAgain() {
   setTimeout(() => doSpin(), 300);
 }
 
-
 function goToMapForDish() {
   closeWinModal();
   navigate('map');
@@ -1976,9 +2182,10 @@ function goToMapForDish() {
 
 function addWinDishToNotebook() {
   if (!lastWonDish) return;
+  const customImg = customDishImages[lastWonDish];
   const newFav = {
     id: 'fav_' + Date.now(),
-    icon: '🎡',
+    icon: customImg || '🎡',
     title: lastWonDish,
     address: 'Vừa quay trúng từ Vòng Quay May Mắn',
     badge: 'Vũ trụ đã duyệt ⭐',
@@ -2410,10 +2617,14 @@ function renderFavList() {
   favDishes.forEach(dish => {
     const card = document.createElement('div');
     card.className = 'bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm overflow-hidden border border-outline-variant/15 hover:border-primary/30 transition-all';
+    const isImg = isImageAvatar(dish.icon);
+    const iconContent = isImg 
+      ? `<img src="${dish.icon}" alt="${dish.title}" class="w-full h-full object-cover" />` 
+      : (dish.icon || '🍜');
     card.innerHTML = `
       <div class="flex gap-space-md items-start">
-        <div class="w-16 h-16 rounded-2xl bg-secondary-fixed flex items-center justify-center text-3xl shrink-0 shadow-2xs">
-          ${dish.icon || '🍜'}
+        <div class="w-16 h-16 rounded-2xl bg-secondary-fixed flex items-center justify-center text-3xl shrink-0 shadow-2xs overflow-hidden border border-outline-variant/20">
+          ${iconContent}
         </div>
         <div class="flex flex-col justify-between flex-1 min-w-0">
           <div class="flex items-start justify-between gap-1">
@@ -2443,6 +2654,86 @@ function renderFavList() {
   });
 }
 
+function updateFavModalIconPreview() {
+  const badge = document.getElementById('fav-modal-icon-badge');
+  const preview = document.getElementById('fav-preview-box');
+  const infoRow = document.getElementById('fav-custom-img-info');
+  const isImg = isImageAvatar(currentSelectedFavIcon);
+
+  if (badge) {
+    if (isImg) {
+      badge.innerHTML = `<img src="${currentSelectedFavIcon}" alt="Icon" class="w-full h-full object-cover rounded-full" />`;
+    } else {
+      badge.textContent = currentSelectedFavIcon || '🍜';
+    }
+  }
+
+  if (preview) {
+    if (isImg) {
+      preview.innerHTML = `<img src="${currentSelectedFavIcon}" alt="Preview" class="w-full h-full object-cover rounded-2xl" />`;
+    } else {
+      preview.textContent = currentSelectedFavIcon || '🍜';
+    }
+  }
+
+  if (infoRow) {
+    if (isImg) {
+      infoRow.classList.remove('hidden');
+      infoRow.classList.add('flex');
+    } else {
+      infoRow.classList.add('hidden');
+      infoRow.classList.remove('flex');
+    }
+  }
+}
+
+function handleFavImageUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    showToast('Vui lòng chọn file hình ảnh hợp lệ nhé! 🖼️');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const maxDim = 256;
+      let width = img.width, height = img.height;
+      if (width > height) {
+        if (width > maxDim) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        }
+      } else {
+        if (height > maxDim) {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      currentSelectedFavIcon = canvas.toDataURL('image/jpeg', 0.85);
+      updateFavModalIconPreview();
+      renderFavIconOptions();
+      showToast('Đã tải ảnh món ăn lên! Đừng quên bấm Lưu quán nhé 📸');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function revertFavToEmoji() {
+  currentSelectedFavIcon = '🍜';
+  updateFavModalIconPreview();
+  renderFavIconOptions();
+  showToast('Đã quay lại dùng emoji 🍜');
+}
+
 function renderFavIconOptions() {
   const container = document.getElementById('fav-emoji-options');
   if (!container) return;
@@ -2454,7 +2745,7 @@ function renderFavIconOptions() {
     b.textContent = ic;
     b.onclick = () => {
       currentSelectedFavIcon = ic;
-      document.getElementById('fav-modal-icon-badge').textContent = ic;
+      updateFavModalIconPreview();
       renderFavIconOptions();
     };
     container.appendChild(b);
@@ -2466,11 +2757,11 @@ function openAddFavModal() {
   currentSelectedFavIcon = '🍜';
   document.getElementById('fav-modal-title').textContent = 'Thêm Quán Ruột Của Nàng';
   document.getElementById('fav-modal-submit-btn').textContent = 'Thêm vào Quán Ruột ❤️';
-  document.getElementById('fav-modal-icon-badge').textContent = currentSelectedFavIcon;
   document.getElementById('fav-input-title').value = '';
   document.getElementById('fav-input-address').value = '';
   document.getElementById('fav-input-badge').value = 'Bé vừa chấm điểm 10/10 ✨';
   document.getElementById('fav-input-note').value = '';
+  updateFavModalIconPreview();
   renderFavIconOptions();
   document.getElementById('fav-dish-modal').classList.remove('hidden');
   document.getElementById('fav-input-title').focus();
@@ -2483,11 +2774,11 @@ function openEditFavModal(id) {
   currentSelectedFavIcon = item.icon || '🍜';
   document.getElementById('fav-modal-title').textContent = 'Chỉnh Sửa Quán Ruột';
   document.getElementById('fav-modal-submit-btn').textContent = 'Cập nhật quán ❤️';
-  document.getElementById('fav-modal-icon-badge').textContent = currentSelectedFavIcon;
   document.getElementById('fav-input-title').value = item.title || '';
   document.getElementById('fav-input-address').value = item.address || '';
   document.getElementById('fav-input-badge').value = item.badge || '';
   document.getElementById('fav-input-note').value = item.note || '';
+  updateFavModalIconPreview();
   renderFavIconOptions();
   document.getElementById('fav-dish-modal').classList.remove('hidden');
   document.getElementById('fav-input-title').focus();
