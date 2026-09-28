@@ -314,43 +314,125 @@
   <div class="flex flex-col w-full pb-10">
     <div class="relative px-margin pt-space-md pb-space-sm flex flex-col items-center text-center">
       <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-72 h-72 bg-gradient-to-b from-secondary-fixed/50 via-primary-fixed/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10"></div>
-      <div class="inline-flex items-center gap-space-xs bg-surface-container-lowest shadow-sm px-3.5 py-1.5 rounded-full mb-space-sm">
-        <span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">favorite</span>
-        <span class="font-label-sm text-label-sm text-primary font-bold uppercase">AI Tình Yêu Phân Tích</span>
-        <span class="inline-block w-1.5 h-1.5 rounded-full bg-primary-container animate-ping"></span>
+      <div class="inline-flex items-center gap-space-xs bg-surface-container-lowest shadow-sm px-3.5 py-1.5 rounded-full mb-space-sm border border-primary/20">
+        <span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">auto_awesome</span>
+        <span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Hệ Thống Giải Mã Vị Giác Chuẩn Xác</span>
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
       </div>
       <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-space-xs">🎉 Giải mã thành công!</h1>
-      <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Nàng muốn ăn món này <span class="font-bold text-primary">98%</span>! Không còn cảnh "gì cũng được" nữa nhé.</p>
+      <p class="font-body-md text-body-md text-on-surface-variant max-w-sm">
+        Chỉ số tương thích đạt <span class="font-extrabold text-primary text-base" id="r-match-rate">98%</span>! Đã đối chiếu hoàn hảo với tâm trạng, bao tử và Sổ tay của nàng.
+      </p>
     </div>
-    <div class="px-margin space-y-space-xl">
+
+    <div class="px-margin space-y-space-md">
+      <!-- ══ AI COMPATIBILITY RADAR & REPORT CARD ══ -->
+      <div class="bg-surface-container-lowest rounded-2xl p-3.5 shadow-sm border border-outline-variant/20 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5">
+            <div class="w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+              <span class="material-symbols-outlined text-[15px]">analytics</span>
+            </div>
+            <span class="text-xs font-bold text-on-surface">Báo cáo phân tích tương thích 3 tầng:</span>
+          </div>
+          <span class="text-[11px] font-bold text-primary bg-primary-fixed/60 px-2 py-0.5 rounded-full" id="r-overall-verdict">Khớp xuất sắc ✨</span>
+        </div>
+
+        <div class="space-y-2 pt-1">
+          <!-- 1. Mood -->
+          <div>
+            <div class="flex items-center justify-between text-[11px] mb-1">
+              <span class="text-on-surface-variant flex items-center gap-1">
+                <span>🌸 Hợp tâm trạng:</span>
+                <strong class="text-on-surface font-semibold truncate max-w-[170px]" id="r-tag-mood">Mệt mỏi sau ngày dài</strong>
+              </span>
+              <span class="font-bold text-primary" id="r-pct-mood">98%</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-700" id="r-bar-mood" style="width: 98%"></div>
+            </div>
+          </div>
+
+          <!-- 2. Craving -->
+          <div>
+            <div class="flex items-center justify-between text-[11px] mb-1">
+              <span class="text-on-surface-variant flex items-center gap-1">
+                <span>👅 Khớp vị giác:</span>
+                <strong class="text-on-surface font-semibold truncate max-w-[170px]" id="r-tag-craving">Xì xụp ngập nước nóng</strong>
+              </span>
+              <span class="font-bold text-secondary" id="r-pct-craving">96%</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-secondary to-secondary-container rounded-full transition-all duration-700" id="r-bar-craving" style="width: 96%"></div>
+            </div>
+          </div>
+
+          <!-- 3. Budget & Safety -->
+          <div>
+            <div class="flex items-center justify-between text-[11px] mb-1">
+              <span class="text-on-surface-variant flex items-center gap-1">
+                <span>💰 Khớp ngân sách:</span>
+                <strong class="text-on-surface font-semibold truncate max-w-[170px]" id="r-tag-budget">Tầm trung 100k - 200k</strong>
+              </span>
+              <span class="font-bold text-amber-700" id="r-pct-budget">100%</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-amber-500 to-tertiary rounded-full transition-all duration-700" id="r-bar-budget" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Main Result Card -->
       <div class="bg-surface-container-lowest rounded-2xl shadow-xl shadow-primary-container/10 relative overflow-hidden border border-outline-variant/20">
-        <!-- Hero Banner with Emoji (Flush to top, no overlap glitch) -->
+        <!-- Hero Banner with Emoji/Image -->
         <div class="relative w-full h-52 bg-gradient-to-br from-secondary-fixed via-primary-fixed/50 to-tertiary-fixed flex items-center justify-center overflow-hidden">
           <div class="absolute -top-10 -left-10 w-36 h-36 bg-white/30 rounded-full blur-xl pointer-events-none"></div>
-          <span class="text-[88px] leading-none drop-shadow-md select-none transform hover:scale-110 transition-transform" id="r-emoji">🍲</span>
+          <div class="w-28 h-28 flex items-center justify-center drop-shadow-md select-none transform hover:scale-105 transition-transform" id="r-emoji-wrap">
+            <span class="text-[88px] leading-none" id="r-emoji">🍲</span>
+          </div>
 
           <!-- Floating Badge with High Z-Index -->
-          <div class="absolute top-3.5 right-3.5 bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-sm text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1 z-20">
+          <div class="absolute top-3.5 right-3.5 bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-sm text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1 z-20" id="r-top-badge">
             <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">hotel_class</span>
             <span>Chân Ái Số 1</span>
+          </div>
+
+          <!-- Meal time banner -->
+          <div class="absolute bottom-2.5 left-3.5 bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface font-label-sm text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-xs flex items-center gap-1 z-20">
+            <span class="material-symbols-outlined text-[14px] text-primary">schedule</span>
+            <span id="r-meal-context">Bữa tối lý tưởng</span>
           </div>
         </div>
 
         <!-- Card Body Content -->
         <div class="p-space-md space-y-space-md">
           <div>
-            <span class="font-label-sm text-label-sm bg-primary/90 text-on-primary px-2.5 py-0.5 rounded-full inline-block mb-1 shadow-2xs" id="r-badge">Ngon nhức nách</span>
-            <h2 class="font-headline-md text-headline-md text-on-surface font-bold" id="r-dish">Lẩu Thái Tom Yum Hải Sản</h2>
+            <div class="flex items-center justify-between mb-1 gap-2">
+              <span class="font-label-sm text-label-sm bg-primary/90 text-on-primary px-2.5 py-0.5 rounded-full inline-block shadow-2xs" id="r-badge">Ngon nhức nách</span>
+              <button type="button" onclick="rerollAlternativeDish()" class="px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-primary-fixed hover:text-primary text-[11px] font-bold text-on-surface-variant flex items-center gap-1 active:scale-95 transition-all" title="Xem một món khác cũng thỏa mãn đúng các câu trả lời vừa chọn">
+                <span class="material-symbols-outlined text-[14px]">shuffle</span>
+                <span>Đổi món khác cùng gu</span>
+              </button>
+            </div>
+            <h2 class="font-headline-md text-headline-md text-on-surface font-bold text-xl sm:text-2xl" id="r-dish">Lẩu Thái Tom Yum Hải Sản</h2>
           </div>
 
-          <div class="bg-surface-container-low rounded-xl p-space-md">
+          <!-- Decision matrix tags -->
+          <div class="flex flex-wrap gap-1.5" id="r-decision-chips">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <div class="bg-surface-container-low rounded-xl p-space-md border border-outline-variant/15">
             <div class="flex items-start gap-space-sm">
               <div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 mt-0.5 text-on-secondary-container">
                 <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">psychology</span>
               </div>
               <div class="min-w-0">
-                <span class="font-label-md text-label-md text-secondary font-bold block mb-0.5">Tâm lý học vị giác của nàng:</span>
+                <span class="font-label-md text-label-md text-secondary font-bold block mb-0.5 flex items-center gap-1">
+                  <span>Tâm lý học vị giác của nàng:</span>
+                  <span class="material-symbols-outlined text-[15px] text-secondary">verified</span>
+                </span>
                 <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" id="r-analysis">Bé đang mệt mỏi sau ngày dài, thèm xì xụp nước lèo béo thơm ấm nóng và cần vị chua cay nồng nàn để sạc lại 100% năng lượng!</p>
               </div>
             </div>
@@ -359,11 +441,17 @@
           <div class="grid grid-cols-2 gap-space-sm">
             <div class="bg-surface-container-low rounded-xl p-3 flex items-center gap-2.5">
               <div class="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-xs shrink-0"><span class="material-symbols-outlined text-[20px]">near_me</span></div>
-              <div class="min-w-0"><span class="font-label-sm text-[11px] text-on-surface-variant block truncate">Thời gian đi</span><span class="font-headline-sm text-sm text-on-surface font-bold">~20 phút</span></div>
+              <div class="min-w-0">
+                <span class="font-label-sm text-[11px] text-on-surface-variant block truncate">Thời gian đi</span>
+                <span class="font-headline-sm text-sm text-on-surface font-bold truncate block" id="r-time">~20 phút</span>
+              </div>
             </div>
             <div class="bg-surface-container-low rounded-xl p-3 flex items-center gap-2.5">
               <div class="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center text-secondary shadow-xs shrink-0"><span class="material-symbols-outlined text-[20px]">payments</span></div>
-              <div class="min-w-0"><span class="font-label-sm text-[11px] text-on-surface-variant block truncate">Túi tiền đôi ta</span><span class="font-headline-sm text-sm text-on-surface font-bold">150k - 200k</span></div>
+              <div class="min-w-0">
+                <span class="font-label-sm text-[11px] text-on-surface-variant block truncate">Túi tiền đôi ta</span>
+                <span class="font-headline-sm text-sm text-on-surface font-bold truncate block" id="r-cost">150k - 200k</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1708,6 +1796,44 @@
   </div>
 </div>
 
+<!-- ══ AI DECODING OVERLAY MODAL ══ -->
+<div id="ai-decoding-modal" class="fixed inset-0 z-50 bg-inverse-surface/75 backdrop-blur-md hidden items-center justify-center p-space-md">
+  <div class="bg-surface rounded-3xl p-6 w-full max-w-sm flex flex-col items-center text-center shadow-2xl border border-primary/20 space-y-4">
+    <!-- Pulsing Radar Animation -->
+    <div class="relative w-24 h-24 flex items-center justify-center my-1">
+      <div class="absolute inset-0 rounded-full bg-primary/20 animate-ping"></div>
+      <div class="absolute inset-2 rounded-full bg-primary/30 animate-pulse"></div>
+      <div class="relative w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-secondary-container text-white flex items-center justify-center shadow-lg">
+        <span class="material-symbols-outlined text-[32px] animate-spin" style="animation-duration: 2.5s;">psychology</span>
+      </div>
+    </div>
+    
+    <div>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed/80 text-primary text-[11px] font-extrabold uppercase tracking-wider mb-1.5">
+        <span class="inline-block w-2 h-2 rounded-full bg-primary animate-ping"></span>
+        AI Vị Giác Đang Phân Tích
+      </span>
+      <h3 class="font-headline-md text-base text-on-surface font-extrabold" id="decoding-title">Đang quét ma trận vị giác của nàng...</h3>
+    </div>
+
+    <!-- Steps Progress Checklist -->
+    <div class="w-full bg-surface-container-low rounded-2xl p-3.5 text-left space-y-2.5 text-xs">
+      <div class="flex items-center gap-2.5 transition-all duration-300" id="decode-step-1">
+        <span class="material-symbols-outlined text-[18px] text-primary" id="decode-step-1-icon">sync</span>
+        <span class="text-on-surface font-semibold" id="decode-step-1-text">Tổng hợp tín hiệu tâm trạng &amp; bao tử...</span>
+      </div>
+      <div class="flex items-center gap-2.5 transition-all duration-300 opacity-40" id="decode-step-2">
+        <span class="material-symbols-outlined text-[18px] text-outline" id="decode-step-2-icon">radio_button_unchecked</span>
+        <span class="text-on-surface font-semibold" id="decode-step-2-text">Đối chiếu Sổ tay &amp; lọc vùng kiêng kỵ...</span>
+      </div>
+      <div class="flex items-center gap-2.5 transition-all duration-300 opacity-40" id="decode-step-3">
+        <span class="material-symbols-outlined text-[18px] text-outline" id="decode-step-3-icon">radio_button_unchecked</span>
+        <span class="text-on-surface font-semibold" id="decode-step-3-text">Tính toán độ tương thích &amp; tối ưu chi phí...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── Navigation ──
 const subs={home:'Giải Mã',quiz:'Trắc Nghiệm',result:'Kết Quả',wheel:'Vòng Quay',map:'Bản Đồ Quán',notebook:'Sổ Tay Nàng'};
@@ -1723,6 +1849,10 @@ function navigate(s){
     l.classList.toggle('act',l.dataset.s===s);
   });
   if(s==='quiz')initQuiz();
+  if(s==='result'&&(!currentResultData || !currentMatchingCandidates || currentMatchingCandidates.length === 0)){
+    evaluateAndPickDishes([selectedMoodIdx || 0, 0, 1]);
+    displayCurrentCandidate(0);
+  }
   const floatWidget = document.getElementById('floating-wheel-widget');
   if (floatWidget) {
     floatWidget.style.display = (s === 'wheel') ? 'none' : 'flex';
@@ -1959,12 +2089,373 @@ const Qs=[
     {l:'Hôm nay flex luôn, không giới hạn 💸',d:'Bé xứng đáng được đãi thật xịn, chọn nơi tốt nhất!',e:'Ví dụ: Omakase, Hotpot premium, Sky bar dining'}
   ]}
 ];
-const Rs=[
-  {e:'🍲',dish:'Lẩu Thái Tom Yum Hải Sản',badge:'Ngon nhức nách',analysis:'Bé đang hơi mệt mỏi sau ngày dài, thèm xì xụp nước lèo béo thơm ấm nóng và cần vị chua cay nồng nàn để sạc lại 100% năng lượng!',b1:'Phở Bò Tái Lăn Bát Đá',b2:'Bún Riêu Cua Bắp Bò Full Topping',tip:'Khi gọi món, nhớ dặn bếp làm cay vừa phải và gọi thêm một ly trà thái đỏ sữa cho nàng nhé!'},
-  {e:'🍛',dish:'Cơm Tấm Sườn Bì Chả Đặc Biệt',badge:'Gu bé chuẩn chỉ',analysis:'Bé đang vui vẻ và sẵn sàng thưởng thức món quen thuộc. Cơm tấm chuẩn vị với sườn nướng thơm lừng là lựa chọn hoàn hảo!',b1:'Bún Chả Hàng Mành Cô Nga',b2:'Bánh Mì Thịt Nướng Đặc Biệt',tip:'Nhớ gọi thêm ly trà đá chanh muối và xin thêm mỡ hành bên ngoài cho bé nhé!'},
-  {e:'🧋',dish:'Trà Sữa Maycha Full Topping',badge:'Bé vỗ tay rồi đấy',analysis:'Bé đang cần được dỗ dành, một ly trà sữa yêu thích với đủ topping sẽ làm tan mây mù ngay lập tức!',b1:'Kem Bơ Xoài Trân Châu',b2:'Sinh Tố Bơ Sữa Tươi Béo Ngậy',tip:'Đặt 30% đường 50% đá, thêm trân châu đen và cheese foam cho đúng formula bí truyền của nàng!'},
-  {e:'🍗',dish:'Gà Rán Cay Sốt Hàn Quốc',badge:'Cay đã nóc nhà',analysis:'Bé đang thèm cảm giác giòn rụm kích thích! Gà rán cay sốt đặc biệt là đúng gu để "bung nóc" sau ngày mệt mỏi.',b1:'Pizza Phô Mai Thịt Bò Cay',b2:'Mì Cay Hàn 5 Cấp Độ',tip:'Gọi thêm khoai tây chiên giòn và coca nhiều đá cho bé nhé, nhớ order ít cay trước đã!'}
+// ── Rich Candidate Food Database (Cross-evaluated with Mood, Craving & Budget) ──
+const candidateDishes = [
+  // Craving 0: Xì xụp ngập nước nóng 🍲
+  { id: 'pho-bo', dish: 'Phở Bò Tái Lăn Bát Đá', e: '🍲', craving: 0, moods: [0, 2, 3], budget: 0, time: '~12 - 15 phút', cost: '60k - 85k / người', badge: 'Ấm bụng tức thì', tasteTrait: 'nước dùng ninh xương đậm đà thơm mùi gừng quế', keywords: ['bò', 'hành', 'nước phở'], b1: 'Bún Bò Huế Giò Chả Cua', b2: 'Bánh Canh Cua Út Lệ', tip: 'Nhớ gọi thêm quẩy giòn và xin đĩa tái lăn tái vừa ngọt nước nhé!' },
+  { id: 'bun-bo-hue', dish: 'Bún Bò Huế Giò Chả Cua', e: '🍜', craving: 0, moods: [1, 2, 3], budget: 0, time: '~15 phút', cost: '65k - 90k / người', badge: 'Đậm đà chuẩn vị', tasteTrait: 'vị ngọt từ xương hòa quyện mùi sả ruốc ớt sa tế cay tê', keywords: ['bò', 'heo', 'chả cua', 'sa tế'], b1: 'Phở Bò Tái Lăn Bát Đá', b2: 'Hủ Tiếu Nam Vang', tip: 'Dặn quán cho ít mỡ nổi và thêm hành trần nước béo cho nàng!' },
+  { id: 'banh-canh-cua', dish: 'Bánh Canh Cua Út Lệ', e: '🍲', craving: 0, moods: [0, 1, 2], budget: 0, time: '~15 - 20 phút', cost: '65k - 95k / người', badge: 'Sền sệt béo ngậy', tasteTrait: 'nước súp sền sệt béo ngọt thịt cua tươi dai mềm', keywords: ['cua', 'hải sản', 'tôm'], b1: 'Bún Riêu Cua Bắp Bò', b2: 'Mì Quảng Gà Ta', tip: 'Thêm đĩa quẩy mềm chấm nước sốt cua béo ngọt rất dính nhé.' },
+  { id: 'lau-thai', dish: 'Lẩu Thái Tom Yum Hải Sản', e: '🍲', craving: 0, moods: [0, 2, 3], budget: 1, time: '~20 - 25 phút', cost: '150k - 200k / người', badge: 'Chua cay sảng khoái', tasteTrait: 'nước lèo tomyum cốt dừa chua cay nồng nàn thơm lá chanh sả', keywords: ['hải sản', 'tôm', 'mực', 'sa tế'], b1: 'Lẩu Gà Lá É', b2: 'Phở Bò Tái Lăn Bát Đá', tip: 'Dặn bếp làm cay vừa phải và gọi thêm một ly trà thái đỏ sữa cho nàng nhé!' },
+  { id: 'lau-ga-la-e', dish: 'Lẩu Gà Lá É Nóng Hổi', e: '🍲', craving: 0, moods: [1, 2], budget: 1, time: '~20 - 25 phút', cost: '130k - 180k / người', badge: 'Liều thuốc chữa lành', tasteTrait: 'nước gà ngọt thanh cay ấm the nồng từ lá é và ớt xiêm xanh', keywords: ['gà', 'ớt', 'măng'], b1: 'Lẩu Thái Tom Yum Hải Sản', b2: 'Bún Bò Huế Giò Chả Cua', tip: 'Nhúng lá é chín tái vừa tới để giữ được trọn vẹn vị thơm the ngọt.' },
+  { id: 'ramen-nhat', dish: 'Ramen Nhật Bản Xá Xíu Trứng Lòng Đào', e: '🍜', craving: 0, moods: [0, 2], budget: 1, time: '~15 - 20 phút', cost: '140k - 190k / người', badge: 'Béo ngậy thơm lừng', tasteTrait: 'nước hầm xương Tonkotsu béo ngậy cùng sợi mì dai ngon', keywords: ['heo', 'trứng', 'hành tây'], b1: 'Lẩu Thái Tom Yum Hải Sản', b2: 'Bánh Canh Cua Út Lệ', tip: 'Chọn mức nước dùng vừa (less salt) để bé ăn thanh vị nhất nhé!' },
+  { id: 'haidilao', dish: 'Haidilao Hotpot Cà Chua & Lẩu Nấm', e: '🍲', craving: 0, moods: [0, 1, 2, 3], budget: 2, time: '~25 - 30 phút', cost: '280k - 400k / người', badge: 'Cưng chiều hết nấc', tasteTrait: 'đại tiệc lẩu tùy chọn vị súp cùng dịch vụ chăm sóc đỉnh cao', keywords: ['bò', 'hải sản', 'thịt'], b1: 'Lẩu Nấm Hoàng Gia Ashima', b2: 'Lẩu Thái Tom Yum Hải Sản', tip: 'Order nước súp cà chua đậm đà kèm múa mì cho bé vui cười rạng rỡ.' },
+  { id: 'lau-nam-ashima', dish: 'Lẩu Nấm Ashima Hoàng Gia & Bò Wagyu', e: '🍲', craving: 0, moods: [0, 1, 2], budget: 3, time: '~30 - 35 phút', cost: '550k - 850k / người', badge: 'Sang trọng hoàng gia', tasteTrait: 'tinh hoa canh nấm quý ngọt thanh thuần khiết bồi bổ sức khỏe', keywords: ['nấm', 'bò wagyu'], b1: 'Haidilao Hotpot Cà Chua', b2: 'Lẩu Thái Tom Yum Hải Sản', tip: 'Không gian yên tĩnh lãng mạn thích hợp để tâm sự và vỗ về nàng.' },
+
+  // Craving 1: Cay tê lưỡi kích thích vị giác 🌶️
+  { id: 'mi-cay-7-cap', dish: 'Mì Cay Hàn Quốc 7 Cấp Độ Bò Mỹ', e: '🌶️', craving: 1, moods: [1, 2, 3], budget: 0, time: '~15 phút', cost: '55k - 85k / người', badge: 'Cay đã nóc nhà', tasteTrait: 'nước dùng kim chi chua cay nồng nàn kích thích toát mồ hôi xả stress', keywords: ['bò', 'mì', 'ớt', 'kim chi'], b1: 'Bún Đậu Mắm Tôm Thập Cẩm', b2: 'Gà Rán Cay Sốt Hàn', tip: 'Chọn mức cay thấp hơn gu bình thường 1 nấc và chuẩn bị sẵn sữa tươi ngọt ngào nhé!' },
+  { id: 'bun-dau-mam-tom', dish: 'Bún Đậu Mắm Tôm Thập Cẩm Cay Nồng', e: '🥢', craving: 1, moods: [0, 1, 3], budget: 0, time: '~15 phút', cost: '55k - 80k / người', badge: 'Ghiền không lối thoát', tasteTrait: 'đậu mơ rán giòn rụm chấm mắm tôm đánh bông với ớt cay xé lưỡi', keywords: ['mắm tôm', 'đậu phụ', 'thịt luộc'], b1: 'Mì Cay Hàn Quốc 7 Cấp Độ', b2: 'Bánh Tráng Trộn Sốt Tắc', tip: 'Đánh mắm tôm sủi bọt thật nhiều tắc đường, nếu bé kiêng mắm tôm thì đổi nước mắm chua ngọt liền.' },
+  { id: 'oc-huong-sot-trung-muoi', dish: 'Ốc Hương Xào Trứng Muối & Sốt Cay', e: '🐚', craving: 1, moods: [0, 1], budget: 0, time: '~20 phút', cost: '80k - 110k / người', badge: 'Hít hà đã miệng', tasteTrait: 'ốc giòn sần sật đẫm sốt trứng muối bơ tỏi ớt cay tê', keywords: ['ốc', 'hải sản', 'bơ tỏi'], b1: 'Bún Đậu Mắm Tôm Thập Cẩm', b2: 'Gà Rán Cay Sốt Hàn', tip: 'Kêu thêm 2 ổ bánh mì nóng giòn chấm sốt trứng muối cay là bé mê tít.' },
+  { id: 'ga-ran-cay-han', dish: 'Gà Rán Cay Sốt Gochujang Hàn Quốc', e: '🍗', craving: 1, moods: [1, 2, 3], budget: 1, time: '~18 - 20 phút', cost: '130k - 180k / người', badge: 'Giải tỏa stress', tasteTrait: 'lớp da giòn rụm ngập sốt cay ngọt Hàn Quốc cắn ngập chân răng', keywords: ['gà', 'sốt cay', 'phô mai'], b1: 'Bò Nướng Sa Tế Phô Mai', b2: 'Mì Cay Hàn Quốc 7 Cấp Độ', tip: 'Order thêm khoai tây chiên giòn và coca nhiều đá để hạ nhiệt nhé.' },
+  { id: 'bo-nuong-sa-te', dish: 'Bạch Tuộc & Bò Nướng Sa Tế Phô Mai', e: '🥩', craving: 1, moods: [0, 1, 3], budget: 1, time: '~20 - 25 phút', cost: '150k - 210k / người', badge: 'Xèo xèo thơm nức', tasteTrait: 'thịt bò và hải sản tẩm sa tế đậm đà nướng xèo xèo nhúng phô mai kéo sợi', keywords: ['bò', 'bạch tuộc', 'sa tế', 'phô mai'], b1: 'Gà Rán Cay Sốt Gochujang', b2: 'Lẩu Cay Tứ Xuyên', tip: 'Chủ động nướng và gắp cho nàng từng miếng nhỏ vừa ăn nhé!' },
+  { id: 'lau-cay-tu-xuyen', dish: 'Lẩu Cay Tứ Xuyên Hoa Tiêu Trùng Khánh', e: '🍲', craving: 1, moods: [0, 1, 2], budget: 1, time: '~25 phút', cost: '160k - 230k / người', badge: 'Tê tái đầu lưỡi', tasteTrait: 'vị cay nồng từ ớt khô và hạt hoa tiêu tê nhẹ cánh môi giải tỏa căng thẳng', keywords: ['ớt', 'hoa tiêu', 'bò'], b1: 'Bò Nướng Sa Tế Phô Mai', b2: 'Lẩu Thái Tom Yum Hải Sản', tip: 'Pha sẵn cho nàng chén sốt dầu hào tỏi băm để trung hòa bớt vị cay nồng.' },
+  { id: 'buffet-nuong-hai-san', dish: 'Buffet Nướng Hàn Quốc & Hải Sản Sa Tế', e: '🥩', craving: 1, moods: [0, 1, 3], budget: 2, time: '~25 - 30 phút', cost: '290k - 420k / người', badge: 'Đại tiệc cay nồng', tasteTrait: 'thả ga các loại dẻ sườn ướp cay sốt hoa quả và hải sản tươi rói', keywords: ['bò', 'hải sản', 'sườn'], b1: 'Haidilao Hotpot Cà Chua', b2: 'Bò Nướng Sa Tế Phô Mai', tip: 'Chọn bàn cạnh cửa sổ hoặc thoáng mát để hai đứa ăn uống thoải mái nhất.' },
+  { id: 'steak-fuji-cay', dish: 'Bò Fuji Nướng Sốt Tiêu Cay & Rượu Vang', e: '🥩', craving: 1, moods: [0, 1], budget: 3, time: '~30 phút', cost: '500k - 800k / người', badge: 'Đẳng cấp hương vị', tasteTrait: 'thịt bò vân mỡ mềm tan đẫm sốt tiêu đen cay nồng thượng hạng', keywords: ['bò', 'tiêu', 'bơ'], b1: 'Buffet Nướng Hàn Quốc', b2: 'Gà Rán Cay Sốt Gochujang', tip: 'Đặt bàn trước để có góc nến hoa lãng mạn dỗ nàng 100% thành công.' },
+
+  // Craving 2: Giòn rụm béo ngậy rôm rốp 🍗
+  { id: 'com-tam-suon-bi-cha', dish: 'Cơm Tấm Sườn Bì Chả Trứng Ốp La', e: '🍛', craving: 2, moods: [0, 2, 3], budget: 0, time: '~10 - 15 phút', cost: '50k - 75k / người', badge: 'Cứu đói thần tốc', tasteTrait: 'miếng sườn nướng mật ong vàng óng cháy cạnh đẫm mỡ hành béo ngậy', keywords: ['heo', 'sườn', 'trứng', 'mỡ hành'], b1: 'Bánh Mì Chảo Bơ Tỏi', b2: 'Nem Chua Rán Giòn', tip: 'Xin thêm một chén mỡ hành tóp mỡ giòn rụm riêng cho bé nhé!' },
+  { id: 'banh-mi-chao', dish: 'Bánh Mì Chảo Bò Bơ Tỏi Trứng Lòng Đào', e: '🥖', craving: 2, moods: [0, 1, 2, 3], budget: 0, time: '~12 - 15 phút', cost: '50k - 70k / người', badge: 'Béo ngậy thơm lừng', tasteTrait: 'sốt bơ tỏi cà chua đậm đà xèo xèo cùng pate béo ngậy và trứng lòng đào', keywords: ['bò', 'trứng', 'bơ', 'pate'], b1: 'Cơm Tấm Sườn Bì Chả', b2: 'Nem Chua Rán Giòn', tip: 'Chấm bánh mì giòn rụm vào lòng đỏ trứng gà béo ngậy cho bé ăn liền.' },
+  { id: 'nem-chua-ran-khoai', dish: 'Nem Chua Rán Giòn & Khoai Lắc Phô Mai', e: '🍡', craving: 2, moods: [0, 1], budget: 0, time: '~15 phút', cost: '45k - 70k / người', badge: 'Rôm rốp vui tai', tasteTrait: 'nem rán vàng ươm vỏ giòn ruột dẻo cùng khoai lắc phô mai ngập tràn', keywords: ['heo', 'phô mai', 'chiên'], b1: 'Bánh Mì Chảo Bơ Tỏi', b2: 'Cơm Tấm Sườn Bì Chả', tip: 'Kêu thêm đĩa xoài cóc bao tử chấm muối tôm chua ngọt giải ngấy.' },
+  { id: 'ga-ran-bonchon', dish: 'Gà Rán Sốt Kem Hành Tuyết Bonchon', e: '🍗', craving: 2, moods: [0, 1, 2, 3], budget: 1, time: '~18 - 20 phút', cost: '140k - 190k / người', badge: 'Giòn rụm khó cưỡng', tasteTrait: 'lớp da giòn rụm rôm rốp phủ sốt kem phô mai béo ngậy tan chảy', keywords: ['gà', 'kem', 'phô mai'], b1: 'Pizza Phô Mai Đắp Viền', b2: 'Bò Bít Tết Sốt Tiêu Đen', tip: 'Gọi nửa ngọt nửa cay để hai bạn thử được cả 2 vị ngon nhất.' },
+  { id: 'pizza-pho-mai', dish: 'Pizza Nướng Củi Phô Mai Đắp Viền Ngập Tràn', e: '🍕', craving: 2, moods: [0, 1], budget: 1, time: '~20 - 25 phút', cost: '150k - 220k / người', badge: 'Béo ngậy hạnh phúc', tasteTrait: 'đế bánh nướng củi thơm lừng ngập tràn phô mai mozzarella kéo sợi dài', keywords: ['bò', 'phô mai', 'xúc xích'], b1: 'Gà Rán Sốt Kem Hành Tuyết', b2: 'Bò Bít Tết Sốt Tiêu Đen', tip: 'Kéo phô mai dài cho nàng quay story sống ảo xinh xắn nhé.' },
+  { id: 'bo-bit-tet', dish: 'Bò Bít Tết Sốt Tiêu Đen & Khoai Tây Múi', e: '🥩', craving: 2, moods: [0, 2], budget: 1, time: '~20 phút', cost: '160k - 240k / người', badge: 'Mềm mọng đậm vị', tasteTrait: 'thịt bò mềm mọng nước thơm nức mùi bơ tỏi sốt tiêu đen sánh đặc', keywords: ['bò', 'bơ', 'khoai tây'], b1: 'Pizza Phô Mai Đắp Viền', b2: 'Gà Rán Sốt Kem Hành Tuyết', tip: 'Gọi độ chín Medium rare để thịt mềm mọng nước ngọt ngào nhất.' },
+  { id: 'buffet-bbq-bo-my', dish: 'Buffet BBQ Nướng Than Hoa Dẻ Sườn Bò Mỹ', e: '🥩', craving: 2, moods: [0, 1, 3], budget: 2, time: '~25 - 30 phút', cost: '320k - 450k / người', badge: 'Thả ga no nê', tasteTrait: 'nướng than hồng xèo xèo các phần thịt bò cuộn nấm kim châm béo ngậy', keywords: ['bò', 'sườn', 'thịt nướng'], b1: 'Haidilao Hotpot Cà Chua', b2: 'Pizza Phô Mai Đắp Viền', tip: 'Cuốn kèm thật nhiều xà lách kim chi và tỏi nướng cho bé đỡ ngấy.' },
+  { id: 'wagyu-steak-fine', dish: 'Steak Bò Wagyu A4 & Rượu Vang Đỏ Lãng Mạn', e: '🥩', craving: 2, moods: [0, 1], budget: 3, time: '~30 - 35 phút', cost: '600k - 1000k / người', badge: 'Hẹn hò sang chảnh', tasteTrait: 'vân mỡ cẩm thạch béo mềm tan trên đầu lưỡi chuẩn phong cách quý tộc', keywords: ['bò wagyu', 'bơ'], b1: 'Buffet BBQ Nướng Than Hoa', b2: 'Bò Bít Tết Sốt Tiêu Đen', tip: 'Buổi tối nến thơm hoa tươi sẽ làm nàng cảm động đến rơi nước mắt.' },
+
+  // Craving 3: Thanh mát healthy nhẹ bụng 🥗
+  { id: 'goi-cuon-bun-tron', dish: 'Gỏi Cuốn Tôm Thịt & Bún Trộn Thanh Cảnh', e: '🥗', craving: 3, moods: [0, 2, 3], budget: 0, time: '~10 - 15 phút', cost: '45k - 70k / người', badge: 'Thanh mát nhẹ bụng', tasteTrait: 'tôm thịt tươi rói cuộn rau sống xanh mướt chấm tương đậu phộng bùi béo', keywords: ['tôm', 'thịt', 'đậu phộng', 'rau'], b1: 'Bún Chả Hàng Mành Nhiều Rau', b2: 'Cháo Sườn Sụn Tía Tô', tip: 'Xin thêm một chén tương đậu phộng béo bùi và đồ chua giòn giòn.' },
+  { id: 'bun-cha-hang-manh', dish: 'Bún Chả Hàng Mành Nhiều Rau Sống Than Hoa', e: '🥢', craving: 3, moods: [0, 1, 2], budget: 0, time: '~15 phút', cost: '55k - 80k / người', badge: 'Thơm thanh dễ ăn', tasteTrait: 'chả nướng than hoa thơm lừng thả trong bát nước mắm đu đủ chua ngọt thanh nhẹ', keywords: ['heo', 'đu đủ', 'rau thơm'], b1: 'Gỏi Cuốn Tôm Thịt', b2: 'Cháo Sườn Sụn Tía Tô', tip: 'Thêm đĩa nem cua bể giòn rụm để bữa ăn thêm tròn vị.' },
+  { id: 'chao-suon-tia-to', dish: 'Cháo Sườn Sụn Tía Tô Bách Thảo Thanh Nhiệt', e: '🥣', craving: 3, moods: [1, 2], budget: 0, time: '~15 phút', cost: '45k - 65k / người', badge: 'Dịu êm dạ dày', tasteTrait: 'cháo sườn sánh mịn hầm nhừ ngọt tự nhiên cùng lá tía tô giải nhiệt êm ái', keywords: ['heo', 'sườn', 'tía tô', 'trứng bách thảo'], b1: 'Gỏi Cuốn Tôm Thịt', b2: 'Bún Chả Hàng Mành Nhiều Rau', tip: 'Trộn đều lá tía tô thái chỉ giúp ấm bụng và xua tan mệt mỏi tức thì.' },
+  { id: 'poke-salmon-bowl', dish: 'Poke Bowl Cá Hồi Tươi Bơ Sáp Sốt Mè Rang', e: '🥑', craving: 3, moods: [0, 2, 3], budget: 1, time: '~15 - 20 phút', cost: '130k - 180k / người', badge: 'Chuẩn gu Eat Clean', tasteTrait: 'cá hồi sashimi béo ngậy hòa quyện bơ sáp tươi ngon sốt mè rang thanh lành', keywords: ['cá hồi', 'bơ', 'mè', 'rong biển'], b1: 'Salad Ức Gà Nướng Mật Ong', b2: 'Cơm Gạo Lứt Cá Hồi', tip: 'Nàng nào thích giữ dáng ăn món này là chấm 10/10 điểm tinh tế.' },
+  { id: 'salad-uc-ga-mat-ong', dish: 'Salad Ức Gà Nướng Mật Ong & Nước Ép Tươi', e: '🥗', craving: 3, moods: [0, 2], budget: 1, time: '~15 - 20 phút', cost: '120k - 160k / người', badge: 'Healthy tươi trẻ', tasteTrait: 'rau củ hữu cơ giòn ngọt kèm ức gà tẩm mật ong áp chảo mềm mọng', keywords: ['gà', 'mật ong', 'rau củ'], b1: 'Poke Bowl Cá Hồi Tươi Bơ Sáp', b2: 'Gỏi Cuốn Tôm Thịt', tip: 'Kêu thêm ly nước ép cần tây táo xanh hoặc cam cà rốt mát lạnh.' },
+  { id: 'sushi-sashimi-set', dish: 'Set Sushi & Sashimi Cá Hồi Tươi Nhật Bản', e: '🍣', craving: 3, moods: [0, 1, 2], budget: 2, time: '~20 - 25 phút', cost: '280k - 420k / người', badge: 'Tươi ngon tan chảy', tasteTrait: 'từng lát cá hồi và sò đỏ tươi sống ngọt lịm tan chảy trên đầu lưỡi', keywords: ['cá hồi', 'hải sản', 'wasabi'], b1: 'Poke Bowl Cá Hồi Tươi Bơ Sáp', b2: 'Omakase Hải Sản Cao Cấp', tip: 'Dặn quán chấm một chút wasabi nhẹ tay để nàng không bị nồng mũi.' },
+  { id: 'omakase-high-end', dish: 'Omakase Hải Sản Tươi Sống Thượng Hạng', e: '🍣', craving: 3, moods: [0, 1], budget: 3, time: '~35 - 45 phút', cost: '700k - 1500k / người', badge: 'Tuyệt phẩm ẩm thực', tasteTrait: 'đầu bếp trực tiếp chế biến từng miếng sushi cao cấp trước mắt hai bạn', keywords: ['hải sản', 'cá ngừ', 'nhím biển'], b1: 'Set Sushi & Sashimi Nhật Bản', b2: 'Poke Bowl Cá Hồi Tươi Bơ Sáp', tip: 'Trải nghiệm đỉnh cao khiến nàng cảm thấy mình như một bà hoàng.' }
 ];
+
+const Rs = candidateDishes; // Backward compatibility with references to Rs[0]
+let currentMatchingCandidates = [];
+let currentCandidateIdx = 0;
+
+function getMealContextString() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const t = `${h}:${m}`;
+  if (h >= 6 && h < 10) return `Bữa sáng ấm bụng • ${t}`;
+  if (h >= 10 && h < 14) return `Bữa trưa sạc năng lượng • ${t}`;
+  if (h >= 14 && h < 17) return `Bữa xế giải tỏa căng thẳng • ${t}`;
+  if (h >= 17 && h < 21) return `Bữa tối hẹn hò lãng mạn • ${t}`;
+  return `Cứu đói đêm khuya ấm lòng • ${t}`;
+}
+
+function generateRealisticAnalysis(dishName, moodIdx, cravingIdx, budgetIdx, fromNotebook = false) {
+  const moodNames = [
+    'vui vẻ hào hứng',
+    'hơi nhõng nhẽo hờn dỗi',
+    'căng thẳng mệt mỏi sau ngày dài',
+    'thèm ăn cồn cào và đói lả'
+  ];
+  const cravingDescs = [
+    'xì xụp ngập nước dùng ninh xương ấm nóng',
+    'vị cay tê kích thích giải phóng hormone hạnh phúc',
+    'độ giòn rụm béo ngậy đẫm vị đậm đà',
+    'vị tươi mát thanh lành không gây nặng bụng'
+  ];
+
+  let p1 = '';
+  if (fromNotebook) {
+    p1 = `Món "${dishName}" nằm ngay trong danh sách món ruột mà nàng đã dặn trong Sổ tay! Khi bé đang ${moodNames[moodIdx] || 'cần nạp năng lượng'}, việc chàng nhớ và chủ động chốt đúng món tủ sẽ khiến bé cảm nhận được sự cưng chiều 100% và xua tan mọi mỏi mệt.`;
+  } else if (moodIdx === 0) {
+    p1 = `Tâm trạng bé hôm nay đang rất tích cực và sẵn sàng cho một trải nghiệm ẩm thực vui vẻ. Sự kết hợp của "${dishName}" với ${cravingDescs[cravingIdx]} sẽ cộng hưởng năng lượng tươi vui, biến bữa ăn thành buổi hẹn hò ngập tràn tiếng cười.`;
+  } else if (moodIdx === 1) {
+    p1 = `Khi bé hờn dỗi, lượng hormone hạnh phúc tạm thời sụt giảm và bao tử cần được xoa dịu. Vị ngon đậm đà của "${dishName}" sẽ kích hoạt giải phóng endorphin tự nhiên, làm mềm lòng nàng và khiến cơn dỗi hờn tan biến ngay sau miếng đầu tiên!`;
+  } else if (moodIdx === 2) {
+    p1 = `Sau một ngày dài học tập và làm việc, lượng cortisol tích tụ khiến cơ thể bé kiệt sức. Sự thơm lành, nóng hổi và giàu dinh dưỡng của "${dishName}" sẽ giúp giãn cơ bắp, hỗ trợ tiêu hóa êm dịu và sạc lại 100% năng lượng cho nàng!`;
+  } else {
+    p1 = `Cơn đói cồn cào khiến đường huyết giảm nhanh, đòi hỏi một bữa ăn giàu năng lượng và no đẫy đà. Lựa chọn "${dishName}" sẽ lập tức lấp đầy bao tử cấp tốc, mang lại cảm giác thỏa mãn tuyệt đối!`;
+  }
+
+  let p2 = '';
+  if (beProfile.blacklistTags && beProfile.blacklistTags.length > 0) {
+    p2 = ` Thuật toán đã tự động đối chiếu Sổ tay để lọc sạch vùng cấm (${beProfile.blacklistTags.join(', ')}) và cân đối mức cay ${beProfile.spicyLevel}/5 chuẩn gu bé dặn.`;
+  }
+
+  return p1 + p2;
+}
+
+function evaluateAndPickDishes(answers) {
+  const moodIdx = (answers && answers[0] !== undefined) ? answers[0] : (selectedMoodIdx || 0);
+  const cravingIdx = (answers && answers[1] !== undefined) ? answers[1] : 0;
+  const budgetIdx = (answers && answers[2] !== undefined) ? answers[2] : 1;
+
+  const blTags = (beProfile.blacklistTags || []).map(t => t.toLowerCase().trim());
+  const evaluated = [];
+
+  // 1. Evaluate dishes from Sổ tay nàng (favDishes)
+  if (typeof favDishes !== 'undefined' && favDishes && favDishes.length > 0) {
+    favDishes.forEach(fav => {
+      const lowerTitle = fav.title.toLowerCase();
+      // Check blacklist
+      const isBlacklisted = blTags.some(tag => tag && lowerTitle.includes(tag));
+      if (isBlacklisted) return;
+
+      let score = 50; // base score for notebook dishes
+
+      // Detect craving fit
+      if (cravingIdx === 0 && (lowerTitle.includes('bún') || lowerTitle.includes('phở') || lowerTitle.includes('lẩu') || lowerTitle.includes('canh') || lowerTitle.includes('mì') || lowerTitle.includes('hủ tiếu') || lowerTitle.includes('cháo') || lowerTitle.includes('ramen'))) {
+        score += 45;
+      } else if (cravingIdx === 1 && (lowerTitle.includes('cay') || lowerTitle.includes('sa tế') || lowerTitle.includes('ớt') || lowerTitle.includes('ốc') || lowerTitle.includes('thái'))) {
+        score += 45;
+      } else if (cravingIdx === 2 && (lowerTitle.includes('gà rán') || lowerTitle.includes('nướng') || lowerTitle.includes('chiên') || lowerTitle.includes('pizza') || lowerTitle.includes('bánh mì') || lowerTitle.includes('cơm tấm') || lowerTitle.includes('nem'))) {
+        score += 45;
+      } else if (cravingIdx === 3 && (lowerTitle.includes('cuốn') || lowerTitle.includes('salad') || lowerTitle.includes('sushi') || lowerTitle.includes('poke') || lowerTitle.includes('chả') || lowerTitle.includes('trà') || lowerTitle.includes('thanh'))) {
+        score += 45;
+      }
+
+      // Mood 1 (hơi dỗi): huge bonus for girlfriend's notebook comfort food
+      if (moodIdx === 1) score += 35;
+      else score += 20;
+
+      evaluated.push({
+        id: 'nb-' + fav.id,
+        dish: fav.title,
+        e: fav.icon || '🍲',
+        badge: '🌟 Món Tủ Sổ Tay Của Nàng',
+        fromNotebook: true,
+        time: '~15 - 20 phút',
+        cost: budgetIdx === 0 ? '55k - 85k / người' : (budgetIdx === 1 ? '130k - 180k / người' : '280k - 450k / người'),
+        tasteTrait: 'món ruột chuẩn gu nàng thích nhất',
+        analysis: generateRealisticAnalysis(fav.title, moodIdx, cravingIdx, budgetIdx, true),
+        tip: fav.note ? `Lưu ý nàng dặn: "${fav.note}"` : 'Gọi đúng địa chỉ quán quen nàng đã lưu trong Sổ tay nhé!',
+        b1: favDishes[1]?.title || 'Phở Bò Tái Lăn Bát Đá',
+        b2: favDishes[2]?.title || 'Lẩu Thái Tom Yum Hải Sản',
+        score: score,
+        moodIdx: moodIdx,
+        cravingIdx: cravingIdx,
+        budgetIdx: budgetIdx
+      });
+    });
+  }
+
+  // 2. Evaluate catalog dishes
+  candidateDishes.forEach(item => {
+    const lowerName = item.dish.toLowerCase();
+    const isBlacklisted = blTags.some(tag => tag && (lowerName.includes(tag) || (item.keywords && item.keywords.some(k => k.includes(tag)))));
+    if (isBlacklisted) return;
+
+    let score = 0;
+    // Craving match
+    if (item.craving === cravingIdx) score += 50;
+
+    // Mood match
+    if (item.moods.includes(moodIdx)) score += 30;
+    else score += 10;
+
+    // Budget match
+    if (item.budget === budgetIdx) score += 25;
+    else if (Math.abs(item.budget - budgetIdx) === 1) score += 12;
+
+    const copy = { ...item };
+    copy.score = score;
+    copy.moodIdx = moodIdx;
+    copy.cravingIdx = cravingIdx;
+    copy.budgetIdx = budgetIdx;
+    copy.analysis = generateRealisticAnalysis(item.dish, moodIdx, cravingIdx, budgetIdx, false);
+    evaluated.push(copy);
+  });
+
+  // Sort descending by score
+  evaluated.sort((a, b) => b.score - a.score);
+
+  currentMatchingCandidates = evaluated.slice(0, 5);
+  currentCandidateIdx = 0;
+  return currentMatchingCandidates;
+}
+
+function displayCurrentCandidate(idx) {
+  if (!currentMatchingCandidates || currentMatchingCandidates.length === 0) {
+    evaluateAndPickDishes([selectedMoodIdx || 0, 0, 1]);
+  }
+  const c = currentMatchingCandidates[idx] || currentMatchingCandidates[0] || candidateDishes[0];
+  currentCandidateIdx = idx;
+  currentResultData = c;
+
+  // Match rates calculation
+  const baseRate = c.fromNotebook ? 99 : Math.min(98, 93 + Math.floor((c.score / 105) * 5));
+  const moodPct = Math.min(99, Math.max(92, baseRate + (c.fromNotebook ? 0 : (c.score % 3) - 1)));
+  const cravingPct = Math.min(99, Math.max(93, baseRate - (c.fromNotebook ? 0 : (c.score % 2))));
+  const budgetPct = 100;
+
+  // Header
+  const matchRateEl = document.getElementById('r-match-rate');
+  if (matchRateEl) matchRateEl.textContent = baseRate + '%';
+
+  // Overall verdict
+  const verdictEl = document.getElementById('r-overall-verdict');
+  if (verdictEl) {
+    verdictEl.textContent = c.fromNotebook ? 'Khớp gu Sổ tay 100% ❤️' : (baseRate >= 97 ? 'Trùng khớp tuyệt hảo 🌟' : 'Phù hợp xuất sắc ✨');
+  }
+
+  // 3-tier report card
+  const moodLabels = ['Vui vẻ thử mới 😊', 'Hơi dỗi cần dỗ 😾', 'Mệt mỏi sau ngày dài 🥱', 'Thèm ăn đói lả 🤤'];
+  const cravingLabels = ['Xì xụp ngập nước nóng 🍲', 'Cay tê lưỡi kích thích 🌶️', 'Giòn rụm béo ngậy 🍗', 'Thanh mát healthy 🥗'];
+  const budgetLabels = ['Dưới 100k/người 🥢', 'Tầm trung 100k - 200k 🍜', 'Sang chảnh 200k - 500k 🍽️', 'Flex không giới hạn 💸'];
+
+  const tagMood = document.getElementById('r-tag-mood');
+  if (tagMood) tagMood.textContent = moodLabels[c.moodIdx ?? 0] || 'Tâm trạng bé';
+  const pctMood = document.getElementById('r-pct-mood');
+  if (pctMood) pctMood.textContent = moodPct + '%';
+  const barMood = document.getElementById('r-bar-mood');
+  if (barMood) barMood.style.width = moodPct + '%';
+
+  const tagCraving = document.getElementById('r-tag-craving');
+  if (tagCraving) tagCraving.textContent = cravingLabels[c.cravingIdx ?? 0] || 'Vị giác';
+  const pctCraving = document.getElementById('r-pct-craving');
+  if (pctCraving) pctCraving.textContent = cravingPct + '%';
+  const barCraving = document.getElementById('r-bar-craving');
+  if (barCraving) barCraving.style.width = cravingPct + '%';
+
+  const tagBudget = document.getElementById('r-tag-budget');
+  if (tagBudget) tagBudget.textContent = budgetLabels[c.budgetIdx ?? 1] || 'Ngân sách';
+  const pctBudget = document.getElementById('r-pct-budget');
+  if (pctBudget) pctBudget.textContent = budgetPct + '%';
+  const barBudget = document.getElementById('r-bar-budget');
+  if (barBudget) barBudget.style.width = budgetPct + '%';
+
+  // Hero Card
+  const dishEl = document.getElementById('r-dish');
+  if (dishEl) dishEl.textContent = c.dish;
+
+  const badgeEl = document.getElementById('r-badge');
+  if (badgeEl) badgeEl.textContent = c.badge || 'Ngon nhức nách';
+
+  const topBadge = document.getElementById('r-top-badge');
+  if (topBadge) {
+    topBadge.innerHTML = c.fromNotebook
+      ? `<span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">favorite</span><span>Món Tủ Nàng Dặn</span>`
+      : `<span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">hotel_class</span><span>Chân Ái Số ${idx + 1}</span>`;
+  }
+
+  const mealContextEl = document.getElementById('r-meal-context');
+  if (mealContextEl) mealContextEl.textContent = getMealContextString();
+
+  const emojiEl = document.getElementById('r-emoji');
+  if (emojiEl) {
+    if (isImageAvatar(c.e)) {
+      emojiEl.innerHTML = `<img src="${c.e}" alt="${c.dish}" class="w-full h-full object-cover rounded-2xl shadow-sm" />`;
+    } else {
+      emojiEl.textContent = c.e || '🍲';
+    }
+  }
+
+  // Decision matrix tags
+  const chipsEl = document.getElementById('r-decision-chips');
+  if (chipsEl) {
+    let chipsHtml = `
+      <span class="text-[11px] font-semibold bg-surface-container-high text-on-surface px-2.5 py-0.5 rounded-full flex items-center gap-1">
+        <span>🌸 ${moodLabels[c.moodIdx ?? 0].split(' ')[0]}</span>
+      </span>
+      <span class="text-[11px] font-semibold bg-surface-container-high text-on-surface px-2.5 py-0.5 rounded-full flex items-center gap-1">
+        <span>👅 ${cravingLabels[c.cravingIdx ?? 0].split(' ')[0]}</span>
+      </span>
+      <span class="text-[11px] font-semibold bg-surface-container-high text-on-surface px-2.5 py-0.5 rounded-full flex items-center gap-1">
+        <span>💰 ${c.cost}</span>
+      </span>
+    `;
+    if (c.fromNotebook) {
+      chipsHtml += `<span class="text-[11px] font-bold bg-primary text-on-primary px-2.5 py-0.5 rounded-full flex items-center gap-1">❤️ Trong Sổ tay nàng</span>`;
+    }
+    if (beProfile.blacklistTags && beProfile.blacklistTags.length > 0) {
+      chipsHtml += `<span class="text-[11px] font-semibold bg-green-100 text-green-800 px-2 py-0.5 rounded-full flex items-center gap-1">🛡️ Đã lọc vùng cấm</span>`;
+    }
+    chipsEl.innerHTML = chipsHtml;
+  }
+
+  // Psychological analysis
+  const analysisEl = document.getElementById('r-analysis');
+  if (analysisEl) analysisEl.textContent = c.analysis;
+
+  // Time and Cost
+  const timeEl = document.getElementById('r-time');
+  if (timeEl) timeEl.textContent = c.time || '~20 phút';
+
+  const costEl = document.getElementById('r-cost');
+  if (costEl) costEl.textContent = c.cost || '150k - 200k / người';
+
+  // Render backups and tip
+  renderResultBackups(c);
+  renderResultTip(c);
+}
+
+function rerollAlternativeDish() {
+  if (!currentMatchingCandidates || currentMatchingCandidates.length <= 1) {
+    evaluateAndPickDishes(ans.length > 0 ? ans : [selectedMoodIdx || 0, 0, 1]);
+  }
+  if (currentMatchingCandidates.length <= 1) {
+    showToast('Đây là món phù hợp nhất với tiêu chí của bé lúc này!');
+    return;
+  }
+
+  currentCandidateIdx = (currentCandidateIdx + 1) % currentMatchingCandidates.length;
+  displayCurrentCandidate(currentCandidateIdx);
+
+  const mainCard = document.querySelector('#sc-result .bg-surface-container-lowest');
+  if (mainCard) {
+    mainCard.classList.add('animate-pulse');
+    setTimeout(() => mainCard.classList.remove('animate-pulse'), 400);
+  }
+
+  showToast(`Đã đổi sang phương án cùng gu: "${currentMatchingCandidates[currentCandidateIdx].dish}" 🎯`);
+}
+
+function startAIDecodingProcess(answers) {
+  const modal = document.getElementById('ai-decoding-modal');
+  if (!modal) {
+    evaluateAndPickDishes(answers);
+    displayCurrentCandidate(0);
+    navigate('result');
+    return;
+  }
+
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+
+  const s1 = document.getElementById('decode-step-1');
+  const s1Icon = document.getElementById('decode-step-1-icon');
+  const s2 = document.getElementById('decode-step-2');
+  const s2Icon = document.getElementById('decode-step-2-icon');
+  const s3 = document.getElementById('decode-step-3');
+  const s3Icon = document.getElementById('decode-step-3-icon');
+
+  // Reset steps
+  if (s1) { s1.classList.remove('opacity-40'); if (s1Icon) { s1Icon.textContent = 'sync'; s1Icon.className = 'material-symbols-outlined text-[18px] text-primary animate-spin'; } }
+  if (s2) { s2.classList.add('opacity-40'); if (s2Icon) { s2Icon.textContent = 'radio_button_unchecked'; s2Icon.className = 'material-symbols-outlined text-[18px] text-outline'; } }
+  if (s3) { s3.classList.add('opacity-40'); if (s3Icon) { s3Icon.textContent = 'radio_button_unchecked'; s3Icon.className = 'material-symbols-outlined text-[18px] text-outline'; } }
+
+  // Step 1 -> Step 2
+  setTimeout(() => {
+    if (s1Icon) { s1Icon.textContent = 'check_circle'; s1Icon.className = 'material-symbols-outlined text-[18px] text-green-600'; }
+    if (s2) { s2.classList.remove('opacity-40'); if (s2Icon) { s2Icon.textContent = 'sync'; s2Icon.className = 'material-symbols-outlined text-[18px] text-primary animate-spin'; } }
+  }, 380);
+
+  // Step 2 -> Step 3
+  setTimeout(() => {
+    if (s2Icon) { s2Icon.textContent = 'check_circle'; s2Icon.className = 'material-symbols-outlined text-[18px] text-green-600'; }
+    if (s3) { s3.classList.remove('opacity-40'); if (s3Icon) { s3Icon.textContent = 'sync'; s3Icon.className = 'material-symbols-outlined text-[18px] text-primary animate-spin'; } }
+    evaluateAndPickDishes(answers);
+  }, 800);
+
+  // Finish and navigate
+  setTimeout(() => {
+    if (s3Icon) { s3Icon.textContent = 'check_circle'; s3Icon.className = 'material-symbols-outlined text-[18px] text-green-600'; }
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      displayCurrentCandidate(0);
+      navigate('result');
+      showToast('Đã giải mã thành công chân ái hôm nay! 🎉');
+    }, 320);
+  }, 1200);
+}
 
 let cur=0,sel=null,ans=[];
 function initQuiz(){
@@ -2035,15 +2526,7 @@ function qNext(){
   ans[cur] = sel;
   if(cur<Qs.length-1){cur++;sel=null;renderQ();}
   else{
-    const r=Rs[Math.floor(Math.random()*Rs.length)];
-    currentResultData = r;
-    document.getElementById('r-emoji').textContent=r.e;
-    document.getElementById('r-dish').textContent=r.dish;
-    document.getElementById('r-badge').textContent=r.badge;
-    document.getElementById('r-analysis').textContent=r.analysis;
-    renderResultBackups(r);
-    renderResultTip(r);
-    navigate('result');
+    startAIDecodingProcess(ans);
   }
 }
 function qBack(){
@@ -4426,6 +4909,8 @@ function resetResultTipToDefault() {
 }
 
 // Init
+evaluateAndPickDishes([0, 0, 1]);
+displayCurrentCandidate(0);
 navigate('home');
 renderWheel();
 updateCustomBadge();
@@ -4436,8 +4921,8 @@ renderProfile();
 renderFavList();
 renderHomeFavList();
 renderComfortTips();
-renderResultBackups(Rs[0]);
-renderResultTip(Rs[0]);
+renderResultBackups(currentResultData || candidateDishes[0]);
+renderResultTip(currentResultData || candidateDishes[0]);
 renderBlackList();
 selectMood(0, true);
 </script>
