@@ -9,6 +9,9 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <!-- Leaflet Map Library for Real-World Interactive Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script id="tailwind-config">
     tailwind.config = {
@@ -74,6 +77,14 @@
     .animate-pop-in{animation:popIn 0.35s cubic-bezier(0.17,0.89,0.32,1.28) forwards;}
     @keyframes spinSlow{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
     .animate-spin-slow{animation:spinSlow 12s linear infinite;}
+
+    /* Leaflet Real-world Map Enhancements */
+    .leaflet-pane img, .leaflet-tile, .leaflet-marker-icon { max-width: none !important; }
+    .leaflet-popup-content-wrapper { border-radius: 18px !important; box-shadow: 0 12px 30px -5px rgba(0,0,0,0.2) !important; padding: 2px !important; border: 1px solid rgba(174,47,52,0.18) !important; }
+    .leaflet-popup-content { margin: 10px 12px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; line-height: 1.4 !important; }
+    .leaflet-popup-tip { background: white !important; }
+    .leaflet-container { font-family: 'Plus Jakarta Sans', sans-serif !important; background: #eef2f5 !important; }
+    .custom-leaflet-pin { background: transparent !important; border: none !important; }
   </style>
 </head>
 <body class="bg-surface font-body-md text-on-surface">
@@ -723,41 +734,25 @@
       <button type="button" onclick="filterMapByTag('điều hòa')" data-tag="điều hòa" class="mchip flex-shrink-0 px-3.5 py-1.5 rounded-full font-label-md text-label-md active:scale-95 bg-surface-container-lowest text-on-surface-variant shadow-sm hover:text-on-surface">Có điều hòa mát rượi ❄️</button>
     </div>
 
-    <!-- ══ BẢN ĐỒ QUÁN XINH (INTERACTIVE MAP CANVAS) ══ -->
+    <!-- ══ BẢN ĐỒ QUÁN XINH (REAL LEAFLET INTERACTIVE MAP) ══ -->
     <div class="px-margin pt-space-xs pb-space-sm">
-      <div class="relative w-full h-[260px] rounded-2xl overflow-hidden shadow-md border border-outline-variant/20" style="background:linear-gradient(135deg,#c8e6c9 0%,#b2dfdb 30%,#bbdefb 60%,#c8e6c9 100%)">
-        <div class="absolute inset-0 opacity-20" style="background:repeating-linear-gradient(0deg,#888 0,#888 1px,transparent 1px,transparent 50px),repeating-linear-gradient(90deg,#888 0,#888 1px,transparent 1px,transparent 70px)"></div>
-        <!-- Roads -->
-        <div class="absolute top-1/2 w-full h-3 bg-white/60 -translate-y-1/2 shadow-xs"></div>
-        <div class="absolute left-1/2 h-full w-3 bg-white/60 -translate-x-1/2 shadow-xs"></div>
-        <div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+      <div class="relative w-full h-[340px] rounded-2xl overflow-hidden shadow-md border border-outline-variant/30 bg-surface-container-low">
+        <!-- Real Leaflet Map Container -->
+        <div id="real-leaflet-map" class="w-full h-full z-10"></div>
 
-        <!-- Controls -->
-        <div class="absolute top-3 right-3 flex flex-col gap-2 z-20">
-          <button type="button" onclick="detectCurrentLocationGPS()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all" title="Lấy vị trí GPS của tôi"><span class="material-symbols-outlined text-[20px]">my_location</span></button>
-          <button type="button" onclick="openExternalGoogleMapsSearch()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-secondary active:scale-90 hover:bg-secondary-fixed transition-all" title="Mở trên Google Maps"><span class="material-symbols-outlined text-[20px]">map</span></button>
-        </div>
-
-        <!-- Dynamic Pins Layer -->
-        <div id="map-pins-container" class="absolute inset-0 z-30 pointer-events-none">
-          <!-- Rendered dynamically by renderMapPins() -->
-        </div>
-
-        <!-- User Location Marker -->
-        <div class="absolute bottom-[32%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
-          <div class="relative flex items-center justify-center">
-            <div id="map-radar-pulse" class="absolute w-12 h-12 rounded-full bg-primary-container/40 animate-ping"></div>
-            <div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-lg border-2 border-white">
-              <span class="material-symbols-outlined text-on-primary text-[14px]">favorite</span>
-            </div>
-          </div>
-          <span class="bg-surface-container-lowest/95 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-bold shadow-md mt-1 whitespace-nowrap border border-primary/20">2 đứa mình 💕</span>
+        <!-- Floating Controls over Map -->
+        <div class="absolute top-3 right-3 flex flex-col gap-2 z-[400]">
+          <button type="button" onclick="detectCurrentLocationGPS()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all border border-outline-variant/20" title="Định vị GPS thực tế của Bé"><span class="material-symbols-outlined text-[20px]">near_me</span></button>
+          <button type="button" onclick="centerMapOnCurrentArea()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all border border-outline-variant/20" title="Về trung tâm khu vực"><span class="material-symbols-outlined text-[20px]">filter_center_focus</span></button>
+          <button type="button" onclick="openExternalGoogleMapsSearch()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-secondary active:scale-90 hover:bg-secondary-fixed transition-all border border-outline-variant/20" title="Mở trên Google Maps"><span class="material-symbols-outlined text-[20px]">map</span></button>
         </div>
 
         <!-- Map Bottom Info Overlay -->
-        <div class="absolute bottom-2 left-3 z-20 bg-surface-container-lowest/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-bold text-on-surface flex items-center gap-1 shadow-xs">
-          <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-          <span id="map-area-indicator">Quận 1, TP. HCM</span>
+        <div class="absolute bottom-2 left-3 z-[400] bg-surface-container-lowest/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-[11px] font-bold text-on-surface flex items-center gap-1.5 shadow-sm border border-outline-variant/20 pointer-events-auto">
+          <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shrink-0"></span>
+          <span id="map-area-indicator" class="truncate max-w-[130px]">Quận 1, TP. HCM</span>
+          <span class="text-outline-variant font-normal">|</span>
+          <span class="text-primary font-bold" id="map-live-radius-indicator">&lt; 2km</span>
         </div>
       </div>
     </div>
@@ -2079,7 +2074,13 @@ function navigate(s){
   }
   if(s==='map'){
     renderMapRestaurants();
-    renderMapPins();
+    setTimeout(() => {
+      initLeafletMap();
+      if (leafletMap) {
+        leafletMap.invalidateSize();
+        renderLeafletOverlays();
+      }
+    }, 150);
   }
   const floatWidget = document.getElementById('floating-wheel-widget');
   if (floatWidget) {
@@ -3603,9 +3604,9 @@ document.querySelectorAll('.wfp').forEach(p=>{
   });
 });
 
-// ══════════════════════════════════════════════════════
-// ══ MAP & RESTAURANT LOGIC (REAL-WORLD INTERACTION) ══
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+// ══ REAL-WORLD LEAFLET INTERACTIVE MAP & RESTAURANT DB ══
+// ══════════════════════════════════════════════════════════
 
 const areaHotspotsData = {
   hcm: [
@@ -3634,6 +3635,27 @@ const areaHotspotsData = {
   ]
 };
 
+const areaCenterCoordinates = {
+  'Quận 1, TP. HCM': { lat: 10.7769, lng: 106.7009 },
+  'Quận 3, TP. HCM': { lat: 10.7844, lng: 106.6844 },
+  'Bình Thạnh, TP. HCM': { lat: 10.8038, lng: 106.7118 },
+  'Quận 5, TP. HCM': { lat: 10.7554, lng: 106.6667 },
+  'Phú Nhuận, TP. HCM': { lat: 10.7992, lng: 106.6806 },
+  'Quận 7, TP. HCM': { lat: 10.7326, lng: 106.7163 },
+  'Thủ Đức (Q.2), TP. HCM': { lat: 10.8037, lng: 106.7388 },
+  'Tân Bình, TP. HCM': { lat: 10.7981, lng: 106.6534 },
+  'Hoàn Kiếm, Hà Nội': { lat: 21.0285, lng: 105.8542 },
+  'Ba Đình, Hà Nội': { lat: 21.0343, lng: 105.8202 },
+  'Đống Đa, Hà Nội': { lat: 21.0181, lng: 105.8275 },
+  'Cầu Giấy, Hà Nội': { lat: 21.0362, lng: 105.7906 },
+  'Tây Hồ, Hà Nội': { lat: 21.0658, lng: 105.8239 },
+  'Hai Bà Trưng, Hà Nội': { lat: 21.0089, lng: 105.8504 },
+  'Hải Châu, Đà Nẵng': { lat: 16.0678, lng: 108.2208 },
+  'Sơn Trà, Đà Nẵng': { lat: 16.0825, lng: 108.2435 },
+  'Ngũ Hành Sơn, Đà Nẵng': { lat: 16.0356, lng: 108.2505 },
+  'Thanh Khê, Đà Nẵng': { lat: 16.0642, lng: 108.1884 }
+};
+
 const mapRestaurantsDb = [
   {
     id: 'pho-hoa-pasteur',
@@ -3642,17 +3664,16 @@ const mapRestaurantsDb = [
     emoji: '🍲',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7876,
+    lng: 106.6908,
     address: '260C Pasteur, Phường Võ Thị Sáu, Quận 1',
-    distKm: 0.8,
     rating: 4.8,
     reviews: 520,
     price: 'cheap',
     priceText: '65k - 90k/người',
     tags: ['ac', 'view'],
     badge: 'Quán ruột lâu năm ⭐',
-    tip: 'Nước dùng ninh xương gia truyền thơm lừng quế hồi, quẩy giòn rụm béo ngậy nàng khen nức nở.',
-    xPct: 48,
-    yPct: 42
+    tip: 'Nước dùng ninh xương gia truyền thơm lừng quế hồi, quẩy giòn rụm béo ngậy nàng khen nức nở.'
   },
   {
     id: 'bun-bo-ut-hung',
@@ -3661,17 +3682,16 @@ const mapRestaurantsDb = [
     emoji: '🍜',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7801,
+    lng: 106.6885,
     address: '6c Tú Xương, Phường Võ Thị Sáu, Quận 1',
-    distKm: 1.2,
     rating: 4.9,
     reviews: 380,
     price: 'cheap',
     priceText: '55k - 80k/người',
     tags: ['ac', 'street'],
     badge: 'Sổ tay nàng duyệt ❤️',
-    tip: 'Chả cua to bự ngọt lịm, dặn quán ít mỡ nổi và cho thêm ớt chưng thơm cay cho nàng.',
-    xPct: 38,
-    yPct: 56
+    tip: 'Chả cua to bự ngọt lịm, dặn quán ít mỡ nổi và cho thêm ớt chưng thơm cay cho nàng.'
   },
   {
     id: 'haidilao-bitexco',
@@ -3680,17 +3700,16 @@ const mapRestaurantsDb = [
     emoji: '🍲',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7716,
+    lng: 106.7044,
     address: 'Tầng 3 Bitexco, 2 Hải Triều, Bến Nghé, Quận 1',
-    distKm: 1.1,
     rating: 4.9,
     reviews: 1200,
     price: 'high',
     priceText: '280k - 400k/người',
     tags: ['ac', 'romantic', 'view'],
     badge: 'Chiều chuộng 100đ 👑',
-    tip: 'Bàn cạnh cửa sổ kính ngắm phố lung linh, gọi múa mì và làm kem cho bé là hết giận liền!',
-    xPct: 62,
-    yPct: 68
+    tip: 'Bàn cạnh cửa sổ kính ngắm phố lung linh, gọi múa mì và làm kem cho bé là hết giận liền!'
   },
   {
     id: 'bonchon-chicken-sg',
@@ -3699,17 +3718,16 @@ const mapRestaurantsDb = [
     emoji: '🍗',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7782,
+    lng: 106.7011,
     address: '43 Hai Bà Trưng, Bến Nghé, Quận 1',
-    distKm: 0.6,
     rating: 4.8,
     reviews: 440,
     price: 'mid',
     priceText: '130k - 180k/người',
     tags: ['ac', 'romantic'],
     badge: 'Da giòn rụm số 1 🍗',
-    tip: 'Combo nửa gà giòn truyền thống nửa sốt Gochujang cay ngọt, thêm khoai tây lắc phô mai.',
-    xPct: 54,
-    yPct: 49
+    tip: 'Combo nửa gà giòn truyền thống nửa sốt Gochujang cay ngọt, thêm khoai tây lắc phô mai.'
   },
   {
     id: 'pizza-4ps-le-thanh-ton',
@@ -3718,17 +3736,16 @@ const mapRestaurantsDb = [
     emoji: '🍕',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7808,
+    lng: 106.7052,
     address: '8/15 Lê Thánh Tôn, Bến Nghé, Quận 1',
-    distKm: 0.9,
     rating: 4.9,
     reviews: 980,
     price: 'high',
     priceText: '180k - 260k/người',
     tags: ['ac', 'romantic'],
     badge: 'Hẹn hò lãng mạn 🕯️',
-    tip: 'Pizza 4 loại phô mai chan mật ong rừng nguyên chất, không gian ấm cúng chụp ảnh siêu xinh.',
-    xPct: 58,
-    yPct: 52
+    tip: 'Pizza 4 loại phô mai chan mật ong rừng nguyên chất, không gian ấm cúng chụp ảnh siêu xinh.'
   },
   {
     id: 'poke-saigon-calmette',
@@ -3737,17 +3754,16 @@ const mapRestaurantsDb = [
     emoji: '🥑',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7758,
+    lng: 106.7005,
     address: 'Tầng 1, 42Bis Lý Tự Trọng, Bến Nghé, Quận 1',
-    distKm: 0.5,
     rating: 4.9,
     reviews: 310,
     price: 'mid',
     priceText: '130k - 170k/người',
     tags: ['ac', 'view'],
     badge: 'Eat clean giữ dáng 🥗',
-    tip: 'Cá hồi sashimi tươi rói kèm sốt mè rang béo thơm nhẹ bụng, nàng nào giữ dáng cũng ưng 10/10.',
-    xPct: 50,
-    yPct: 46
+    tip: 'Cá hồi sashimi tươi rói kèm sốt mè rang béo thơm nhẹ bụng, nàng nào giữ dáng cũng ưng 10/10.'
   },
   {
     id: 'tra-sua-koi-the',
@@ -3756,17 +3772,16 @@ const mapRestaurantsDb = [
     emoji: '🧋',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7731,
+    lng: 106.7048,
     address: '76 Ngô Đức Kế, Bến Nghé, Quận 1',
-    distKm: 1.0,
     rating: 4.8,
     reviews: 860,
     price: 'cheap',
     priceText: '50k - 75k/người',
     tags: ['ac'],
     badge: 'Chữa lành tức thì 🧋',
-    tip: 'Nhớ thần chú: 30% đường, 50% đá, gấp đôi trân châu hoàng kim dẻo mềm nàng mê.',
-    xPct: 66,
-    yPct: 62
+    tip: 'Nhớ thần chú: 30% đường, 50% đá, gấp đôi trân châu hoàng kim dẻo mềm nàng mê.'
   },
   {
     id: 'el-gaucho-steak',
@@ -3775,17 +3790,16 @@ const mapRestaurantsDb = [
     emoji: '🥩',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7779,
+    lng: 106.7037,
     address: '74/1 Hai Bà Trưng, Bến Nghé, Quận 1',
-    distKm: 0.7,
     rating: 4.9,
     reviews: 730,
     price: 'high',
     priceText: '600k - 1000k/người',
     tags: ['ac', 'romantic'],
     badge: 'Đẳng cấp quý tộc 🍷',
-    tip: 'Thịt bò vân mỡ mọng nước tan chảy đầu lưỡi, phục vụ nến và hoa tươi cho dịp kỷ niệm.',
-    xPct: 64,
-    yPct: 44
+    tip: 'Thịt bò vân mỡ mọng nước tan chảy đầu lưỡi, phục vụ nến và hoa tươi cho dịp kỷ niệm.'
   },
   {
     id: 'oc-dao-nguyen-trai',
@@ -3794,17 +3808,16 @@ const mapRestaurantsDb = [
     emoji: '🐚',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7638,
+    lng: 106.6881,
     address: 'Hẻm 212B Nguyễn Trãi, Phường Nguyễn Cư Trinh, Quận 1',
-    distKm: 1.8,
     rating: 4.8,
     reviews: 640,
     price: 'mid',
     priceText: '100k - 160k/người',
     tags: ['street'],
     badge: 'Đặc sản Sài Gòn 🐚',
-    tip: 'Ốc hương giòn sần sật ngập sốt trứng muối thơm ngậy, gọi 2 bánh mì nóng giòn chấm hết nước sốt.',
-    xPct: 36,
-    yPct: 70
+    tip: 'Ốc hương giòn sần sật ngập sốt trứng muối thơm ngậy, gọi 2 bánh mì nóng giòn chấm hết nước sốt.'
   },
   {
     id: 'bun-dau-tien-hai',
@@ -3813,17 +3826,16 @@ const mapRestaurantsDb = [
     emoji: '🥢',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7668,
+    lng: 106.6872,
     address: '409 Cống Quỳnh, Phường Nguyễn Cư Trinh, Quận 1',
-    distKm: 1.6,
     rating: 4.7,
     reviews: 490,
     price: 'cheap',
     priceText: '55k - 85k/người',
     tags: ['street', 'ac'],
     badge: 'Mẹt đầy ắp 🥢',
-    tip: 'Đậu rán giòn rụm bên ngoài mềm mướt bên trong, mắm tôm đánh sủi bọt bông với nhiều tắc ớt.',
-    xPct: 32,
-    yPct: 62
+    tip: 'Đậu rán giòn rụm bên ngoài mềm mướt bên trong, mắm tôm đánh sủi bọt bông với nhiều tắc ớt.'
   },
   {
     id: 'sushi-tei-ly-tu-trong',
@@ -3832,17 +3844,16 @@ const mapRestaurantsDb = [
     emoji: '🍣',
     area: 'Quận 1, TP. HCM',
     city: 'hcm',
+    lat: 10.7736,
+    lng: 106.6961,
     address: '200 Lý Tự Trọng, Bến Thành, Quận 1',
-    distKm: 0.7,
     rating: 4.9,
     reviews: 580,
     price: 'high',
     priceText: '260k - 380k/người',
     tags: ['ac', 'romantic'],
     badge: 'Cực tươi ngọt 🍣',
-    tip: 'Cá hồi tươi rói béo mềm tan trong miệng, nhân viên chu đáo chuẩn phong cách Nhật.',
-    xPct: 45,
-    yPct: 52
+    tip: 'Cá hồi tươi rói béo mềm tan trong miệng, nhân viên chu đáo chuẩn phong cách Nhật.'
   },
   {
     id: 'mi-cay-sasin-q3',
@@ -3851,17 +3862,16 @@ const mapRestaurantsDb = [
     emoji: '🌶️',
     area: 'Quận 3, TP. HCM',
     city: 'hcm',
+    lat: 10.7783,
+    lng: 106.6841,
     address: '310 Nguyễn Đình Chiểu, Phường 4, Quận 3',
-    distKm: 1.5,
     rating: 4.7,
     reviews: 350,
     price: 'cheap',
     priceText: '50k - 80k/người',
     tags: ['ac'],
     badge: 'Thử thách cay tê 🌶️',
-    tip: 'Vị chua cay kim chi đậm đà giải tỏa stress tức thì, nhớ gọi thêm bình sữa tươi để cứu nguy!',
-    xPct: 42,
-    yPct: 60
+    tip: 'Vị chua cay kim chi đậm đà giải tỏa stress tức thì, nhớ gọi thêm bình sữa tươi để cứu nguy!'
   },
   {
     id: 'banh-canh-ut-le',
@@ -3870,17 +3880,16 @@ const mapRestaurantsDb = [
     emoji: '🍲',
     area: 'Quận 5, TP. HCM',
     city: 'hcm',
+    lat: 10.7712,
+    lng: 106.6628,
     address: '210 Tô Hiến Thành, Phường 15, Quận 10',
-    distKm: 2.4,
     rating: 4.8,
     reviews: 670,
     price: 'cheap',
     priceText: '60k - 85k/người',
     tags: ['street', 'ac'],
     badge: 'Đông nghẹt khách 🔥',
-    tip: 'Nước dùng sền sệt béo ngậy ngọt vị thịt cua tươi và huyết mềm, thêm quẩy giòn tan.',
-    xPct: 25,
-    yPct: 65
+    tip: 'Nước dùng sền sệt béo ngậy ngọt vị thịt cua tươi và huyết mềm, thêm quẩy giòn tan.'
   },
   {
     id: 'lau-ga-la-e-tao-ngo',
@@ -3889,17 +3898,16 @@ const mapRestaurantsDb = [
     emoji: '🍲',
     area: 'Bình Thạnh, TP. HCM',
     city: 'hcm',
+    lat: 10.8062,
+    lng: 106.7161,
     address: '79 Ung Văn Khiêm, Phường 25, Bình Thạnh',
-    distKm: 2.8,
     rating: 4.7,
     reviews: 410,
     price: 'mid',
     priceText: '120k - 180k/người',
     tags: ['view', 'street'],
     badge: 'Ấm lòng mùa mưa 🌧️',
-    tip: 'Vị cay the thơm lừng của ớt xiêm xanh và lá é non giúp xua tan mệt mỏi sau ngày dài.',
-    xPct: 72,
-    yPct: 35
+    tip: 'Vị cay the thơm lừng của ớt xiêm xanh và lá é non giúp xua tan mệt mỏi sau ngày dài.'
   },
   {
     id: 'com-tam-ba-ghien',
@@ -3908,17 +3916,16 @@ const mapRestaurantsDb = [
     emoji: '🍛',
     area: 'Phú Nhuận, TP. HCM',
     city: 'hcm',
+    lat: 10.7932,
+    lng: 106.6738,
     address: '84 Đặng Văn Ngữ, Phường 10, Phú Nhuận',
-    distKm: 3.5,
     rating: 4.7,
     reviews: 820,
     price: 'cheap',
     priceText: '65k - 95k/người',
     tags: ['street'],
     badge: 'Sườn khổng lồ 🥩',
-    tip: 'Miếng sườn to che trọn đĩa cơm nướng mật ong thơm nức mũi, xin thêm chén mỡ hành tóp mỡ.',
-    xPct: 30,
-    yPct: 30
+    tip: 'Miếng sườn to che trọn đĩa cơm nướng mật ong thơm nức mũi, xin thêm chén mỡ hành tóp mỡ.'
   },
   {
     id: 'bun-cha-huong-lien',
@@ -3927,17 +3934,16 @@ const mapRestaurantsDb = [
     emoji: '🥢',
     area: 'Hoàn Kiếm, Hà Nội',
     city: 'hn',
+    lat: 21.0169,
+    lng: 105.8538,
     address: '24 Lê Văn Hưu, Phan Chu Trinh, Hoàn Kiếm, Hà Nội',
-    distKm: 1.4,
     rating: 4.8,
     reviews: 1450,
     price: 'cheap',
     priceText: '60k - 85k/người',
     tags: ['ac', 'street'],
     badge: 'Danh tiếng quốc tế 🥢',
-    tip: 'Chả nướng than hoa thơm lừng mềm mọng, nước mắm đu đủ chua ngọt thanh dịu kèm nem cua bể.',
-    xPct: 55,
-    yPct: 45
+    tip: 'Chả nướng than hoa thơm lừng mềm mọng, nước mắm đu đủ chua ngọt thanh dịu kèm nem cua bể.'
   }
 ];
 
@@ -3945,6 +3951,7 @@ const mapRestaurantsDb = [
 let selectedAreaName = 'Quận 1, TP. HCM';
 let selectedCity = 'hcm';
 let selectedRadiusKm = 2;
+let currentCenterCoords = { lat: 10.7769, lng: 106.7009 }; // Default: District 1, HCM
 let currentMapSearch = '';
 let selectedMapTag = 'all';
 let mapFilters = {
@@ -3956,6 +3963,229 @@ let mapFilters = {
   onlyFav: false,
   highRating: false
 };
+
+// Leaflet Map Global Instances
+let leafletMap = null;
+let leafletMarkersLayer = null;
+let leafletUserMarker = null;
+let leafletRadiusCircle = null;
+let restaurantMarkersMap = {};
+
+// ── Real Geographic Haversine Distance ──
+function getHaversineDistanceKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const dist = R * c;
+  return dist < 10 ? +(dist.toFixed(1)) : Math.round(dist);
+}
+
+function getEffectiveDistKm(r) {
+  return getHaversineDistanceKm(currentCenterCoords.lat, currentCenterCoords.lng, r.lat, r.lng);
+}
+
+function getFilteredRestaurants() {
+  return mapRestaurantsDb.filter(r => {
+    const effDist = getEffectiveDistKm(r);
+
+    // Radius filter
+    if (selectedRadiusKm < 999 && effDist > selectedRadiusKm) {
+      return false;
+    }
+
+    // Text search
+    if (currentMapSearch) {
+      const q = currentMapSearch;
+      const textMatch = r.name.toLowerCase().includes(q) ||
+                        r.food.toLowerCase().includes(q) ||
+                        r.address.toLowerCase().includes(q) ||
+                        r.tip.toLowerCase().includes(q);
+      if (!textMatch) return false;
+    }
+
+    // Tag chip filter
+    const isNotebookSaved = favDishes.some(f => f.title === r.name || f.title === r.food);
+    if (selectedMapTag === 'quán ruột' && !isNotebookSaved && !r.badge.includes('Sổ tay') && !r.badge.includes('ruột')) {
+      return false;
+    }
+    if (selectedMapTag === 'view chill' && !r.tags.includes('view') && !r.tags.includes('romantic')) {
+      return false;
+    }
+    if (selectedMapTag === 'vỉa hè' && !r.tags.includes('street')) {
+      return false;
+    }
+    if (selectedMapTag === 'điều hòa' && !r.tags.includes('ac')) {
+      return false;
+    }
+
+    // Advanced modal filters
+    if (mapFilters.ac && !r.tags.includes('ac')) return false;
+    if (mapFilters.romantic && !r.tags.includes('romantic')) return false;
+    if (mapFilters.view && !r.tags.includes('view')) return false;
+    if (mapFilters.street && !r.tags.includes('street')) return false;
+    if (mapFilters.price !== 'all' && r.price !== mapFilters.price) return false;
+    if (mapFilters.onlyFav && !isNotebookSaved) return false;
+    if (mapFilters.highRating && r.rating < 4.8) return false;
+
+    return true;
+  });
+}
+
+// ── Leaflet Real Map Engine ──
+function initLeafletMap() {
+  const container = document.getElementById('real-leaflet-map');
+  if (!container) return;
+  if (leafletMap) {
+    leafletMap.invalidateSize();
+    return;
+  }
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet library is still loading...');
+    setTimeout(initLeafletMap, 300);
+    return;
+  }
+
+  // Create real Leaflet map instance
+  leafletMap = L.map('real-leaflet-map', {
+    zoomControl: false,
+    attributionControl: false
+  }).setView([currentCenterCoords.lat, currentCenterCoords.lng], 15);
+
+  // CartoDB Voyager Tile Layer - Real, clean, beautiful street map of Vietnam
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    subdomains: 'abcd'
+  }).addTo(leafletMap);
+
+  L.control.zoom({ position: 'bottomright' }).addTo(leafletMap);
+
+  leafletMarkersLayer = L.layerGroup().addTo(leafletMap);
+
+  renderLeafletOverlays();
+}
+
+function renderLeafletOverlays() {
+  if (!leafletMap || !leafletMarkersLayer) return;
+
+  leafletMarkersLayer.clearLayers();
+  restaurantMarkersMap = {};
+
+  // 1. User Position Marker ("2 đứa mình 💕")
+  const userIcon = L.divIcon({
+    className: 'custom-leaflet-pin',
+    html: `
+      <div class="relative flex flex-col items-center cursor-pointer -translate-x-1/2 -translate-y-1/2">
+        <div class="relative flex items-center justify-center">
+          <div class="absolute w-10 h-10 rounded-full bg-primary/25 animate-ping"></div>
+          <div class="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center shadow-lg border-2 border-white">
+            <span class="material-symbols-outlined text-[15px]" style="font-variation-settings:'FILL' 1">favorite</span>
+          </div>
+        </div>
+        <span class="bg-surface-container-lowest/95 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-bold shadow-md mt-1 whitespace-nowrap border border-primary/30">2 đứa mình 💕</span>
+      </div>
+    `,
+    iconSize: [30, 30]
+  });
+
+  if (leafletUserMarker) {
+    leafletUserMarker.setLatLng([currentCenterCoords.lat, currentCenterCoords.lng]);
+  } else {
+    leafletUserMarker = L.marker([currentCenterCoords.lat, currentCenterCoords.lng], { icon: userIcon, zIndexOffset: 1000 }).addTo(leafletMap);
+  }
+
+  // 2. Radius Circle Overlay
+  if (leafletRadiusCircle) {
+    leafletMap.removeLayer(leafletRadiusCircle);
+    leafletRadiusCircle = null;
+  }
+  if (selectedRadiusKm < 999) {
+    leafletRadiusCircle = L.circle([currentCenterCoords.lat, currentCenterCoords.lng], {
+      radius: selectedRadiusKm * 1000,
+      color: '#ae2f34',
+      fillColor: '#ffdad8',
+      fillOpacity: 0.16,
+      weight: 1.5,
+      dashArray: '5, 6'
+    }).addTo(leafletMap);
+  }
+
+  // 3. Restaurant Markers Layer
+  const filtered = getFilteredRestaurants();
+  filtered.forEach(r => {
+    const effDist = getEffectiveDistKm(r);
+    const customImg = customDishImages[r.food] || customDishImages[r.name];
+
+    const restIcon = L.divIcon({
+      className: 'custom-leaflet-pin',
+      html: `
+        <div class="group relative flex flex-col items-center cursor-pointer transition-transform hover:scale-110 active:scale-95 -translate-x-1/2 -translate-y-1/2">
+          <div class="bg-surface-container-lowest/95 text-on-surface px-2 py-0.5 rounded-full text-[9px] font-bold shadow-md whitespace-nowrap border border-outline-variant/30 group-hover:border-primary group-hover:text-primary transition-all flex items-center gap-1 mb-0.5">
+            <span>${r.emoji}</span>
+            <span class="max-w-[70px] truncate">${r.name.split('-')[0].trim()}</span>
+            <span class="text-primary font-bold">${effDist}km</span>
+          </div>
+          <div class="w-6 h-6 rounded-full bg-primary text-on-primary shadow-lg border-2 border-white flex items-center justify-center group-hover:bg-primary-dark transition-all">
+            <span class="material-symbols-outlined text-[13px]">restaurant</span>
+          </div>
+        </div>
+      `,
+      iconSize: [30, 30]
+    });
+
+    const marker = L.marker([r.lat, r.lng], { icon: restIcon });
+
+    const popupHtml = `
+      <div class="text-left space-y-1.5 min-w-[190px]">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-lg bg-primary-fixed/40 flex items-center justify-center text-lg flex-shrink-0 overflow-hidden">
+            ${customImg ? `<img src="${customImg}" alt="${r.name}" class="w-full h-full object-cover" />` : r.emoji}
+          </div>
+          <div class="min-w-0 flex-1">
+            <h4 class="font-bold text-xs text-on-surface leading-tight truncate">${r.name}</h4>
+            <span class="text-[10px] text-primary font-semibold block truncate">${r.food}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-[10px] text-on-surface-variant">
+          <span class="text-amber-500 font-bold">★ ${r.rating} (${r.reviews})</span>
+          <span>•</span>
+          <span class="text-primary font-bold">Cách ~${effDist} km</span>
+          <span>•</span>
+          <span>${r.priceText}</span>
+        </div>
+        <p class="text-[10px] text-on-surface-variant line-clamp-1">📍 ${r.address}</p>
+        <div class="flex items-center gap-1.5 pt-1 border-t border-outline-variant/20">
+          <button onclick="openRestaurantInGoogleMaps('${r.id}')" class="flex-1 py-1 px-2 rounded-lg bg-primary text-on-primary text-[10px] font-bold text-center active:scale-95 shadow-2xs">Chỉ đường 🗺️</button>
+          <button onclick="focusRestaurantCard('${r.id}')" class="py-1 px-2 rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface text-[10px] font-semibold text-center active:scale-95">Xem món</button>
+        </div>
+      </div>
+    `;
+
+    marker.bindPopup(popupHtml, { maxWidth: 240, closeButton: false });
+    leafletMarkersLayer.addLayer(marker);
+    restaurantMarkersMap[r.id] = marker;
+  });
+}
+
+function centerMapOnCurrentArea() {
+  if (leafletMap) {
+    leafletMap.flyTo([currentCenterCoords.lat, currentCenterCoords.lng], 15, { duration: 0.8 });
+    showToast(`📍 Về trung tâm: ${selectedAreaName}`);
+  }
+}
+
+function flyToRestaurant(id) {
+  const r = mapRestaurantsDb.find(x => x.id === id);
+  if (!r || !leafletMap) return;
+  leafletMap.flyTo([r.lat, r.lng], 16, { duration: 0.8 });
+  const marker = restaurantMarkersMap[id];
+  if (marker) {
+    setTimeout(() => { marker.openPopup(); }, 850);
+  }
+}
 
 // ── Area Selection Modal Handlers ──
 function openAreaSelectModal() {
@@ -4012,6 +4242,9 @@ function renderAreaChips(city) {
 
 function selectArea(areaName) {
   selectedAreaName = areaName;
+  const coords = areaCenterCoordinates[areaName] || areaCenterCoordinates['Quận 1, TP. HCM'];
+  currentCenterCoords = { ...coords };
+
   const lbl = document.getElementById('area-lbl');
   if (lbl) lbl.textContent = areaName;
   const mapIndicator = document.getElementById('map-area-indicator');
@@ -4021,7 +4254,10 @@ function selectArea(areaName) {
 
   closeAreaSelectModal();
   renderMapRestaurants();
-  renderMapPins();
+  if (leafletMap) {
+    leafletMap.flyTo([currentCenterCoords.lat, currentCenterCoords.lng], 15, { duration: 1.0 });
+    renderLeafletOverlays();
+  }
   showToast(`📍 Đã chuyển khu vực: ${areaName}`);
 }
 
@@ -4040,7 +4276,24 @@ function detectCurrentLocationGPS() {
     showToast('Đang quét tọa độ GPS quanh Bé...');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        selectArea('Vị trí GPS của Bé');
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        currentCenterCoords = { lat, lng };
+        selectedAreaName = 'Vị trí GPS của Bé';
+
+        const lbl = document.getElementById('area-lbl');
+        if (lbl) lbl.textContent = selectedAreaName;
+        const mapIndicator = document.getElementById('map-area-indicator');
+        if (mapIndicator) mapIndicator.textContent = selectedAreaName;
+        const currEl = document.getElementById('current-selected-area-text');
+        if (currEl) currEl.textContent = selectedAreaName;
+
+        closeAreaSelectModal();
+        renderMapRestaurants();
+        if (leafletMap) {
+          leafletMap.flyTo([lat, lng], 15, { duration: 1.0 });
+          renderLeafletOverlays();
+        }
         showToast('📍 Đã định vị thành công vị trí GPS của Bé!');
       },
       (err) => {
@@ -4102,9 +4355,16 @@ function selectRadiusOption(radiusKm) {
   if (lbl) {
     lbl.textContent = (selectedRadiusKm >= 999) ? 'Toàn khu vực' : `< ${selectedRadiusKm}km quanh Bé`;
   }
+  const liveRadius = document.getElementById('map-live-radius-indicator');
+  if (liveRadius) {
+    liveRadius.textContent = (selectedRadiusKm >= 999) ? 'Toàn thành phố' : `< ${selectedRadiusKm}km quanh Bé`;
+  }
+
   closeRadiusSelectModal();
   renderMapRestaurants();
-  renderMapPins();
+  if (leafletMap) {
+    renderLeafletOverlays();
+  }
   showToast(`🎯 Bán kính tìm quán: ${selectedRadiusKm >= 999 ? 'Tất cả khoảng cách' : '< ' + selectedRadiusKm + 'km'}`);
 }
 
@@ -4117,7 +4377,7 @@ function handleMapSearch(val) {
     else clearBtn.classList.add('hidden');
   }
   renderMapRestaurants();
-  renderMapPins();
+  if (leafletMap) renderLeafletOverlays();
 }
 
 function clearMapSearch() {
@@ -4193,7 +4453,7 @@ function applyMapFilters() {
 
   closeMapFilterModal();
   renderMapRestaurants();
-  renderMapPins();
+  if (leafletMap) renderLeafletOverlays();
   showToast('⚙️ Đã áp dụng tiêu chí bộ lọc quán xinh!');
 }
 
@@ -4221,7 +4481,7 @@ function resetMapFilters() {
 
   closeMapFilterModal();
   renderMapRestaurants();
-  renderMapPins();
+  if (leafletMap) renderLeafletOverlays();
   showToast('Đã đặt lại bộ lọc quán về mặc định!');
 }
 
@@ -4235,73 +4495,10 @@ function filterMapByTag(tag) {
     }
   });
   renderMapRestaurants();
-  renderMapPins();
+  if (leafletMap) renderLeafletOverlays();
 }
 
-// ── Dynamic Distance & Filter Calculation ──
-function getEffectiveDistKm(r) {
-  if (selectedAreaName.includes('GPS') || selectedAreaName.includes('Gần bạn nhất')) {
-    return r.distKm;
-  }
-  const areaKey = selectedAreaName.split(',')[0].trim().toLowerCase();
-  const rAreaKey = r.area.split(',')[0].trim().toLowerCase();
-  if (areaKey === rAreaKey) {
-    return r.distKm;
-  }
-  if (r.city === selectedCity) {
-    return +(r.distKm + 1.6).toFixed(1);
-  }
-  return +(r.distKm + 7.5).toFixed(1);
-}
-
-function getFilteredRestaurants() {
-  return mapRestaurantsDb.filter(r => {
-    const effDist = getEffectiveDistKm(r);
-
-    // Radius filter
-    if (selectedRadiusKm < 999 && effDist > selectedRadiusKm) {
-      return false;
-    }
-
-    // Text search
-    if (currentMapSearch) {
-      const q = currentMapSearch;
-      const textMatch = r.name.toLowerCase().includes(q) ||
-                        r.food.toLowerCase().includes(q) ||
-                        r.address.toLowerCase().includes(q) ||
-                        r.tip.toLowerCase().includes(q);
-      if (!textMatch) return false;
-    }
-
-    // Tag chip filter
-    const isNotebookSaved = favDishes.some(f => f.title === r.name || f.title === r.food);
-    if (selectedMapTag === 'quán ruột' && !isNotebookSaved && !r.badge.includes('Sổ tay') && !r.badge.includes('ruột')) {
-      return false;
-    }
-    if (selectedMapTag === 'view chill' && !r.tags.includes('view') && !r.tags.includes('romantic')) {
-      return false;
-    }
-    if (selectedMapTag === 'vỉa hè' && !r.tags.includes('street')) {
-      return false;
-    }
-    if (selectedMapTag === 'điều hòa' && !r.tags.includes('ac')) {
-      return false;
-    }
-
-    // Advanced modal filters
-    if (mapFilters.ac && !r.tags.includes('ac')) return false;
-    if (mapFilters.romantic && !r.tags.includes('romantic')) return false;
-    if (mapFilters.view && !r.tags.includes('view')) return false;
-    if (mapFilters.street && !r.tags.includes('street')) return false;
-    if (mapFilters.price !== 'all' && r.price !== mapFilters.price) return false;
-    if (mapFilters.onlyFav && !isNotebookSaved) return false;
-    if (mapFilters.highRating && r.rating < 4.8) return false;
-
-    return true;
-  });
-}
-
-// ── Rendering Restaurant Cards & Map Pins ──
+// ── Rendering Restaurant Cards List ──
 function renderMapRestaurants() {
   const container = document.getElementById('map-restaurants-container');
   if (!container) return;
@@ -4409,38 +4606,6 @@ function renderMapRestaurants() {
   }).join('');
 }
 
-function renderMapPins() {
-  const container = document.getElementById('map-pins-container');
-  if (!container) return;
-  const filtered = getFilteredRestaurants();
-  container.innerHTML = '';
-
-  filtered.slice(0, 10).forEach(r => {
-    const effDist = getEffectiveDistKm(r);
-    const pin = document.createElement('div');
-    pin.className = 'absolute z-30 pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all hover:scale-110 active:scale-95 group';
-    pin.style.left = `${r.xPct}%`;
-    pin.style.top = `${r.yPct}%`;
-    pin.id = `map-pin-${r.id}`;
-    pin.onclick = () => focusRestaurantCard(r.id);
-
-    pin.innerHTML = `
-      <div class="relative flex flex-col items-center">
-        <div class="bg-surface-container-lowest/95 text-on-surface px-2 py-0.5 rounded-full text-[9px] font-bold shadow-md whitespace-nowrap border border-outline-variant/30 group-hover:border-primary group-hover:text-primary transition-all flex items-center gap-1 mb-0.5">
-          <span>${r.emoji}</span>
-          <span class="max-w-[70px] truncate">${r.name.split('-')[0].trim()}</span>
-          <span class="text-primary font-bold">${effDist}km</span>
-        </div>
-        <div class="w-6 h-6 rounded-full bg-primary text-on-primary shadow-lg border-2 border-white flex items-center justify-center group-hover:bg-primary-dark transition-all">
-          <span class="material-symbols-outlined text-[13px]">restaurant</span>
-        </div>
-        <div class="w-1.5 h-1.5 bg-primary/40 rounded-full mt-0.5"></div>
-      </div>
-    `;
-    container.appendChild(pin);
-  });
-}
-
 function focusRestaurantCard(id) {
   const card = document.getElementById(`map-card-${id}`);
   if (card) {
@@ -4450,6 +4615,7 @@ function focusRestaurantCard(id) {
       card.classList.remove('ring-2', 'ring-primary', 'shadow-lg');
     }, 2000);
   }
+  flyToRestaurant(id);
 }
 
 function openRestaurantInGoogleMaps(id) {
@@ -6024,7 +6190,9 @@ renderBlackList();
 selectMood(0, true);
 renderAreaChips('hcm');
 renderMapRestaurants();
-renderMapPins();
+setTimeout(() => {
+  initLeafletMap();
+}, 250);
 </script>
 </body>
 </html>
