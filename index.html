@@ -1803,9 +1803,11 @@
       </div>
     </div>
   </div>
+</div>
+
 <!-- ══ MODAL: CHỌN KHU VỰC HẸN HÒ ══ -->
-<div id="area-select-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
-  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[85vh] overflow-y-auto flex flex-col shadow-2xl space-y-4">
+<div id="area-select-modal" onclick="if(event.target === this) closeAreaSelectModal()" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[85vh] overflow-y-auto flex flex-col shadow-2xl space-y-3.5">
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
       <div class="flex items-center gap-2">
         <div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
@@ -1821,18 +1823,30 @@
       </button>
     </div>
 
+    <!-- Khu vực hiện tại đang chọn -->
+    <div class="p-2.5 rounded-xl bg-primary-fixed/30 border border-primary/30 flex items-center justify-between">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="material-symbols-outlined text-primary text-[20px] shrink-0">my_location</span>
+        <div class="min-w-0">
+          <span class="text-[10px] text-on-surface-variant block uppercase font-bold tracking-wider">Đang áp dụng:</span>
+          <span id="current-selected-area-text" class="text-xs font-bold text-primary truncate block">Quận 1, TP. HCM</span>
+        </div>
+      </div>
+      <button type="button" onclick="selectArea('Quận 1, TP. HCM')" class="px-2.5 py-1 rounded-lg bg-surface text-primary text-[11px] font-bold border border-primary/20 hover:bg-primary hover:text-on-primary transition-all shrink-0">Về Quận 1</button>
+    </div>
+
     <!-- GPS Button -->
-    <button type="button" onclick="detectCurrentLocationGPS()" class="w-full bg-primary-fixed/60 hover:bg-primary-fixed text-on-primary-fixed-variant p-3 rounded-xl flex items-center justify-between active:scale-98 transition-all border border-primary/30">
+    <button type="button" onclick="detectCurrentLocationGPS()" class="w-full bg-surface-container-low hover:bg-primary-fixed/50 text-on-surface p-3 rounded-xl flex items-center justify-between active:scale-98 transition-all border border-outline-variant/30 hover:border-primary/40">
       <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-xs">
-          <span class="material-symbols-outlined text-[18px]">my_location</span>
+        <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-xs shrink-0">
+          <span class="material-symbols-outlined text-[18px]">near_me</span>
         </div>
         <div class="text-left">
           <span class="font-label-md text-xs font-bold text-on-surface block">Lấy vị trí GPS thực tế của tôi</span>
           <span class="text-[11px] text-primary font-semibold">Tự động định vị bán kính quán ăn gần nhất</span>
         </div>
       </div>
-      <span class="material-symbols-outlined text-primary text-[20px]">chevron_right</span>
+      <span class="material-symbols-outlined text-primary text-[20px] shrink-0">chevron_right</span>
     </button>
 
     <!-- Custom address input -->
@@ -1866,7 +1880,7 @@
 </div>
 
 <!-- ══ MODAL: CHỌN BÁN KÍNH QUANH BÉ ══ -->
-<div id="radius-select-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
+<div id="radius-select-modal" onclick="if(event.target === this) closeRadiusSelectModal()" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
   <div class="bg-surface rounded-2xl p-space-lg w-full max-w-sm flex flex-col shadow-2xl space-y-3.5">
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
       <div class="flex items-center gap-2">
@@ -1948,7 +1962,7 @@
 </div>
 
 <!-- ══ MODAL: BỘ LỌC TIÊU CHÍ QUÁN XINH ══ -->
-<div id="map-advanced-filter-modal" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
+<div id="map-advanced-filter-modal" onclick="if(event.target === this) closeMapFilterModal()" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
   <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[88vh] overflow-y-auto flex flex-col shadow-2xl space-y-4">
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
       <div class="flex items-center gap-2">
@@ -3949,6 +3963,8 @@ function openAreaSelectModal() {
   if (modal) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    const currEl = document.getElementById('current-selected-area-text');
+    if (currEl) currEl.textContent = selectedAreaName;
     renderAreaChips(selectedCity);
   }
 }
@@ -4000,6 +4016,8 @@ function selectArea(areaName) {
   if (lbl) lbl.textContent = areaName;
   const mapIndicator = document.getElementById('map-area-indicator');
   if (mapIndicator) mapIndicator.textContent = areaName;
+  const currEl = document.getElementById('current-selected-area-text');
+  if (currEl) currEl.textContent = areaName;
 
   closeAreaSelectModal();
   renderMapRestaurants();
@@ -4022,14 +4040,12 @@ function detectCurrentLocationGPS() {
     showToast('Đang quét tọa độ GPS quanh Bé...');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const lat = pos.coords.latitude.toFixed(3);
-        const lng = pos.coords.longitude.toFixed(3);
-        selectArea(`GPS (${lat}, ${lng})`);
-        showToast('📍 Đã định vị chính xác vị trí GPS của Bé!');
+        selectArea('Vị trí GPS của Bé');
+        showToast('📍 Đã định vị thành công vị trí GPS của Bé!');
       },
       (err) => {
-        selectArea('Gần bạn nhất (Quận 1, TP. HCM)');
-        showToast('📍 Đã chuyển về vị trí gần bạn nhất (Quận 1, TP. HCM)');
+        selectArea('Quận 1, TP. HCM');
+        showToast('📍 Không lấy được GPS, chuyển về Quận 1, TP. HCM');
       },
       { timeout: 7000 }
     );
