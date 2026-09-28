@@ -744,6 +744,7 @@
         <div class="absolute top-3 right-3 flex flex-col gap-2 z-[400]">
           <button type="button" onclick="detectCurrentLocationGPS()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all border border-outline-variant/20" title="Định vị GPS thực tế của Bé"><span class="material-symbols-outlined text-[20px]">near_me</span></button>
           <button type="button" onclick="centerMapOnCurrentArea()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all border border-outline-variant/20" title="Về trung tâm khu vực"><span class="material-symbols-outlined text-[20px]">filter_center_focus</span></button>
+          <button type="button" onclick="toggleMapTileStyle()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all border border-outline-variant/20" title="Đổi kiểu bản đồ (OpenStreetMap / Esri)"><span class="material-symbols-outlined text-[20px]">layers</span></button>
           <button type="button" onclick="openExternalGoogleMapsSearch()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-secondary active:scale-90 hover:bg-secondary-fixed transition-all border border-outline-variant/20" title="Mở trên Google Maps"><span class="material-symbols-outlined text-[20px]">map</span></button>
         </div>
 
@@ -4035,7 +4036,39 @@ function getFilteredRestaurants() {
   });
 }
 
-// ── Leaflet Real Map Engine ──
+// ── Leaflet Real Map Engine (100% Free, NO API Key Required) ──
+let currentTileLayerName = 'osm';
+let activeTileLayer = null;
+
+function setMapTileLayer(type) {
+  if (!leafletMap) return;
+  if (activeTileLayer) {
+    leafletMap.removeLayer(activeTileLayer);
+  }
+  if (type === 'esri') {
+    // Esri World Street Map (100% Free, NO API Key, highly detailed streets & buildings)
+    activeTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: '© Esri, HERE, Garmin, USGS'
+    });
+    currentTileLayerName = 'esri';
+    showToast('🗺️ Đã đổi sang kiểu bản đồ: Esri World Street');
+  } else {
+    // OpenStreetMap Standard (100% Free, NO API Key, Vietnamese street names & landmarks)
+    activeTileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    });
+    currentTileLayerName = 'osm';
+    showToast('🗺️ Đã đổi sang kiểu bản đồ: OpenStreetMap Tiếng Việt');
+  }
+  activeTileLayer.addTo(leafletMap);
+}
+
+function toggleMapTileStyle() {
+  setMapTileLayer(currentTileLayerName === 'osm' ? 'esri' : 'osm');
+}
+
 function initLeafletMap() {
   const container = document.getElementById('real-leaflet-map');
   if (!container) return;
@@ -4055,11 +4088,8 @@ function initLeafletMap() {
     attributionControl: false
   }).setView([currentCenterCoords.lat, currentCenterCoords.lng], 15);
 
-  // CartoDB Voyager Tile Layer - Real, clean, beautiful street map of Vietnam
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19,
-    subdomains: 'abcd'
-  }).addTo(leafletMap);
+  // Set default tile layer to OpenStreetMap (100% free, NO API key required!)
+  setMapTileLayer('osm');
 
   L.control.zoom({ position: 'bottomright' }).addTo(leafletMap);
 
