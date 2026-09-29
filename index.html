@@ -3756,6 +3756,13 @@ function goToMapForDish() {
 
 function addWinDishToNotebook() {
   if (!lastWonDish) return;
+  const norm = lastWonDish.trim().toLowerCase();
+  const existing = favDishes.find(d => d.title && d.title.trim().toLowerCase() === norm);
+  if (existing) {
+    showToast(`"${lastWonDish}" đã có sẵn trong Sổ tay của bạn rồi nè! 💕`);
+    closeWinModal();
+    return;
+  }
   const customImg = customDishImages[lastWonDish];
   const newFav = {
     id: 'fav_' + Date.now(),
@@ -7865,6 +7872,55 @@ function saveFavDishesToStorage() {
   } catch(e) {}
 }
 
+function deduplicateFavDishes() {
+  if (!Array.isArray(favDishes)) return;
+  const seenTitles = new Map();
+  const seenImages = new Set();
+  const cleaned = [];
+  let hasChange = false;
+
+  for (const item of favDishes) {
+    if (!item || !item.title) continue;
+    const normTitle = item.title.trim().toLowerCase();
+
+    // 1. Chống trùng lặp tiêu đề / tên món quán
+    if (seenTitles.has(normTitle)) {
+      hasChange = true;
+      const existing = seenTitles.get(normTitle);
+      // Ưu tiên giữ lại bản ghi có ảnh chụp thật hoặc ghi chú chi tiết hơn
+      if (!isImageAvatar(existing.icon) && isImageAvatar(item.icon)) {
+        const idx = cleaned.indexOf(existing);
+        if (idx !== -1) cleaned[idx] = item;
+        seenTitles.set(normTitle, item);
+      }
+      continue;
+    }
+
+    // 2. Chống trùng lặp hình ảnh upload (không cho 2 món khác nhau dùng chung 1 ảnh chụp)
+    if (isImageAvatar(item.icon)) {
+      if (seenImages.has(item.icon)) {
+        hasChange = true;
+        // Trùng ảnh: chuyển về emoji phù hợp để tránh spam ảnh
+        const t = item.title.toLowerCase();
+        item.icon = (t.includes('bún') || t.includes('phở') || t.includes('hủ tiếu')) ? '🍜' 
+                  : ((t.includes('nước') || t.includes('trà') || t.includes('ép') || t.includes('cà phê')) ? '🧋' 
+                  : (t.includes('cơm') ? '🍛' : '🍽️'));
+      } else {
+        seenImages.add(item.icon);
+      }
+    }
+
+    seenTitles.set(normTitle, item);
+    cleaned.push(item);
+  }
+
+  if (hasChange || cleaned.length !== favDishes.length) {
+    favDishes = cleaned;
+    saveFavDishesToStorage();
+  }
+}
+deduplicateFavDishes();
+
 const favFoodIcons = ['🍜', '🍲', '🧋', '🍛', '🍗', '🥩', '🥟', '🍣', '🍕', '🦀', '🍧', '🍦', '☕', '🍔', '🥖', '🍢'];
 let currentEditingFavId = null;
 let currentSelectedFavIcon = '🍜';
@@ -7994,7 +8050,20 @@ function handleFavImageUpload(event) {
       canvas.height = height;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
-      currentSelectedFavIcon = canvas.toDataURL('image/jpeg', 0.85);
+      const newImgData = canvas.toDataURL('image/jpeg', 0.85);
+
+      // Chống trùng lặp ảnh với các quán/món khác trong danh sách
+      const dupDish = favDishes.find(d => {
+        if (currentEditingFavId && d.id === currentEditingFavId) return false;
+        return isImageAvatar(d.icon) && d.icon === newImgData;
+      });
+      if (dupDish) {
+        showToast(`⚠️ Ảnh này đã được dùng cho "${dupDish.title}" rồi nè! Vui lòng chọn ảnh khác để không bị trùng lặp nhé 📸`);
+        event.target.value = '';
+        return;
+      }
+
+      currentSelectedFavIcon = newImgData;
       updateFavModalIconPreview();
       renderFavIconOptions();
       showToast('Đã tải ảnh món ăn lên! Đừng quên bấm Lưu quán nhé 📸');
@@ -8209,6 +8278,30 @@ function saveFavDishItem() {
     showToast('Vui lòng nhập tên quán hoặc món ăn nhé!');
     return;
   }
+
+  // Chống trùng lặp tiêu đề / tên món quán (trừ khi đang chỉnh sửa chính nó)
+  const normTitle = title.toLowerCase();
+  const dupTitleItem = favDishes.find(d => {
+    if (currentEditingFavId && d.id === currentEditingFavId) return false;
+    return d.title && d.title.trim().toLowerCase() === normTitle;
+  });
+  if (dupTitleItem) {
+    showToast(`⚠️ Quán hoặc món "${title}" đã có trong danh sách rồi nè! Vui lòng không thêm trùng nhé ❤️`);
+    return;
+  }
+
+  // Chống trùng lặp hình ảnh tải lên giữa các quán khác nhau
+  if (isImageAvatar(currentSelectedFavIcon)) {
+    const dupImgItem = favDishes.find(d => {
+      if (currentEditingFavId && d.id === currentEditingFavId) return false;
+      return isImageAvatar(d.icon) && d.icon.trim() === currentSelectedFavIcon.trim();
+    });
+    if (dupImgItem) {
+      showToast(`⚠️ Hình ảnh này đã được dùng cho "${dupImgItem.title}" rồi! Vui lòng chọn ảnh khác để tránh trùng lặp nhé 📸`);
+      return;
+    }
+  }
+
   const address = document.getElementById('fav-input-address').value.trim();
   const badge = document.getElementById('fav-input-badge').value.trim();
   const note = document.getElementById('fav-input-note').value.trim();
