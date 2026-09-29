@@ -2705,8 +2705,8 @@ function evaluateAndPickDishes(answers) {
         tasteTrait: 'món ruột chuẩn gu nàng thích nhất',
         analysis: generateRealisticAnalysis(fav.title, moodIdx, cravingIdx, budgetIdx, true),
         tip: fav.note ? `Lưu ý nàng dặn: "${fav.note}"` : 'Gọi đúng địa chỉ quán quen nàng đã lưu trong Sổ tay nhé!',
-        b1: favDishes[1]?.title || 'Phở Bò Tái Lăn Bát Đá',
-        b2: favDishes[2]?.title || 'Lẩu Thái Tom Yum Hải Sản',
+        b1: favDishes.filter(f => f && f.title && f.title.trim().toLowerCase() !== fav.title.trim().toLowerCase())[0]?.title || 'Phở Bò Tái Lăn Bát Đá',
+        b2: favDishes.filter(f => f && f.title && f.title.trim().toLowerCase() !== fav.title.trim().toLowerCase())[1]?.title || 'Lẩu Thái Tom Yum Hải Sản',
         score: score,
         moodIdx: moodIdx,
         cravingIdx: cravingIdx,
@@ -9205,67 +9205,177 @@ function renderResultBackups(r) {
   if (!container) return;
   container.innerHTML = '';
 
-  const res = r || (Rs && Rs[0]);
+  const res = r || currentResultData || (Rs && Rs[0]);
+  const mainTitle = ((res && res.dish) || '').trim().toLowerCase();
 
-  // Determine Option 2
+  // Danh sách các món đã được dùng để loại trừ hoàn toàn trùng lặp
+  const usedTitles = new Set();
+  if (mainTitle) usedTitles.add(mainTitle);
+
+  // Helper tìm món trong favDishes chưa bị trùng
+  function pickNextAvailableFav(excludeSet) {
+    if (!Array.isArray(favDishes)) return null;
+    return favDishes.find(d => {
+      if (!d || !d.title) return false;
+      return !excludeSet.has(d.title.trim().toLowerCase());
+    });
+  }
+
+  // Helper tìm món trong currentMatchingCandidates chưa bị trùng
+  function pickNextAvailableCandidate(excludeSet) {
+    if (!Array.isArray(currentMatchingCandidates)) return null;
+    return currentMatchingCandidates.find(c => {
+      if (!c || !c.dish) return false;
+      return !excludeSet.has(c.dish.trim().toLowerCase());
+    });
+  }
+
+  // Helper tìm món trong candidateDishes chưa bị trùng
+  function pickNextAvailableCatalog(excludeSet) {
+    if (!Array.isArray(candidateDishes)) return null;
+    return candidateDishes.find(c => {
+      if (!c || !c.dish) return false;
+      return !excludeSet.has(c.dish.trim().toLowerCase());
+    });
+  }
+
+  // 1. Xác định LỰA CHỌN SỐ 2 (b1)
   let b1 = null;
   if (customResultBackups.b1 && customResultBackups.b1.trim()) {
-    b1 = {
-      title: customResultBackups.b1.trim(),
-      icon: customResultBackups.icon1 || '🍜',
-      rate: '96%',
-      badge: 'LỰA CHỌN SỐ 2 (Tùy chỉnh)',
-      fromNotebook: false
-    };
-  } else if (favDishes.length > 0) {
-    b1 = {
-      title: favDishes[0].title,
-      icon: favDishes[0].icon || '🍜',
-      rate: '96%',
-      badge: 'LỰA CHỌN SỐ 2 (96%)',
-      fromNotebook: true,
-      note: favDishes[0].note || favDishes[0].address
-    };
-  } else {
-    b1 = {
-      title: res?.b1 || 'Phở Bò Tái Lăn Bát Đá',
-      icon: '🍜',
-      rate: '91%',
-      badge: 'LỰA CHỌN SỐ 2 (91%)',
-      fromNotebook: false
-    };
+    const custTitle = customResultBackups.b1.trim();
+    if (!usedTitles.has(custTitle.toLowerCase())) {
+      b1 = {
+        title: custTitle,
+        icon: customResultBackups.icon1 || '🍜',
+        rate: '96%',
+        badge: 'LỰA CHỌN SỐ 2 (Tùy chỉnh)',
+        fromNotebook: false
+      };
+    }
   }
 
-  // Determine Option 3
+  if (!b1) {
+    const favItem = pickNextAvailableFav(usedTitles);
+    if (favItem) {
+      b1 = {
+        title: favItem.title,
+        icon: favItem.icon || '🍜',
+        rate: '96%',
+        badge: 'LỰA CHỌN SỐ 2 (96%)',
+        fromNotebook: true,
+        note: favItem.note || favItem.address
+      };
+    }
+  }
+
+  if (!b1) {
+    const candItem = pickNextAvailableCandidate(usedTitles);
+    if (candItem) {
+      b1 = {
+        title: candItem.dish,
+        icon: candItem.e || '🍜',
+        rate: '95%',
+        badge: 'LỰA CHỌN SỐ 2 (95%)',
+        fromNotebook: candItem.fromNotebook || false,
+        note: candItem.tasteTrait || candItem.tip
+      };
+    }
+  }
+
+  if (!b1) {
+    if (res?.b1 && !usedTitles.has(res.b1.trim().toLowerCase())) {
+      b1 = {
+        title: res.b1.trim(),
+        icon: '🍜',
+        rate: '91%',
+        badge: 'LỰA CHỌN SỐ 2 (91%)',
+        fromNotebook: false
+      };
+    } else {
+      const catItem = pickNextAvailableCatalog(usedTitles);
+      b1 = {
+        title: catItem ? catItem.dish : 'Phở Bò Tái Lăn Bát Đá',
+        icon: catItem ? catItem.e : '🍜',
+        rate: '91%',
+        badge: 'LỰA CHỌN SỐ 2 (91%)',
+        fromNotebook: false
+      };
+    }
+  }
+
+  if (b1 && b1.title) {
+    usedTitles.add(b1.title.trim().toLowerCase());
+  }
+
+  // 2. Xác định LỰA CHỌN SỐ 3 (b2) - Đảm bảo KHÔNG TRÙNG cả Lựa chọn 1 lẫn Lựa chọn 2
   let b2 = null;
   if (customResultBackups.b2 && customResultBackups.b2.trim()) {
-    b2 = {
-      title: customResultBackups.b2.trim(),
-      icon: customResultBackups.icon2 || '🍲',
-      rate: '91%',
-      badge: 'LỰA CHỌN SỐ 3 (Tùy chỉnh)',
-      fromNotebook: false
-    };
-  } else if (favDishes.length > 1) {
-    b2 = {
-      title: favDishes[1].title,
-      icon: favDishes[1].icon || '🍲',
-      rate: '90%',
-      badge: 'LỰA CHỌN SỐ 3 (90%)',
-      fromNotebook: true,
-      note: favDishes[1].note || favDishes[1].address
-    };
-  } else {
-    b2 = {
-      title: res?.b2 || 'Bún Riêu Cua Bắp Bò',
-      icon: '🍲',
-      rate: '86%',
-      badge: 'LỰA CHỌN SỐ 3 (86%)',
-      fromNotebook: false
-    };
+    const custTitle = customResultBackups.b2.trim();
+    if (!usedTitles.has(custTitle.toLowerCase())) {
+      b2 = {
+        title: custTitle,
+        icon: customResultBackups.icon2 || '🍲',
+        rate: '91%',
+        badge: 'LỰA CHỌN SỐ 3 (Tùy chỉnh)',
+        fromNotebook: false
+      };
+    }
   }
 
-  const items = [b1, b2];
+  if (!b2) {
+    const favItem = pickNextAvailableFav(usedTitles);
+    if (favItem) {
+      b2 = {
+        title: favItem.title,
+        icon: favItem.icon || '🍲',
+        rate: '90%',
+        badge: 'LỰA CHỌN SỐ 3 (90%)',
+        fromNotebook: true,
+        note: favItem.note || favItem.address
+      };
+    }
+  }
+
+  if (!b2) {
+    const candItem = pickNextAvailableCandidate(usedTitles);
+    if (candItem) {
+      b2 = {
+        title: candItem.dish,
+        icon: candItem.e || '🍲',
+        rate: '89%',
+        badge: 'LỰA CHỌN SỐ 3 (89%)',
+        fromNotebook: candItem.fromNotebook || false,
+        note: candItem.tasteTrait || candItem.tip
+      };
+    }
+  }
+
+  if (!b2) {
+    if (res?.b2 && !usedTitles.has(res.b2.trim().toLowerCase())) {
+      b2 = {
+        title: res.b2.trim(),
+        icon: '🍲',
+        rate: '86%',
+        badge: 'LỰA CHỌN SỐ 3 (86%)',
+        fromNotebook: false
+      };
+    } else {
+      const catItem = pickNextAvailableCatalog(usedTitles);
+      b2 = {
+        title: catItem ? catItem.dish : 'Lẩu Thái Tom Yum Hải Sản',
+        icon: catItem ? catItem.e : '🍲',
+        rate: '86%',
+        badge: 'LỰA CHỌN SỐ 3 (86%)',
+        fromNotebook: false
+      };
+    }
+  }
+
+  if (b2 && b2.title) {
+    usedTitles.add(b2.title.trim().toLowerCase());
+  }
+
+  const items = [b1, b2].filter(Boolean);
   items.forEach((item, idx) => {
     const isImg = isImageAvatar(item.icon);
     const iconHtml = isImg
@@ -9476,6 +9586,13 @@ function promoteBackupToPrimary() {
   if (!currentSelectedBackupItem) return;
   const newMain = currentSelectedBackupItem.title;
   const newEmoji = currentSelectedBackupItem.icon || '🍜';
+  const fromNotebook = currentSelectedBackupItem.fromNotebook;
+
+  if (currentResultData) {
+    currentResultData.dish = newMain;
+    currentResultData.e = newEmoji;
+    currentResultData.fromNotebook = fromNotebook;
+  }
 
   const dishEl = document.getElementById('r-dish');
   if (dishEl) dishEl.textContent = newMain;
@@ -9483,17 +9600,26 @@ function promoteBackupToPrimary() {
   const emojiEl = document.getElementById('r-emoji');
   if (emojiEl) {
     if (isImageAvatar(newEmoji)) {
-      emojiEl.innerHTML = `<img src="${newEmoji}" alt="${newMain}" class="w-full h-full object-cover rounded-full" />`;
+      emojiEl.innerHTML = `<img src="${newEmoji}" alt="${newMain}" class="w-full h-full object-cover rounded-2xl shadow-sm" />`;
     } else {
       emojiEl.textContent = newEmoji;
     }
   }
 
+  const topBadge = document.getElementById('r-top-badge');
+  if (topBadge) {
+    topBadge.innerHTML = fromNotebook
+      ? `<span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">favorite</span><span>Món Tủ Nàng Dặn</span>`
+      : `<span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">hotel_class</span><span>Chân Ái Số 1</span>`;
+  }
+
   const badgeEl = document.getElementById('r-badge');
-  if (badgeEl) badgeEl.textContent = 'Gu bé chuẩn chỉ (Từ Sổ tay)';
+  if (badgeEl) badgeEl.textContent = fromNotebook ? '🌟 Món Tủ Sổ Tay Của Nàng' : 'Gu Bé Chọn (Dự phòng)';
 
   const analysisEl = document.getElementById('r-analysis');
-  if (analysisEl) analysisEl.textContent = `Đã chuyển sang món dự phòng "${newMain}" theo đúng gu nàng dặn trong Sổ tay!`;
+  if (analysisEl) analysisEl.textContent = `Đã chuyển sang món "${newMain}" theo đúng sở thích của nàng!`;
+
+  renderResultBackups(currentResultData);
 
   closeBackupActionModal();
   showToast(`Đã đổi sang "${newMain}" làm món chính! 🥳`);
