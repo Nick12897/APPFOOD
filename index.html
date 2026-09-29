@@ -1857,18 +1857,35 @@
       </div>
     </div>
 
-    <!-- Popular culinary hotspots tabs -->
+    <!-- Quick Search Province/City -->
+    <div class="space-y-1">
+      <label class="text-[11px] font-bold text-on-surface-variant block">🔍 Tìm nhanh tỉnh thành / địa điểm hẹn hò:</label>
+      <div class="flex items-center bg-surface-container-low px-3 py-2 rounded-xl border border-outline-variant/30 focus-within:border-primary">
+        <span class="material-symbols-outlined text-outline text-[18px] mr-1.5 shrink-0">search</span>
+        <input id="province-search-input" type="text" placeholder="Gõ tìm Đà Lạt, Vũng Tàu, Cần Thơ, Sa Pa, Hải Phòng..." class="w-full bg-transparent border-none outline-none text-xs text-on-surface" oninput="handleAreaSearchInput(this.value)"/>
+        <button id="clear-province-search-btn" type="button" onclick="clearProvinceSearch()" class="text-outline hover:text-on-surface text-xs hidden ml-1 font-bold px-1">✕</button>
+      </div>
+    </div>
+
+    <!-- Region Category Tabs & Chips -->
     <div class="space-y-2 pt-1">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold text-on-surface-variant">Thiên đường ẩm thực nổi tiếng:</span>
-        <div class="flex gap-1 text-[11px]">
-          <button type="button" onclick="switchAreaCity('hcm')" id="city-btn-hcm" class="px-2.5 py-0.5 rounded-full font-bold bg-primary text-on-primary">TP. HCM</button>
-          <button type="button" onclick="switchAreaCity('hn')" id="city-btn-hn" class="px-2.5 py-0.5 rounded-full font-semibold bg-surface-container text-on-surface-variant">Hà Nội</button>
-          <button type="button" onclick="switchAreaCity('dn')" id="city-btn-dn" class="px-2.5 py-0.5 rounded-full font-semibold bg-surface-container text-on-surface-variant">Đà Nẵng</button>
-        </div>
+        <span class="text-[11px] font-bold text-on-surface-variant">Chọn theo vùng miền & điểm du lịch:</span>
+        <span id="area-count-badge" class="text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded-full font-bold">50+ địa điểm</span>
+      </div>
+      
+      <!-- Scrollable Region Tabs -->
+      <div class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs" id="region-tabs-bar">
+        <button type="button" onclick="switchAreaRegion('dulich')" id="region-btn-dulich" class="region-tab-btn px-3 py-1 rounded-full font-bold whitespace-nowrap bg-primary text-on-primary shadow-xs transition-all">🔥 Du lịch hot</button>
+        <button type="button" onclick="switchAreaRegion('tplon')" id="region-btn-tplon" class="region-tab-btn px-3 py-1 rounded-full font-semibold whitespace-nowrap bg-surface-container text-on-surface-variant hover:text-on-surface transition-all">🏙️ TP lớn</button>
+        <button type="button" onclick="switchAreaRegion('miennam')" id="region-btn-miennam" class="region-tab-btn px-3 py-1 rounded-full font-semibold whitespace-nowrap bg-surface-container text-on-surface-variant hover:text-on-surface transition-all">🌾 Miền Nam / Miền Tây</button>
+        <button type="button" onclick="switchAreaRegion('mientrung')" id="region-btn-mientrung" class="region-tab-btn px-3 py-1 rounded-full font-semibold whitespace-nowrap bg-surface-container text-on-surface-variant hover:text-on-surface transition-all">🌊 Miền Trung / Tây Nguyên</button>
+        <button type="button" onclick="switchAreaRegion('mienbac')" id="region-btn-mienbac" class="region-tab-btn px-3 py-1 rounded-full font-semibold whitespace-nowrap bg-surface-container text-on-surface-variant hover:text-on-surface transition-all">🏔️ Miền Bắc</button>
+        <button type="button" onclick="switchAreaRegion('all')" id="region-btn-all" class="region-tab-btn px-3 py-1 rounded-full font-semibold whitespace-nowrap bg-surface-container text-on-surface-variant hover:text-on-surface transition-all">🇻🇳 Tất cả</button>
       </div>
 
-      <div class="grid grid-cols-2 gap-2" id="area-chips-container">
+      <!-- Area Chips Container -->
+      <div class="grid grid-cols-2 gap-2 max-h-[220px] overflow-y-auto pr-1" id="area-chips-container">
         <!-- Rendered dynamically -->
       </div>
     </div>
@@ -3610,33 +3627,83 @@ document.querySelectorAll('.wfp').forEach(p=>{
 // ══════════════════════════════════════════════════════════
 
 const areaHotspotsData = {
-  hcm: [
-    { name: 'Quận 1, TP. HCM', desc: 'Bến Thành, Nguyễn Huệ, Phố Tây', count: 12 },
-    { name: 'Quận 3, TP. HCM', desc: 'Hồ Con Rùa, Võ Văn Tần, Tú Xương', count: 8 },
-    { name: 'Bình Thạnh, TP. HCM', desc: 'D2 / Nguyễn Gia Trí, Thanh Đa', count: 9 },
-    { name: 'Quận 5, TP. HCM', desc: 'Chợ Lớn, ẩm thực Trung Hoa', count: 7 },
-    { name: 'Phú Nhuận, TP. HCM', desc: 'Phan Xích Long thiên đường ăn uống', count: 6 },
-    { name: 'Quận 7, TP. HCM', desc: 'Phú Mỹ Hưng, cầu Ánh Sao', count: 5 },
-    { name: 'Thủ Đức (Q.2), TP. HCM', desc: 'Thảo Điền cafe & nhà hàng xinh', count: 6 },
-    { name: 'Tân Bình, TP. HCM', desc: 'Bàu Cát, khu sân bay tấp nập', count: 5 }
+  dulich: [
+    { name: 'Đà Lạt, Lâm Đồng', desc: 'Lẩu gà lá é, bánh tráng nướng, kem bơ, sữa đậu nành', count: 14, tag: 'Du lịch hot' },
+    { name: 'Vũng Tàu, BR-VT', desc: 'Bánh khọt Gốc Vú Sữa, lẩu cá đuối Út Mười, hải sản', count: 12, tag: 'Du lịch hot' },
+    { name: 'Nha Trang, Khánh Hòa', desc: 'Nem nướng Đặng Văn Quyên, bún cá Mịn, hải sản tươi', count: 11, tag: 'Du lịch hot' },
+    { name: 'Phú Quốc, Kiên Giang', desc: 'Bún quậy Kiến Xây, gỏi cá trích, hải sản chợ đêm', count: 10, tag: 'Du lịch hot' },
+    { name: 'Sa Pa, Lào Cai', desc: 'Lẩu cá hồi A Phủ, lợn bản, xiên nướng than Cầu Mây', count: 8, tag: 'Du lịch hot' },
+    { name: 'Hội An, Quảng Nam', desc: 'Cơm gà Bà Buội, cao lầu Thanh, bánh mì Phượng', count: 9, tag: 'Du lịch hot' },
+    { name: 'Quy Nhơn, Bình Định', desc: 'Bánh xèo tôm nhảy Gia Như, bún chả cá Ngọc Liên', count: 8, tag: 'Du lịch hot' },
+    { name: 'Hạ Long, Quảng Ninh', desc: 'Bánh cuốn chả mực Bà Ngân, cù kỳ, hải sản Bãi Cháy', count: 8, tag: 'Du lịch hot' },
+    { name: 'Ninh Bình', desc: 'Cơm cháy dê núi Chính Thư, nem dê Kim Sơn', count: 7, tag: 'Du lịch hot' },
+    { name: 'Phan Thiết, Bình Thuận', desc: 'Bánh canh chả cá, lẩu thả Mũi Né, hải sản bờ kè', count: 7, tag: 'Du lịch hot' }
   ],
-  hn: [
-    { name: 'Hoàn Kiếm, Hà Nội', desc: 'Phố Cổ, Tạ Hiện, Hồ Gươm', count: 10 },
-    { name: 'Ba Đình, Hà Nội', desc: 'Giảng Võ, Trúc Bạch lãng mạn', count: 7 },
-    { name: 'Đống Đa, Hà Nội', desc: 'Chùa Láng, Ô Chợ Dừa, Đặng Văn Ngữ', count: 9 },
-    { name: 'Cầu Giấy, Hà Nội', desc: 'Tô Hiệu, Dịch Vọng nhiều quán ngon', count: 8 },
-    { name: 'Tây Hồ, Hà Nội', desc: 'Quảng An, ven hồ lộng gió', count: 6 },
-    { name: 'Hai Bà Trưng, Hà Nội', desc: 'Tuệ Tĩnh, Đại Cồ Việt', count: 5 }
+  tplon: [
+    { name: 'Quận 1, TP. HCM', desc: 'Bến Thành, Nguyễn Huệ, Phố Tây Bùi Viện', count: 15, tag: 'TP. HCM' },
+    { name: 'Quận 3, TP. HCM', desc: 'Hồ Con Rùa, Võ Văn Tần, Tú Xương', count: 10, tag: 'TP. HCM' },
+    { name: 'Bình Thạnh, TP. HCM', desc: 'D2 / Nguyễn Gia Trí, Thanh Đa', count: 9, tag: 'TP. HCM' },
+    { name: 'Quận 5, TP. HCM', desc: 'Chợ Lớn, ẩm thực Trung Hoa', count: 8, tag: 'TP. HCM' },
+    { name: 'Phú Nhuận, TP. HCM', desc: 'Phan Xích Long thiên đường ăn uống', count: 8, tag: 'TP. HCM' },
+    { name: 'Quận 7, TP. HCM', desc: 'Phú Mỹ Hưng, cầu Ánh Sao', count: 6, tag: 'TP. HCM' },
+    { name: 'Thủ Đức (Q.2), TP. HCM', desc: 'Thảo Điền cafe & nhà hàng xinh', count: 6, tag: 'TP. HCM' },
+    { name: 'Tân Bình, TP. HCM', desc: 'Bàu Cát, khu sân bay tấp nập', count: 5, tag: 'TP. HCM' },
+    { name: 'Hoàn Kiếm, Hà Nội', desc: 'Phố Cổ, Tạ Hiện, Hồ Gươm, Nhà Chung', count: 12, tag: 'Hà Nội' },
+    { name: 'Ba Đình, Hà Nội', desc: 'Giảng Võ, Trúc Bạch, Đội Cấn', count: 8, tag: 'Hà Nội' },
+    { name: 'Đống Đa, Hà Nội', desc: 'Chùa Láng, Ô Chợ Dừa, Đặng Văn Ngữ', count: 9, tag: 'Hà Nội' },
+    { name: 'Cầu Giấy, Hà Nội', desc: 'Tô Hiệu, Dịch Vọng nhiều quán ngon', count: 8, tag: 'Hà Nội' },
+    { name: 'Tây Hồ, Hà Nội', desc: 'Quảng An, ven hồ lộng gió, cafe chill', count: 7, tag: 'Hà Nội' },
+    { name: 'Hải Châu, Đà Nẵng', desc: 'Bạch Đằng, đường 2/9 ven sông Hàn', count: 9, tag: 'Đà Nẵng' },
+    { name: 'Sơn Trà, Đà Nẵng', desc: 'Võ Nguyên Giáp, hải sản tươi rói', count: 7, tag: 'Đà Nẵng' },
+    { name: 'Hải Phòng', desc: 'Bánh đa cua Bà Cụ, bánh mì cay, ốc Thủy Dương', count: 9, tag: 'Hải Phòng' },
+    { name: 'Cần Thơ (Ninh Kiều)', desc: 'Bến Ninh Kiều, lẩu mắm Dạ Lý, bánh cống', count: 8, tag: 'Cần Thơ' }
   ],
-  dn: [
-    { name: 'Hải Châu, Đà Nẵng', desc: 'Bạch Đằng, đường 2/9 ven sông Hàn', count: 8 },
-    { name: 'Sơn Trà, Đà Nẵng', desc: 'Võ Nguyên Giáp, hải sản tươi rói', count: 6 },
-    { name: 'Ngũ Hành Sơn, Đà Nẵng', desc: 'An Thượng khu phố Tây', count: 5 },
-    { name: 'Thanh Khê, Đà Nẵng', desc: 'Điện Biên Phủ, ẩm thực miền Trung', count: 4 }
+  miennam: [
+    { name: 'Cần Thơ (Ninh Kiều)', desc: 'Lẩu mắm Dạ Lý, bánh xèo 7 Tới, nem Cái Răng', count: 8, tag: 'Miền Tây' },
+    { name: 'Bình Dương (Thủ Dầu Một)', desc: 'Bò nướng ngói Ánh Tuyết, bánh bèo bì Mỹ Liên', count: 7, tag: 'Đông Nam Bộ' },
+    { name: 'Đồng Nai (Biên Hòa)', desc: 'Lẩu tôm 5 Ri, chả lụi Biên Hòa Huỳnh Văn Nghệ', count: 7, tag: 'Đông Nam Bộ' },
+    { name: 'Tây Ninh', desc: 'Bò tơ Năm Sánh, bánh tráng Trảng Bàng Út Huệ', count: 6, tag: 'Đông Nam Bộ' },
+    { name: 'Tiền Giang (Mỹ Tho)', desc: 'Hủ tiếu Mỹ Tho Trung Lương, chuối nướng cốt dừa', count: 6, tag: 'Miền Tây' },
+    { name: 'An Giang (Châu Đốc / Long Xuyên)', desc: 'Bún cá Châu Đốc Bé Hai, lẩu mắm, bò bảy món', count: 6, tag: 'Miền Tây' },
+    { name: 'Bến Tre', desc: 'Cơm dừa tép rang, bánh tráng Mỹ Lồng', count: 5, tag: 'Miền Tây' },
+    { name: 'Đồng Tháp (Cao Lãnh / Sa Đéc)', desc: 'Hủ tiếu Sa Đéc bà Sẩm, vịt nướng lu', count: 5, tag: 'Miền Tây' },
+    { name: 'Cà Mau', desc: 'Cua biển Năm Căn Quán Hạnh, lẩu mắm cá đồng', count: 5, tag: 'Miền Tây' },
+    { name: 'Vĩnh Long', desc: 'Cá tai tượng chiên xù, khoai lang nướng chấm mắm', count: 4, tag: 'Miền Tây' },
+    { name: 'Kiên Giang (Rạch Giá)', desc: 'Bún cá Rạch Giá, hải sản khu lấn biển', count: 5, tag: 'Miền Tây' }
+  ],
+  mientrung: [
+    { name: 'Huế (Thừa Thiên Huế)', desc: 'Bún bò Mụ Rơi, bánh bèo nậm lọc Bà Đỏ, cơm hến', count: 9, tag: 'Bắc Trung Bộ' },
+    { name: 'Đà Lạt, Lâm Đồng', desc: 'Lẩu gà lá é Tao Ngộ, bánh tráng nướng Dì Đinh', count: 14, tag: 'Tây Nguyên' },
+    { name: 'Nha Trang, Khánh Hòa', desc: 'Nem nướng Đặng Văn Quyên, bún cá sứa Mịn', count: 11, tag: 'Nam Trung Bộ' },
+    { name: 'Quy Nhơn, Bình Định', desc: 'Bánh xèo tôm nhảy Gia Như, bún chả cá Ngọc Liên', count: 8, tag: 'Nam Trung Bộ' },
+    { name: 'Buôn Ma Thuột (Đắk Lắk)', desc: 'Bún đỏ Thu Nhận, cà phê Làng Trung Nguyên', count: 6, tag: 'Tây Nguyên' },
+    { name: 'Pleiku (Gia Lai)', desc: 'Phở hai tô Hồng, gà nướng cơm lam Bazan', count: 5, tag: 'Tây Nguyên' },
+    { name: 'Phan Thiết, Bình Thuận', desc: 'Bánh canh chả cá, lẩu thả Mũi Né', count: 6, tag: 'Nam Trung Bộ' },
+    { name: 'Quảng Bình (Đồng Hới)', desc: 'Cháo canh cá lóc sườn heo, đẻn biển ram', count: 5, tag: 'Bắc Trung Bộ' },
+    { name: 'Thanh Hóa', desc: 'Nem chua Cây Đa, chả tôm nướng than hoa', count: 6, tag: 'Bắc Trung Bộ' },
+    { name: 'Nghệ An (Vinh)', desc: 'Cháo lươn súp lươn Bà Liễu, bánh mướt nóng', count: 6, tag: 'Bắc Trung Bộ' }
+  ],
+  mienbac: [
+    { name: 'Hải Phòng', desc: 'Bánh đa cua Bà Cụ, bánh mì cay, ốc Thủy Dương', count: 9, tag: 'Duyên Hải' },
+    { name: 'Quảng Ninh (Hạ Long)', desc: 'Bánh cuốn chả mực Bà Ngân, hải sản Hương Duyên', count: 8, tag: 'Duyên Hải' },
+    { name: 'Sa Pa, Lào Cai', desc: 'Lẩu cá hồi A Phủ, thắng cố, đồ nướng phố Cầu Mây', count: 8, tag: 'Tây Bắc' },
+    { name: 'Ninh Bình', desc: 'Cơm cháy dê núi Chính Thư, miến lươn', count: 7, tag: 'Đồng Bằng' },
+    { name: 'Nam Định', desc: 'Phở bò Đán, bánh xíu páo Hàng Sắt', count: 6, tag: 'Đồng Bằng' },
+    { name: 'Bắc Ninh', desc: 'Bánh phu thê Đình Bảng, nem Bùi Gia Bình', count: 5, tag: 'Kinh Bắc' },
+    { name: 'Thái Nguyên', desc: 'Trà Tân Cương, đậu phụ Bình Long', count: 4, tag: 'Việt Bắc' },
+    { name: 'Hải Dương', desc: 'Bánh đậu xanh, bún cá rô đồng', count: 5, tag: 'Đồng Bằng' },
+    { name: 'Hà Giang', desc: 'Cháo ấu tẩu, thắng dền Đồng Văn, phở Tráng Kìm', count: 4, tag: 'Đông Bắc' },
+    { name: 'Phú Thọ', desc: 'Cá thính Đất Tổ, thịt chua Thanh Sơn', count: 4, tag: 'Trung Du' }
   ]
 };
 
+// Aliases for backward compatibility
+areaHotspotsData.hcm = areaHotspotsData.tplon.filter(x => x.name.includes('TP. HCM'));
+areaHotspotsData.hn = areaHotspotsData.tplon.filter(x => x.name.includes('Hà Nội'));
+areaHotspotsData.dn = areaHotspotsData.tplon.filter(x => x.name.includes('Đà Nẵng'));
+
 const areaCenterCoordinates = {
+  // TP. HCM
   'Quận 1, TP. HCM': { lat: 10.7769, lng: 106.7009 },
   'Quận 3, TP. HCM': { lat: 10.7844, lng: 106.6844 },
   'Bình Thạnh, TP. HCM': { lat: 10.8038, lng: 106.7118 },
@@ -3645,16 +3712,70 @@ const areaCenterCoordinates = {
   'Quận 7, TP. HCM': { lat: 10.7326, lng: 106.7163 },
   'Thủ Đức (Q.2), TP. HCM': { lat: 10.8037, lng: 106.7388 },
   'Tân Bình, TP. HCM': { lat: 10.7981, lng: 106.6534 },
+
+  // Hà Nội
   'Hoàn Kiếm, Hà Nội': { lat: 21.0285, lng: 105.8542 },
   'Ba Đình, Hà Nội': { lat: 21.0343, lng: 105.8202 },
   'Đống Đa, Hà Nội': { lat: 21.0181, lng: 105.8275 },
   'Cầu Giấy, Hà Nội': { lat: 21.0362, lng: 105.7906 },
   'Tây Hồ, Hà Nội': { lat: 21.0658, lng: 105.8239 },
   'Hai Bà Trưng, Hà Nội': { lat: 21.0089, lng: 105.8504 },
+
+  // Đà Nẵng
   'Hải Châu, Đà Nẵng': { lat: 16.0678, lng: 108.2208 },
   'Sơn Trà, Đà Nẵng': { lat: 16.0825, lng: 108.2435 },
   'Ngũ Hành Sơn, Đà Nẵng': { lat: 16.0356, lng: 108.2505 },
-  'Thanh Khê, Đà Nẵng': { lat: 16.0642, lng: 108.1884 }
+  'Thanh Khê, Đà Nẵng': { lat: 16.0642, lng: 108.1884 },
+
+  // Du lịch hot & Tỉnh thành
+  'Đà Lạt, Lâm Đồng': { lat: 11.9404, lng: 108.4583 },
+  'Đà Lạt (Lâm Đồng)': { lat: 11.9404, lng: 108.4583 },
+  'Vũng Tàu, BR-VT': { lat: 10.3460, lng: 107.0843 },
+  'Vũng Tàu (Bà Rịa - VT)': { lat: 10.3460, lng: 107.0843 },
+  'Nha Trang, Khánh Hòa': { lat: 12.2388, lng: 109.1967 },
+  'Nha Trang (Khánh Hòa)': { lat: 12.2388, lng: 109.1967 },
+  'Phú Quốc, Kiên Giang': { lat: 10.2289, lng: 103.9572 },
+  'Phú Quốc (Kiên Giang)': { lat: 10.2289, lng: 103.9572 },
+  'Sa Pa, Lào Cai': { lat: 22.3364, lng: 103.8438 },
+  'Lào Cai (Sa Pa)': { lat: 22.3364, lng: 103.8438 },
+  'Hội An, Quảng Nam': { lat: 15.8801, lng: 108.3380 },
+  'Quy Nhơn, Bình Định': { lat: 13.7830, lng: 109.2197 },
+  'Quy Nhơn (Bình Định)': { lat: 13.7830, lng: 109.2197 },
+  'Hạ Long, Quảng Ninh': { lat: 20.9505, lng: 107.0734 },
+  'Quảng Ninh (Hạ Long)': { lat: 20.9505, lng: 107.0734 },
+  'Ninh Bình': { lat: 20.2506, lng: 105.9744 },
+  'Phan Thiết, Bình Thuận': { lat: 10.9272, lng: 108.0984 },
+  'Phan Thiết (Bình Thuận)': { lat: 10.9272, lng: 108.0984 },
+
+  // Miền Nam / Miền Tây
+  'Cần Thơ (Ninh Kiều)': { lat: 10.0350, lng: 105.7820 },
+  'Bình Dương (Thủ Dầu Một)': { lat: 10.9804, lng: 106.6519 },
+  'Đồng Nai (Biên Hòa)': { lat: 10.9574, lng: 106.8427 },
+  'Tây Ninh': { lat: 11.3101, lng: 106.0988 },
+  'Tiền Giang (Mỹ Tho)': { lat: 10.3600, lng: 106.3600 },
+  'An Giang (Châu Đốc / Long Xuyên)': { lat: 10.7020, lng: 105.1210 },
+  'Bến Tre': { lat: 10.2415, lng: 106.3756 },
+  'Đồng Tháp (Cao Lãnh / Sa Đéc)': { lat: 10.4600, lng: 105.6328 },
+  'Cà Mau': { lat: 9.1769, lng: 105.1524 },
+  'Vĩnh Long': { lat: 10.2537, lng: 105.9722 },
+  'Kiên Giang (Rạch Giá)': { lat: 10.0124, lng: 105.0809 },
+
+  // Miền Trung & Tây Nguyên
+  'Huế (Thừa Thiên Huế)': { lat: 16.4637, lng: 107.5909 },
+  'Buôn Ma Thuột (Đắk Lắk)': { lat: 12.6667, lng: 108.0500 },
+  'Pleiku (Gia Lai)': { lat: 13.9833, lng: 108.0000 },
+  'Quảng Bình (Đồng Hới)': { lat: 17.4760, lng: 106.6020 },
+  'Thanh Hóa': { lat: 19.8067, lng: 105.7852 },
+  'Nghệ An (Vinh)': { lat: 18.6734, lng: 105.6813 },
+
+  // Miền Bắc
+  'Hải Phòng': { lat: 20.8449, lng: 106.6881 },
+  'Nam Định': { lat: 20.4200, lng: 106.1683 },
+  'Bắc Ninh': { lat: 21.1861, lng: 106.0763 },
+  'Thái Nguyên': { lat: 21.5942, lng: 105.8482 },
+  'Hải Dương': { lat: 20.9373, lng: 106.3150 },
+  'Hà Giang': { lat: 22.8233, lng: 104.9839 },
+  'Phú Thọ': { lat: 21.3228, lng: 105.4019 }
 };
 
 const mapRestaurantsDb = [
@@ -3945,6 +4066,509 @@ const mapRestaurantsDb = [
     tags: ['ac', 'street'],
     badge: 'Danh tiếng quốc tế 🥢',
     tip: 'Chả nướng than hoa thơm lừng mềm mọng, nước mắm đu đủ chua ngọt thanh dịu kèm nem cua bể.'
+  },
+  {
+    id: 'pho-thin-lo-duc',
+    name: 'Phở Thìn Lò Đúc',
+    food: 'Phở Bò Tái Lăn Hành Hoa Ngập Bát',
+    emoji: '🍜',
+    area: 'Hoàn Kiếm, Hà Nội',
+    city: 'hn',
+    lat: 21.0182,
+    lng: 105.8565,
+    address: '13 Lò Đúc, Phạm Đình Hổ, Hai Bà Trưng, Hà Nội',
+    rating: 4.8,
+    reviews: 2100,
+    price: 'cheap',
+    priceText: '70k - 90k/người',
+    tags: ['street'],
+    badge: 'Phở bò tái lăn trứ danh 🍜',
+    tip: 'Thịt bò xào lăn lửa lớn dậy mùi tỏi thơm lừng, hành hoa phủ xanh ngập bát, chan thêm chút giấm tỏi ớt.'
+  },
+  // Đà Nẵng
+  {
+    id: 'mi-quang-bep-trang',
+    name: 'Mì Quảng Ếch Bếp Trang',
+    food: 'Mì Quảng Ếch Om Niêu Đất',
+    emoji: '🍜',
+    area: 'Hải Châu, Đà Nẵng',
+    city: 'dn',
+    lat: 16.0682,
+    lng: 108.2235,
+    address: '26 Bạch Đằng, Thạch Thang, Hải Châu, Đà Nẵng',
+    rating: 4.8,
+    reviews: 980,
+    price: 'mid',
+    priceText: '65k - 95k/người',
+    tags: ['ac', 'view'],
+    badge: 'Đặc sản Đà Thành 🐸',
+    tip: 'Thịt ếch đồng om sả nghệ thơm lừng trong niêu đất sôi sùng sục, sợi mì dẻo dai ăn kèm bánh tráng mè nướng.'
+  },
+  {
+    id: 'hai-san-be-man',
+    name: 'Hải Sản Bé Mặn',
+    food: 'Hải Sản Tươi Sống Bên Biển Mỹ Khê',
+    emoji: '🦞',
+    area: 'Sơn Trà, Đà Nẵng',
+    city: 'dn',
+    lat: 16.0825,
+    lng: 108.2435,
+    address: 'Lô 11 Võ Nguyên Giáp, Mân Thái, Sơn Trà, Đà Nẵng',
+    rating: 4.8,
+    reviews: 1600,
+    price: 'mid',
+    priceText: '180k - 300k/người',
+    tags: ['view', 'street'],
+    badge: 'Hải sản tươi sống bãi biển 🌊',
+    tip: 'Tôm hùm, cua gạch, mực trứng bơi tại bể bắt chế biến ngay tại chỗ, ngồi sát biển lộng gió cực chill.'
+  },
+  // Đà Lạt
+  {
+    id: 'lau-ga-la-e-dalat',
+    name: 'Lẩu Gà Lá É Tao Ngộ Đà Lạt',
+    food: 'Lẩu Gà Lá É Ớt Xiêm Xanh',
+    emoji: '🍲',
+    area: 'Đà Lạt, Lâm Đồng',
+    city: 'dalat',
+    lat: 11.9312,
+    lng: 108.4485,
+    address: 'Số 5 Đường 3/4, Phường 3, TP. Đà Lạt',
+    rating: 4.9,
+    reviews: 2450,
+    price: 'mid',
+    priceText: '150k - 220k/người',
+    tags: ['street', 'view'],
+    badge: 'Ngon nức tiếng Đà Lạt 🌲',
+    tip: 'Lá é thơm the cay ấm nồng quyện thịt gà ta chắc ngọt, húp xì xụp giữa trời se lạnh 15°C thì mê ly!'
+  },
+  {
+    id: 'banh-trang-nuong-di-dinh',
+    name: 'Bánh Tráng Nướng Dì Đinh',
+    food: 'Bánh Tráng Nướng Phô Mai Trứng Thịt',
+    emoji: '🍕',
+    area: 'Đà Lạt, Lâm Đồng',
+    city: 'dalat',
+    lat: 11.9423,
+    lng: 108.4312,
+    address: '26 Hoàng Diệu, Phường 5, TP. Đà Lạt',
+    rating: 4.8,
+    reviews: 1350,
+    price: 'cheap',
+    priceText: '25k - 45k/người',
+    tags: ['street'],
+    badge: 'Pizza Đà Lạt chuẩn gu 🍕',
+    tip: 'Vỏ bánh tráng giòn rụm nướng than hoa, ngập tràn phô mai kéo sợi thơm béo, bò khô và tép hành phi thơm nức.'
+  },
+  {
+    id: 'kem-bo-thanh-thao',
+    name: 'Kem Bơ Thanh Thảo',
+    food: 'Kem Bơ Sáp Dừa Tươi Béo Dẻo',
+    emoji: '🍨',
+    area: 'Đà Lạt, Lâm Đồng',
+    city: 'dalat',
+    lat: 11.9458,
+    lng: 108.4371,
+    address: '76 Nguyễn Văn Trỗi, Phường 2, TP. Đà Lạt',
+    rating: 4.8,
+    reviews: 1800,
+    price: 'cheap',
+    priceText: '25k - 40k/người',
+    tags: ['street', 'ac'],
+    badge: 'Món tráng miệng chân ái 🍨',
+    tip: 'Bơ sáp dẻo quánh đặc sánh kết hợp viên kem dừa béo bùi ngọt dịu cùng dừa sấy giòn tan.'
+  },
+  // Vũng Tàu
+  {
+    id: 'banh-khot-goc-vu-sua',
+    name: 'Bánh Khọt Gốc Vú Sữa',
+    food: 'Bánh Khọt Tôm Tươi Giòn Rụm',
+    emoji: '🍤',
+    area: 'Vũng Tàu, BR-VT',
+    city: 'vungtau',
+    lat: 10.3421,
+    lng: 107.0782,
+    address: '14 Nguyễn Trường Tộ, Phường 2, TP. Vũng Tàu',
+    rating: 4.8,
+    reviews: 3200,
+    price: 'cheap',
+    priceText: '60k - 90k/người',
+    tags: ['street'],
+    badge: 'Huyền thoại Vũng Tàu 🍤',
+    tip: 'Bánh đổ khuôn gang giòn tan rải tôm tươi đỏ au và bột tôm chấy, cuốn xà lách chấm nước mắm pha đu đủ bào giòn.'
+  },
+  {
+    id: 'lau-ca-duoi-ut-muoi',
+    name: 'Lẩu Cá Đuối Út Mười',
+    food: 'Lẩu Cá Đuối Nấu Măng Chua',
+    emoji: '🍲',
+    area: 'Vũng Tàu, BR-VT',
+    city: 'vungtau',
+    lat: 10.3485,
+    lng: 107.0798,
+    address: '16A Trương Công Định, Phường 3, TP. Vũng Tàu',
+    rating: 4.8,
+    reviews: 1980,
+    price: 'mid',
+    priceText: '130k - 180k/người',
+    tags: ['ac', 'street'],
+    badge: 'Lẩu cá đuối đậm đà 🐟',
+    tip: 'Thịt cá đuối tươi ngọt mềm ngập sụn non giòn sần sật, nước lẩu chua cay măng chua ăn kèm bún tươi giải ngấy.'
+  },
+  {
+    id: 'hai-san-ganh-hao',
+    name: 'Hải Sản Gành Hào 1',
+    food: 'Hải Sản Tươi Sống Ngắm Hoàng Hôn',
+    emoji: '🦞',
+    area: 'Vũng Tàu, BR-VT',
+    city: 'vungtau',
+    lat: 10.3468,
+    lng: 107.0621,
+    address: '03 Trần Phú, Phường 5, TP. Vũng Tàu',
+    rating: 4.9,
+    reviews: 2850,
+    price: 'high',
+    priceText: '250k - 450k/người',
+    tags: ['romantic', 'view', 'ac'],
+    badge: 'View biển lãng mạn 100đ 🌊',
+    tip: 'Vừa thưởng thức cua sốt me, hàu nướng phô mai vừa ngắm hoàng hôn buông xuống biển Vũng Tàu tuyệt đẹp.'
+  },
+  // Nha Trang
+  {
+    id: 'nem-nuong-dang-van-quyen',
+    name: 'Nem Nướng Đặng Văn Quyên',
+    food: 'Nem Nướng Nha Trang Cuốn Bánh Tráng',
+    emoji: '🥢',
+    area: 'Nha Trang, Khánh Hòa',
+    city: 'nhatrang',
+    lat: 12.2530,
+    lng: 109.1945,
+    address: '16A Lãn Ông, Xương Huân, TP. Nha Trang',
+    rating: 4.9,
+    reviews: 2150,
+    price: 'cheap',
+    priceText: '55k - 85k/người',
+    tags: ['ac'],
+    badge: 'Đặc sản Nha Trang số 1 ⭐',
+    tip: 'Nem nướng than thơm phức, chả ram bắp giòn rụm cùng nước chấm sệt thịt gan béo bùi độc quyền.'
+  },
+  {
+    id: 'bun-ca-sua-min',
+    name: 'Bún Cá & Sứa Mịn Nha Trang',
+    food: 'Bún Sứa Chả Cá Tươi Nước Dùng Trong',
+    emoji: '🍜',
+    area: 'Nha Trang, Khánh Hòa',
+    city: 'nhatrang',
+    lat: 12.2410,
+    lng: 109.1912,
+    address: '170 Bạch Đằng, Tân Lập, TP. Nha Trang',
+    rating: 4.8,
+    reviews: 1100,
+    price: 'cheap',
+    priceText: '45k - 65k/người',
+    tags: ['street'],
+    badge: 'Sứa biển giòn mát sần sật 🪼',
+    tip: 'Sứa biển trong veo dai giòn, chả cá thu chiên hấp thơm ngọt tự nhiên, nước lèo ninh xương cá thanh ngọt.'
+  },
+  // Phú Quốc
+  {
+    id: 'bun-quay-kien-xay',
+    name: 'Bún Quậy Kiến Xây - Bạch Đằng',
+    food: 'Bún Quậy Tôm Mực Tươi Ép Tại Chỗ',
+    emoji: '🍜',
+    area: 'Phú Quốc, Kiên Giang',
+    city: 'phuquoc',
+    lat: 10.2178,
+    lng: 103.9592,
+    address: '28 Bạch Đằng, Dương Đông, TP. Phú Quốc',
+    rating: 4.9,
+    reviews: 3100,
+    price: 'cheap',
+    priceText: '55k - 85k/người',
+    tags: ['street', 'ac'],
+    badge: 'Trải nghiệm quậy nước chấm 🥢',
+    tip: 'Sợi bún tươi quết chả tôm mực tươi roi rói rồi chan nước dùng nóng, tự tay quậy chén muối ớt tắc cay nồng theo gu.'
+  },
+  // Cần Thơ
+  {
+    id: 'lau-mam-da-ly',
+    name: 'Lẩu Mắm Dạ Lý Cần Thơ',
+    food: 'Lẩu Mắm Cá Linh & Bông Điên Điển',
+    emoji: '🍲',
+    area: 'Cần Thơ (Ninh Kiều)',
+    city: 'cantho',
+    lat: 10.0245,
+    lng: 105.7680,
+    address: '89 Đường 3/2, Hưng Lợi, Ninh Kiều, Cần Thơ',
+    rating: 4.8,
+    reviews: 1450,
+    price: 'mid',
+    priceText: '160k - 230k/người',
+    tags: ['ac'],
+    badge: 'Hương vị Tây Đô đích thực 🌾',
+    tip: 'Nước lẩu nấu mắm sặc mắm linh sánh đậm thơm lừng ăn kèm bông so đũa, điên điển, kèo nèo và cà tím.'
+  },
+  {
+    id: 'banh-xeo-7-toi',
+    name: 'Bánh Xèo 7 Tới',
+    food: 'Bánh Xèo Củ Hủ Dừa Thịt Vịt Xiêm',
+    emoji: '🥞',
+    area: 'Cần Thơ (Ninh Kiều)',
+    city: 'cantho',
+    lat: 10.0180,
+    lng: 105.7495,
+    address: '45 Hoàng Quốc Việt, An Bình, Ninh Kiều, Cần Thơ',
+    rating: 4.8,
+    reviews: 1050,
+    price: 'cheap',
+    priceText: '50k - 80k/người',
+    tags: ['street'],
+    badge: 'Bánh xèo khổng lồ giòn rụm 🥞',
+    tip: 'Vỏ bánh vàng ươm mỏng tang, nhân củ hủ dừa giòn ngọt và thịt vịt xiêm băm nhỏ ngọt mềm không ngấy.'
+  },
+  // Hải Phòng
+  {
+    id: 'banh-da-cua-ba-cu',
+    name: 'Bánh Đa Cua Bà Cụ',
+    food: 'Bánh Đa Cua Bể Chả Lá Lốt',
+    emoji: '🍜',
+    area: 'Hải Phòng',
+    city: 'haiphong',
+    lat: 20.8525,
+    lng: 106.6840,
+    address: '179 Cầu Đất, Ngô Quyền, Hải Phòng',
+    rating: 4.9,
+    reviews: 2300,
+    price: 'cheap',
+    priceText: '45k - 70k/người',
+    tags: ['ac', 'street'],
+    badge: 'Food tour đất Cảng số 1 🦀',
+    tip: 'Bánh đa đỏ sợi dai chan ngập gạch cua đồng béo ngậy ngọt lịm, chả lá lốt thơm lừng và bề bề tươi.'
+  },
+  {
+    id: 'banh-mi-cay-dinh-tien-hoang',
+    name: 'Bánh Mì Cay & Chè Thái Đinh Tiên Hoàng',
+    food: 'Bánh Mì Cay Patê Cột Đèn & Tương Chí Chương',
+    emoji: '🥖',
+    area: 'Hải Phòng',
+    city: 'haiphong',
+    lat: 20.8580,
+    lng: 106.6815,
+    address: '37 Đinh Tiên Hoàng, Hoàng Văn Thụ, Hồng Bàng, Hải Phòng',
+    rating: 4.8,
+    reviews: 1650,
+    price: 'cheap',
+    priceText: '15k - 30k/người',
+    tags: ['street'],
+    badge: 'Cay nồng chí chương 🌶️',
+    tip: 'Bánh que nướng giòn rụm ngập patê béo ngậy chấm tương ớt chí chương cay xè, tráng miệng ly chè Thái mát rượi.'
+  },
+  // Sa Pa
+  {
+    id: 'lau-ca-hoi-a-phu',
+    name: 'Nhà Hàng A Phủ - Sa Pa',
+    food: 'Lẩu Cá Hồi Na Uy & Thắng Cố Ngựa Bản',
+    emoji: '🍲',
+    area: 'Sa Pa, Lào Cai',
+    city: 'sapa',
+    lat: 22.3335,
+    lng: 103.8402,
+    address: '15 Fansipan, Thị xã Sa Pa, Lào Cai',
+    rating: 4.8,
+    reviews: 1280,
+    price: 'mid',
+    priceText: '160k - 250k/người',
+    tags: ['romantic', 'view', 'ac'],
+    badge: 'Ấm áp vùng cao Tây Bắc 🏔️',
+    tip: 'Cá hồi tươi phi lê nhúng nước lẩu chua cay măng rừng hạt dổi, ngồi cạnh lò sưởi ấm cúng nhìn mây phố núi.'
+  },
+  // Huế
+  {
+    id: 'bun-bo-mu-roi',
+    name: 'Bún Bò Mụ Rơi - Huế',
+    food: 'Bún Bò Giò Chả Cua Cố Đô',
+    emoji: '🍜',
+    area: 'Huế (Thừa Thiên Huế)',
+    city: 'hue',
+    lat: 16.4740,
+    lng: 107.5795,
+    address: '40 Nguyễn Chí Diểu, Thuận Thành, TP. Huế',
+    rating: 4.9,
+    reviews: 1450,
+    price: 'cheap',
+    priceText: '40k - 65k/người',
+    tags: ['street'],
+    badge: 'Đậm đà phong vị cố đô 👑',
+    tip: 'Nước dùng sả ruốc thơm lừng cay nồng chuẩn vị xứ Huế, miếng giò heo mềm rục cùng chả cua ngọt bùi.'
+  },
+  {
+    id: 'banh-beo-nam-loc-ba-do',
+    name: 'Bánh Bèo Nậm Lọc Bà Đỏ',
+    food: 'Mâm Bánh Bèo Chén & Nậm Lọc Tôm Rim',
+    emoji: '🥟',
+    area: 'Huế (Thừa Thiên Huế)',
+    city: 'hue',
+    lat: 16.4715,
+    lng: 107.5910,
+    address: '8 Nguyễn Bỉnh Khiêm, Phú Cát, TP. Huế',
+    rating: 4.8,
+    reviews: 1150,
+    price: 'cheap',
+    priceText: '35k - 60k/người',
+    tags: ['street'],
+    badge: 'Món cung đình tiến vua 👑',
+    tip: 'Bánh bèo chén mỏng mịn rải tôm chấy hành phi, bánh bột lọc trong vắt cắn ngập tôm rim mặn ngọt đậm đà.'
+  },
+  // Quy Nhơn
+  {
+    id: 'banh-xeo-tom-nhay-gia-nhu',
+    name: 'Bánh Xèo Tôm Nhảy Gia Như',
+    food: 'Bánh Xèo Tôm Nhảy Đất Võ Giòn Rụm',
+    emoji: '🥞',
+    area: 'Quy Nhơn, Bình Định',
+    city: 'quynhon',
+    lat: 13.7715,
+    lng: 109.2280,
+    address: '14 Diên Hồng, Lê Hồng Phong, TP. Quy Nhơn',
+    rating: 4.8,
+    reviews: 1100,
+    price: 'cheap',
+    priceText: '35k - 60k/người',
+    tags: ['street'],
+    badge: 'Tôm tươi tanh tách trên chảo 🍤',
+    tip: 'Những con tôm đất đỏ tươi nhảy tanh tách khi đổ bột giòn rụm, cuốn bánh tráng rau mầm tuyệt đỉnh.'
+  },
+  // Hạ Long
+  {
+    id: 'banh-cuon-cha-muc-ba-ngan',
+    name: 'Bánh Cuốn Chả Mực Bà Ngân',
+    food: 'Bánh Cuốn Nóng Kèm Chả Mực Giã Tay',
+    emoji: '🥟',
+    area: 'Hạ Long, Quảng Ninh',
+    city: 'halong',
+    lat: 20.9525,
+    lng: 107.0850,
+    address: '34 Đoàn Thị Điểm, Bạch Đằng, TP. Hạ Long',
+    rating: 4.9,
+    reviews: 1720,
+    price: 'cheap',
+    priceText: '45k - 70k/người',
+    tags: ['street', 'ac'],
+    badge: 'Chả mực giòn sần sật nức tiếng 🦑',
+    tip: 'Chả mực giã tay nóng hổi cắn giòn sần sật kết hợp bánh cuốn mềm mướt tráng tay ăn mê liền.'
+  },
+  // Bình Dương
+  {
+    id: 'banh-beo-bi-my-lien',
+    name: 'Bánh Bèo Bì Mỹ Liên (Chợ Búng)',
+    food: 'Bánh Bèo Bì Thịt Ram Nước Cốt Dừa',
+    emoji: '🥟',
+    area: 'Bình Dương (Thủ Dầu Một)',
+    city: 'binhduong',
+    lat: 10.9250,
+    lng: 106.6980,
+    address: '1 ĐT745, An Thạnh, Thuận An, Bình Dương',
+    rating: 4.8,
+    reviews: 950,
+    price: 'cheap',
+    priceText: '35k - 55k/người',
+    tags: ['street'],
+    badge: 'Di sản ẩm thực trăm năm 🥢',
+    tip: 'Bánh bèo dẻo mịn rải bì heo trộn thính thơm bùi, chan nước mắm chua ngọt thơm lừng.'
+  },
+  // Đồng Nai
+  {
+    id: 'lau-tom-5-ri-bien-hoa',
+    name: 'Lẩu Tôm 5 Ri Biên Hòa',
+    food: 'Lẩu Tôm Càng Xanh Chua Cay',
+    emoji: '🍲',
+    area: 'Đồng Nai (Biên Hòa)',
+    city: 'dongnai',
+    lat: 10.9520,
+    lng: 106.8180,
+    address: '20/3C Khóm 5, P. Hòa Bình, TP. Biên Hòa',
+    rating: 4.8,
+    reviews: 1250,
+    price: 'mid',
+    priceText: '130k - 190k/người',
+    tags: ['ac'],
+    badge: 'Tôm càng béo ngậy 🦐',
+    tip: 'Tôm càng to bự thịt chắc ngọt lịm, nước lẩu chua cay vừa miệng cả bàn ăn no nê.'
+  },
+  // Tây Ninh
+  {
+    id: 'bo-to-tay-ninh-nam-sanh',
+    name: 'Bò Tơ Tây Ninh Năm Sánh',
+    food: 'Bò Tơ Nướng Y & Bò Tơ Cuốn Bánh Tráng',
+    emoji: '🥩',
+    area: 'Tây Ninh',
+    city: 'tayninh',
+    lat: 11.2720,
+    lng: 106.1250,
+    address: 'QL22B, Hiệp Trường, Hoà Thành, Tây Ninh',
+    rating: 4.9,
+    reviews: 1420,
+    price: 'mid',
+    priceText: '130k - 200k/người',
+    tags: ['view'],
+    badge: 'Bò tơ tươi mềm da giòn 🥩',
+    tip: 'Thịt bò tơ mềm ngọt cuốn rau rừng Tây Ninh chấm mắm nêm đậm đà thơm ngây ngất.'
+  },
+  // Ninh Bình
+  {
+    id: 'com-chay-de-nui-chinh-thu',
+    name: 'Nhà Hàng Chính Thư - Dê Núi',
+    food: 'Cơm Cháy Ruốc Sốt Dê Núi',
+    emoji: '🐐',
+    area: 'Ninh Bình',
+    city: 'ninhbinh',
+    lat: 20.2450,
+    lng: 105.9400,
+    address: 'Ninh Xuân, Hoa Lư, Ninh Bình',
+    rating: 4.9,
+    reviews: 1560,
+    price: 'mid',
+    priceText: '140k - 220k/người',
+    tags: ['view', 'ac'],
+    badge: 'Đặc sản Cố Đô Hoa Lư 🏔️',
+    tip: 'Thịt dê núi tươi ngọt không hôi nhúng tái chanh và cơm cháy giòn rụm ngập nước sốt đậm đà.'
+  },
+  // Buôn Ma Thuột
+  {
+    id: 'bun-do-thu-nhan-bmt',
+    name: 'Bún Đỏ Thu Nhận BMT',
+    food: 'Bún Đỏ Bò Viên Trứng Cút Cua Đồng',
+    emoji: '🍜',
+    area: 'Buôn Ma Thuột (Đắk Lắk)',
+    city: 'daklak',
+    lat: 12.6820,
+    lng: 108.0430,
+    address: 'Góc Phan Đình Giót - Lê Hồng Phong, TP. Buôn Ma Thuột',
+    rating: 4.8,
+    reviews: 890,
+    price: 'cheap',
+    priceText: '30k - 50k/người',
+    tags: ['street'],
+    badge: 'Sợi bún đỏ phố núi Tây Nguyên 🍜',
+    tip: 'Nước dùng màu điều óng ánh từ gạch cua đồng ngọt mát, rau cần và giá trụng giòn sần sật.'
+  },
+  // Cà Mau
+  {
+    id: 'cua-bien-nam-can-quan-hanh',
+    name: 'Cua Biển Năm Căn Quán Hạnh',
+    food: 'Cua Cà Mau Hấp Bia Sốt Me Chua Ngọt',
+    emoji: '🦀',
+    area: 'Cà Mau',
+    city: 'camau',
+    lat: 9.1790,
+    lng: 105.1510,
+    address: '29 Ngô Quyền, Phường 2, TP. Cà Mau',
+    rating: 4.9,
+    reviews: 1040,
+    price: 'mid',
+    priceText: '180k - 280k/người',
+    tags: ['street'],
+    badge: 'Cua biển chắc thịt ngọt số 1 🦀',
+    tip: 'Cua gạch son đầy ắp và cua thịt chắc nịch chấm muối tiêu chanh ớt hiểm thơm lừng miền Đất Mũi.'
   }
 ];
 
@@ -4218,6 +4842,9 @@ function flyToRestaurant(id) {
 }
 
 // ── Area Selection Modal Handlers ──
+let selectedAreaRegion = 'dulich';
+let areaSearchQuery = '';
+
 function openAreaSelectModal() {
   const modal = document.getElementById('area-select-modal');
   if (modal) {
@@ -4225,7 +4852,7 @@ function openAreaSelectModal() {
     modal.classList.add('flex');
     const currEl = document.getElementById('current-selected-area-text');
     if (currEl) currEl.textContent = selectedAreaName;
-    renderAreaChips(selectedCity);
+    renderAreaChips();
   }
 }
 
@@ -4237,32 +4864,106 @@ function closeAreaSelectModal() {
   }
 }
 
-function switchAreaCity(city) {
-  selectedCity = city;
-  ['hcm', 'hn', 'dn'].forEach(c => {
-    const btn = document.getElementById(`city-btn-${c}`);
+function switchAreaRegion(region) {
+  selectedAreaRegion = region;
+  const regions = ['dulich', 'tplon', 'miennam', 'mientrung', 'mienbac', 'all'];
+  regions.forEach(r => {
+    const btn = document.getElementById(`region-btn-${r}`);
     if (btn) {
-      if (c === city) {
-        btn.className = 'px-2.5 py-0.5 rounded-full font-bold bg-primary text-on-primary';
+      if (r === region) {
+        btn.className = 'region-tab-btn px-3 py-1 rounded-full font-bold whitespace-nowrap bg-primary text-on-primary shadow-xs transition-all';
       } else {
-        btn.className = 'px-2.5 py-0.5 rounded-full font-semibold bg-surface-container text-on-surface-variant hover:text-on-surface';
+        btn.className = 'region-tab-btn px-3 py-1 rounded-full font-semibold whitespace-nowrap bg-surface-container text-on-surface-variant hover:text-on-surface transition-all';
       }
     }
   });
-  renderAreaChips(city);
+  renderAreaChips();
 }
 
-function renderAreaChips(city) {
+function switchAreaCity(city) {
+  if (city === 'hcm' || city === 'hn' || city === 'dn') {
+    switchAreaRegion('tplon');
+  } else {
+    switchAreaRegion(city);
+  }
+}
+
+function handleAreaSearchInput(val) {
+  areaSearchQuery = (val || '').trim().toLowerCase();
+  const clearBtn = document.getElementById('clear-province-search-btn');
+  if (clearBtn) {
+    if (areaSearchQuery) clearBtn.classList.remove('hidden');
+    else clearBtn.classList.add('hidden');
+  }
+  renderAreaChips();
+}
+
+function clearProvinceSearch() {
+  const inp = document.getElementById('province-search-input');
+  if (inp) inp.value = '';
+  handleAreaSearchInput('');
+}
+
+function getAllAreaHotspots() {
+  const seen = new Set();
+  const all = [];
+  const order = ['dulich', 'tplon', 'miennam', 'mientrung', 'mienbac'];
+  order.forEach(regKey => {
+    (areaHotspotsData[regKey] || []).forEach(item => {
+      if (!seen.has(item.name)) {
+        seen.add(item.name);
+        all.push(item);
+      }
+    });
+  });
+  return all;
+}
+
+function renderAreaChips(cityOrRegion) {
   const container = document.getElementById('area-chips-container');
   if (!container) return;
-  const list = areaHotspotsData[city] || areaHotspotsData.hcm;
+
+  if (cityOrRegion && ['dulich', 'tplon', 'miennam', 'mientrung', 'mienbac', 'all'].includes(cityOrRegion)) {
+    selectedAreaRegion = cityOrRegion;
+  }
+
+  let list = [];
+  if (areaSearchQuery) {
+    const all = getAllAreaHotspots();
+    list = all.filter(item => 
+      item.name.toLowerCase().includes(areaSearchQuery) ||
+      (item.desc && item.desc.toLowerCase().includes(areaSearchQuery)) ||
+      (item.tag && item.tag.toLowerCase().includes(areaSearchQuery))
+    );
+  } else if (selectedAreaRegion === 'all') {
+    list = getAllAreaHotspots();
+  } else {
+    list = areaHotspotsData[selectedAreaRegion] || areaHotspotsData.dulich;
+  }
+
+  const badgeEl = document.getElementById('area-count-badge');
+  if (badgeEl) {
+    badgeEl.textContent = `${list.length} địa điểm`;
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="col-span-2 p-4 text-center space-y-2 bg-surface-container-low rounded-xl border border-dashed border-outline-variant/30">
+        <span class="text-2xl">📍</span>
+        <p class="text-xs text-on-surface-variant font-medium">Không tìm thấy địa điểm trùng khớp với "<strong>${areaSearchQuery}</strong>"</p>
+        <button type="button" onclick="selectArea('${areaSearchQuery}')" class="px-3 py-1.5 rounded-xl bg-primary text-on-primary text-xs font-bold shadow-2xs active:scale-95">Tìm "${areaSearchQuery}" trên bản đồ 🗺️</button>
+      </div>
+    `;
+    return;
+  }
+
   container.innerHTML = list.map(item => {
     const isSelected = selectedAreaName === item.name;
     return `
       <div onclick="selectArea('${item.name}')" class="cursor-pointer p-2.5 rounded-xl border transition-all ${isSelected ? 'bg-primary-fixed/40 border-primary text-primary font-bold shadow-xs' : 'bg-surface-container-low hover:bg-surface-container border-outline-variant/20 text-on-surface'}">
-        <div class="flex items-center justify-between">
-          <span class="text-xs truncate block">${item.name}</span>
-          ${isSelected ? '<span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings:\'FILL\' 1">check_circle</span>' : ''}
+        <div class="flex items-center justify-between gap-1">
+          <span class="text-xs truncate block font-bold">${item.name}</span>
+          ${isSelected ? '<span class="material-symbols-outlined text-[15px] text-primary shrink-0" style="font-variation-settings:\'FILL\' 1">check_circle</span>' : (item.tag ? `<span class="text-[9px] px-1.5 py-0.2 rounded-full bg-surface-container-high text-on-surface-variant shrink-0">${item.tag}</span>` : '')}
         </div>
         <span class="text-[10px] text-on-surface-variant line-clamp-1 mt-0.5">${item.desc}</span>
       </div>
@@ -4270,10 +4971,31 @@ function renderAreaChips(city) {
   }).join('');
 }
 
+function getCoordsForArea(areaName) {
+  if (areaCenterCoordinates[areaName]) return areaCenterCoordinates[areaName];
+  const lower = areaName.toLowerCase();
+  for (const [key, coords] of Object.entries(areaCenterCoordinates)) {
+    if (lower.includes(key.toLowerCase()) || key.toLowerCase().includes(lower.split(',')[0])) {
+      return coords;
+    }
+  }
+  return areaCenterCoordinates['Quận 1, TP. HCM'];
+}
+
 function selectArea(areaName) {
   selectedAreaName = areaName;
-  const coords = areaCenterCoordinates[areaName] || areaCenterCoordinates['Quận 1, TP. HCM'];
+  const coords = getCoordsForArea(areaName);
   currentCenterCoords = { ...coords };
+
+  // If outside HCM and radius is small walking distance, auto-expand to 5km for rich view
+  const isHcmDistrict = areaName.includes('TP. HCM') || areaName.startsWith('Quận') || areaName.startsWith('Bình Thạnh') || areaName.startsWith('Phú Nhuận') || areaName.startsWith('Tân Bình') || areaName.startsWith('Thủ Đức');
+  if (!isHcmDistrict && selectedRadiusKm < 5) {
+    selectedRadiusKm = 5;
+    const radiusLbl = document.getElementById('radius-lbl');
+    if (radiusLbl) radiusLbl.textContent = '< 5km quanh Bé';
+    const liveRadius = document.getElementById('map-live-radius-indicator');
+    if (liveRadius) liveRadius.textContent = '< 5km quanh Bé';
+  }
 
   const lbl = document.getElementById('area-lbl');
   if (lbl) lbl.textContent = areaName;
@@ -4285,7 +5007,7 @@ function selectArea(areaName) {
   closeAreaSelectModal();
   renderMapRestaurants();
   if (leafletMap) {
-    leafletMap.flyTo([currentCenterCoords.lat, currentCenterCoords.lng], 15, { duration: 1.0 });
+    leafletMap.flyTo([currentCenterCoords.lat, currentCenterCoords.lng], 14, { duration: 1.0 });
     renderLeafletOverlays();
   }
   showToast(`📍 Đã chuyển khu vực: ${areaName}`);
@@ -4298,7 +5020,7 @@ function applyCustomAreaInput() {
     return;
   }
   const val = inp.value.trim();
-  selectArea(`${val} (${selectedCity === 'hn' ? 'Hà Nội' : selectedCity === 'dn' ? 'Đà Nẵng' : 'TP. HCM'})`);
+  selectArea(val);
 }
 
 function detectCurrentLocationGPS() {
@@ -4540,16 +5262,20 @@ function renderMapRestaurants() {
   if (allCountEl) allCountEl.textContent = filtered.length;
 
   if (filtered.length === 0) {
+    const areaShort = selectedAreaName.split(',')[0].trim();
     container.innerHTML = `
-      <div class="bg-surface-container-lowest p-6 rounded-2xl text-center space-y-3 border border-dashed border-outline-variant">
-        <div class="w-12 h-12 rounded-full bg-secondary-fixed/50 flex items-center justify-center mx-auto text-2xl">🍜</div>
-        <div>
-          <h4 class="font-bold text-sm text-on-surface">Không tìm thấy quán phù hợp quanh đây</h4>
-          <p class="text-xs text-on-surface-variant mt-1">Thử nới rộng bán kính hoặc tìm quán bằng Google Maps nhé!</p>
+      <div class="bg-surface-container-lowest p-6 rounded-2xl text-center space-y-3.5 border border-dashed border-outline-variant/40 shadow-xs">
+        <div class="w-14 h-14 rounded-full bg-primary-fixed/40 text-primary flex items-center justify-center mx-auto text-2xl shadow-2xs">📍</div>
+        <div class="space-y-1">
+          <h4 class="font-bold text-sm text-on-surface">Đang xem: <span class="text-primary">${selectedAreaName}</span></h4>
+          <p class="text-xs text-on-surface-variant max-w-xs mx-auto">Chưa có quán có sẵn trong bán kính hiện tại (${selectedRadiusKm >= 999 ? 'toàn khu vực' : selectedRadiusKm + 'km'}). Bạn có thể mở rộng khoảng cách hoặc tìm nhanh tất cả quán ngon quanh ${areaShort} trên Google Maps nhé!</p>
         </div>
-        <div class="flex items-center justify-center gap-2 pt-1">
-          <button type="button" onclick="selectRadiusOption(999)" class="px-3 py-1.5 rounded-full bg-primary-fixed text-primary text-xs font-bold active:scale-95">Mở rộng bán kính</button>
-          <button type="button" onclick="openExternalGoogleMapsSearch()" class="px-3 py-1.5 rounded-full bg-primary text-on-primary text-xs font-bold shadow-xs active:scale-95">Mở Google Maps 🗺️</button>
+        <div class="flex items-center justify-center gap-2 pt-1 flex-wrap">
+          <button type="button" onclick="selectRadiusOption(999)" class="px-3.5 py-2 rounded-xl bg-surface-container hover:bg-surface-variant text-on-surface text-xs font-bold active:scale-95 transition-all">Mở rộng bán kính (Tất cả)</button>
+          <button type="button" onclick="openExternalGoogleMapsSearch()" class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-bold shadow-xs active:scale-95 transition-all flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">map</span>
+            <span>Tìm quán ở ${areaShort} trên Google Maps 🗺️</span>
+          </button>
         </div>
       </div>
     `;
@@ -6218,7 +6944,7 @@ renderResultBackups(currentResultData || candidateDishes[0]);
 renderResultTip(currentResultData || candidateDishes[0]);
 renderBlackList();
 selectMood(0, true);
-renderAreaChips('hcm');
+renderAreaChips('dulich');
 renderMapRestaurants();
 setTimeout(() => {
   initLeafletMap();
