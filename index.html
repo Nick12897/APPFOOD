@@ -765,9 +765,19 @@
         <!-- Real Leaflet Map Container -->
         <div id="real-leaflet-map" class="w-full h-full z-10"></div>
 
+        <!-- Adjust Location Prompt Banner -->
+        <div id="map-adjusting-banner" class="hidden absolute top-3 left-3 right-14 z-[400] bg-primary text-white text-[11px] p-2 rounded-xl shadow-lg flex items-center justify-between pointer-events-auto border border-white/20 animate-pulse">
+          <div class="flex items-center gap-1.5 min-w-0 pr-1">
+            <span class="material-symbols-outlined text-[16px] shrink-0 text-white">touch_app</span>
+            <span class="truncate">Chạm bản đồ hoặc kéo ghim để chỉnh chỗ Bé!</span>
+          </div>
+          <button type="button" onclick="toggleAdjustLocationMode(false)" class="shrink-0 bg-white/25 hover:bg-white/40 text-white font-bold px-2 py-0.5 rounded text-[10px] transition-colors">Xong</button>
+        </div>
+
         <!-- Floating Controls over Map -->
         <div class="absolute top-3 right-3 flex flex-col gap-2 z-[400]">
           <button type="button" onclick="detectCurrentLocationGPS()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all border border-outline-variant/20" title="Định vị GPS thực tế của Bé"><span class="material-symbols-outlined text-[20px]">near_me</span></button>
+          <button type="button" id="map-adjust-loc-btn" onclick="toggleAdjustLocationMode()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all border border-outline-variant/20" title="Chỉnh vị trí Bé trên bản đồ (Kéo ghim hoặc Chạm bản đồ)"><span class="material-symbols-outlined text-[20px]">pin_drop</span></button>
           <button type="button" onclick="centerMapOnCurrentArea()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all border border-outline-variant/20" title="Về trung tâm khu vực"><span class="material-symbols-outlined text-[20px]">filter_center_focus</span></button>
           <button type="button" onclick="toggleMapTileStyle()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-primary active:scale-90 hover:bg-primary-fixed transition-all border border-outline-variant/20" title="Đổi kiểu bản đồ (OpenStreetMap / Esri)"><span class="material-symbols-outlined text-[20px]">layers</span></button>
           <button type="button" onclick="openExternalGoogleMapsSearch()" class="w-9 h-9 rounded-full bg-surface-container-lowest/95 shadow-md flex items-center justify-center text-secondary active:scale-90 hover:bg-secondary-fixed transition-all border border-outline-variant/20" title="Mở trên Google Maps"><span class="material-symbols-outlined text-[20px]">map</span></button>
@@ -1199,7 +1209,7 @@
         <div class="pt-0.5">
           <span class="text-[10px] text-on-surface-variant block mb-1 font-semibold">Gợi ý địa điểm & bệnh viện nhanh:</span>
           <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-[11px]">
-            <button type="button" onclick="setQuickProfileAddress('Bệnh viện Quốc tế Tâm Trí Hồng Ngự', {lat: 10.808819, lng: 105.348802}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Hồng Ngự (Đồng Tháp)</button>
+            <button type="button" onclick="setQuickProfileAddress('Bệnh viện Quốc tế Tâm Trí Hồng Ngự', {lat: 10.80935, lng: 105.35005}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Hồng Ngự (Đồng Tháp)</button>
             <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Tâm Trí Đồng Tháp', {lat: 10.463512, lng: 105.632514}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Đồng Tháp (Cao Lãnh)</button>
             <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Tâm Trí Sài Gòn', {lat: 10.831663, lng: 106.621566}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Sài Gòn</button>
             <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Hồng Ngọc - Yên Ninh', {lat: 21.04452, lng: 105.84271}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Hồng Ngọc HN</button>
@@ -3932,6 +3942,11 @@ const areaCenterCoordinates = {
   'An Giang (Châu Đốc / Long Xuyên)': { lat: 10.7020, lng: 105.1210 },
   'Bến Tre': { lat: 10.2415, lng: 106.3756 },
   'Đồng Tháp (Cao Lãnh / Sa Đéc)': { lat: 10.4600, lng: 105.6328 },
+  'TP. Hồng Ngự, Đồng Tháp': { lat: 10.80935, lng: 105.35005 },
+  'Hồng Ngự, Đồng Tháp': { lat: 10.80935, lng: 105.35005 },
+  'Hồng Ngự (Đồng Tháp)': { lat: 10.80935, lng: 105.35005 },
+  'Bệnh viện Quốc tế Tâm Trí Hồng Ngự': { lat: 10.80935, lng: 105.35005 },
+  'Bệnh viện Đa khoa Khu vực Hồng Ngự': { lat: 10.803663, lng: 105.351531 },
   'Cà Mau': { lat: 9.1769, lng: 105.1524 },
   'Vĩnh Long': { lat: 10.2537, lng: 105.9722 },
   'Kiên Giang (Rạch Giá)': { lat: 10.0124, lng: 105.0809 },
@@ -5512,6 +5527,11 @@ function initLeafletMap() {
     return;
   }
 
+  // If profile has saved address coordinates, ensure map starts centered there
+  if (typeof beProfile !== 'undefined' && beProfile && beProfile.addressCoords && beProfile.addressCoords.lat) {
+    currentCenterCoords = { ...beProfile.addressCoords };
+  }
+
   // Create real Leaflet map instance
   leafletMap = L.map('real-leaflet-map', {
     zoomControl: false,
@@ -5524,6 +5544,14 @@ function initLeafletMap() {
   L.control.zoom({ position: 'bottomright' }).addTo(leafletMap);
 
   leafletMarkersLayer = L.layerGroup().addTo(leafletMap);
+
+  // Handle map click for relocation mode
+  leafletMap.on('click', function(e) {
+    if (isAdjustingLocation) {
+      onUserPinDragged(e.latlng.lat, e.latlng.lng);
+      toggleAdjustLocationMode(false);
+    }
+  });
 
   renderLeafletOverlays();
 }
@@ -5564,12 +5592,24 @@ function renderLeafletOverlays() {
   if (leafletUserMarker) {
     leafletUserMarker.setLatLng([currentCenterCoords.lat, currentCenterCoords.lng]);
     leafletUserMarker.setIcon(userIcon);
+    if (leafletUserMarker.dragging) {
+      leafletUserMarker.dragging.enable();
+    }
   } else {
-    leafletUserMarker = L.marker([currentCenterCoords.lat, currentCenterCoords.lng], { icon: userIcon, zIndexOffset: 1000 }).addTo(leafletMap);
+    leafletUserMarker = L.marker([currentCenterCoords.lat, currentCenterCoords.lng], { 
+      icon: userIcon, 
+      zIndexOffset: 1000,
+      draggable: true
+    }).addTo(leafletMap);
+
+    leafletUserMarker.on('dragend', function(e) {
+      const pos = e.target.getLatLng();
+      onUserPinDragged(pos.lat, pos.lng);
+    });
   }
 
   const userPopupHtml = `
-    <div class="text-left space-y-1 p-1 min-w-[170px]">
+    <div class="text-left space-y-1.5 p-1 min-w-[190px]">
       <div class="flex items-center gap-2">
         <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden shrink-0 shadow-2xs">
           ${avatarContent}
@@ -5579,9 +5619,16 @@ function renderLeafletOverlays() {
           <span class="text-[10px] text-on-surface-variant block truncate leading-tight mt-0.5">${selectedAreaName}</span>
         </div>
       </div>
+      <div class="text-[9px] text-primary/80 bg-primary/10 rounded px-1.5 py-0.5 font-mono">
+        📍 ${currentCenterCoords.lat.toFixed(5)}, ${currentCenterCoords.lng.toFixed(5)} <span class="text-on-surface-variant font-sans">(Kéo để dời)</span>
+      </div>
       <p class="text-[10px] text-on-surface-variant pt-1 border-t border-outline-variant/20 leading-relaxed">
         Đang quét quán ăn ngon trong bán kính <strong class="text-primary">${selectedRadiusKm >= 999 ? 'toàn khu vực' : '< ' + selectedRadiusKm + 'km'}</strong> quanh nàng! 💕
       </p>
+      <button type="button" onclick="toggleAdjustLocationMode(true)" class="w-full mt-1 bg-surface-container hover:bg-primary-fixed text-primary text-[10px] font-bold py-1 px-2 rounded-lg border border-primary/20 flex items-center justify-center gap-1 transition-all">
+        <span class="material-symbols-outlined text-[13px]">pin_drop</span>
+        Chạm bản đồ để chỉnh chỗ
+      </button>
     </div>
   `;
   leafletUserMarker.bindPopup(userPopupHtml, { maxWidth: 220, closeButton: false });
@@ -5657,6 +5704,58 @@ function renderLeafletOverlays() {
     leafletMarkersLayer.addLayer(marker);
     restaurantMarkersMap[r.id] = marker;
   });
+}
+
+let isAdjustingLocation = false;
+
+function toggleAdjustLocationMode(forceState) {
+  isAdjustingLocation = typeof forceState === 'boolean' ? forceState : !isAdjustingLocation;
+  const btn = document.getElementById('map-adjust-loc-btn');
+  const banner = document.getElementById('map-adjusting-banner');
+  const mapEl = document.getElementById('real-leaflet-map');
+
+  if (isAdjustingLocation) {
+    if (btn) {
+      btn.classList.add('bg-primary', 'text-white', 'ring-2', 'ring-primary/40');
+      btn.classList.remove('bg-surface-container-lowest/95', 'text-primary');
+    }
+    if (banner) banner.classList.remove('hidden');
+    if (mapEl) mapEl.style.cursor = 'crosshair';
+    showToast('🎯 Chạm vị trí trên bản đồ hoặc kéo ghim Bé để chỉnh vị trí!');
+  } else {
+    if (btn) {
+      btn.classList.remove('bg-primary', 'text-white', 'ring-2', 'ring-primary/40');
+      btn.classList.add('bg-surface-container-lowest/95', 'text-primary');
+    }
+    if (banner) banner.classList.add('hidden');
+    if (mapEl) mapEl.style.cursor = '';
+  }
+}
+
+function onUserPinDragged(lat, lng) {
+  const roundedLat = +(lat.toFixed(6));
+  const roundedLng = +(lng.toFixed(6));
+
+  currentCenterCoords = { lat: roundedLat, lng: roundedLng };
+
+  if (typeof beProfile !== 'undefined' && beProfile) {
+    beProfile.addressCoords = { lat: roundedLat, lng: roundedLng };
+    try {
+      localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile));
+    } catch(err) {}
+  }
+
+  if (leafletUserMarker) {
+    leafletUserMarker.setLatLng([roundedLat, roundedLng]);
+  }
+  if (leafletRadiusCircle) {
+    leafletRadiusCircle.setLatLng([roundedLat, roundedLng]);
+  }
+
+  renderLeafletOverlays();
+  renderMapRestaurants();
+  renderProfile();
+  showToast('📍 Đã định vị chính xác vị trí của Bé trên bản đồ! ❤️');
 }
 
 function centerMapOnCurrentArea() {
@@ -6388,7 +6487,14 @@ const defaultProfile = {
 let beProfile = { ...defaultProfile };
 try {
   const saved = localStorage.getItem('an_gi_be_profile');
-  if (saved) beProfile = { ...defaultProfile, ...JSON.parse(saved) };
+  if (saved) {
+    beProfile = { ...defaultProfile, ...JSON.parse(saved) };
+    // Auto-migrate previous offset coordinates for BV Tâm Trí Hồng Ngự to exact building campus
+    if (beProfile.addressCoords && Math.abs(beProfile.addressCoords.lat - 10.808819) < 0.0005) {
+      beProfile.addressCoords = { lat: 10.80935, lng: 105.35005 };
+      try { localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile)); } catch(e){}
+    }
+  }
 } catch(e) { beProfile = { ...defaultProfile }; }
 
 const avatarList = ['🐰', '🐱', '🐻', '🐶', '🦊', '🐼', '🐹', '🦄', '👸', '🌸', '🍓', '🥑', '🍧', '🧋', '👑', '🐣', '🦋'];
@@ -6636,8 +6742,8 @@ const localAddressDirectory = [
     address: 'Số 12 Đường Nguyễn Tất Thành, Khu đô thị Bờ Đông, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
     type: 'hospital',
     icon: '🏥',
-    lat: 10.808819,
-    lng: 105.348802
+    lat: 10.80935,
+    lng: 105.35005
   },
   {
     name: 'Bệnh viện Đa khoa Tâm Trí Đồng Tháp',
@@ -6654,8 +6760,8 @@ const localAddressDirectory = [
     address: 'Đường Lê Duẩn, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
     type: 'hospital',
     icon: '🏥',
-    lat: 10.803512,
-    lng: 105.340215
+    lat: 10.803663,
+    lng: 105.351531
   },
   {
     name: 'Bệnh viện Đa khoa Tỉnh Đồng Tháp',
