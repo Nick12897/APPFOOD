@@ -1209,7 +1209,7 @@
         <div class="pt-0.5">
           <span class="text-[10px] text-on-surface-variant block mb-1 font-semibold">Gợi ý địa điểm & bệnh viện nhanh:</span>
           <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-[11px]">
-            <button type="button" onclick="setQuickProfileAddress('Bệnh viện Quốc tế Tâm Trí Hồng Ngự', {lat: 10.80935, lng: 105.35005}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Hồng Ngự (Đồng Tháp)</button>
+            <button type="button" onclick="setQuickProfileAddress('Bệnh viện Quốc tế Tâm Trí Hồng Ngự', {lat: 10.80788, lng: 105.34955}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Hồng Ngự (Đồng Tháp)</button>
             <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Tâm Trí Đồng Tháp', {lat: 10.463512, lng: 105.632514}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Đồng Tháp (Cao Lãnh)</button>
             <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Tâm Trí Sài Gòn', {lat: 10.831663, lng: 106.621566}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Sài Gòn</button>
             <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Hồng Ngọc - Yên Ninh', {lat: 21.04452, lng: 105.84271}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Hồng Ngọc HN</button>
@@ -3942,10 +3942,10 @@ const areaCenterCoordinates = {
   'An Giang (Châu Đốc / Long Xuyên)': { lat: 10.7020, lng: 105.1210 },
   'Bến Tre': { lat: 10.2415, lng: 106.3756 },
   'Đồng Tháp (Cao Lãnh / Sa Đéc)': { lat: 10.4600, lng: 105.6328 },
-  'TP. Hồng Ngự, Đồng Tháp': { lat: 10.80935, lng: 105.35005 },
-  'Hồng Ngự, Đồng Tháp': { lat: 10.80935, lng: 105.35005 },
-  'Hồng Ngự (Đồng Tháp)': { lat: 10.80935, lng: 105.35005 },
-  'Bệnh viện Quốc tế Tâm Trí Hồng Ngự': { lat: 10.80935, lng: 105.35005 },
+  'TP. Hồng Ngự, Đồng Tháp': { lat: 10.80788, lng: 105.34955 },
+  'Hồng Ngự, Đồng Tháp': { lat: 10.80788, lng: 105.34955 },
+  'Hồng Ngự (Đồng Tháp)': { lat: 10.80788, lng: 105.34955 },
+  'Bệnh viện Quốc tế Tâm Trí Hồng Ngự': { lat: 10.80788, lng: 105.34955 },
   'Bệnh viện Đa khoa Khu vực Hồng Ngự': { lat: 10.803663, lng: 105.351531 },
   'Cà Mau': { lat: 9.1769, lng: 105.1524 },
   'Vĩnh Long': { lat: 10.2537, lng: 105.9722 },
@@ -4904,15 +4904,123 @@ const mapRestaurantsDb = [
     tip: 'Cá linh non béo ngậy đầu mùa nấu nước lẩu chua thanh, nhúng bông điên điển vàng ươm giòn ngọt ngây ngất.'
   },
   {
+    id: 'an-vat-ong-map-hong-ngu',
+    name: 'Ăn Vặt Ông Mập - Quảng Trường Võ Nguyên Giáp',
+    food: 'Trà Sữa Khoai Môn & Xiên Que Chiên Giòn, Bánh Tráng Trộn',
+    emoji: '🍡',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.80862,
+    lng: 105.34960,
+    address: 'Quảng trường Võ Nguyên Giáp, Đ. Nguyễn Thị Minh Khai (đối diện BV Tâm Trí)',
+    rating: 4.9,
+    reviews: 540,
+    price: 'cheap',
+    priceText: '15k - 35k/món',
+    tags: ['street', 'view'],
+    badge: 'Quán ăn vặt hot nhất Quảng trường sát cạnh Bé 🍡',
+    tip: 'Trà sữa ngọt béo vừa vặn, bánh tráng trộn tóp mỡ giòn rụm, xiên que nóng hổi đi bộ 1 phút qua đường là tới.'
+  },
+  {
+    id: 'cafe-yu-xuan-90-hong-ngu',
+    name: 'Cafe Yu Xuân 90',
+    food: 'Cà Phê Muối Béo Ngậy & Trà Trái Cây Thanh Mát',
+    emoji: '☕',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.80799,
+    lng: 105.35102,
+    address: 'Số 90 Nguyễn Thị Minh Khai, Phường An Thạnh (~150m từ BV Tâm Trí)',
+    rating: 4.8,
+    reviews: 410,
+    price: 'cheap',
+    priceText: '25k - 45k/ly',
+    tags: ['ac', 'view'],
+    badge: 'Cà phê máy lạnh chill sát chỗ làm Bé ☕',
+    tip: 'Không gian máy lạnh yên tĩnh mát mẻ, cà phê thơm đượm vị, nước ép và trà trái cây thanh ngọt giải nhiệt tuyệt hảo.'
+  },
+  {
+    id: 'de-tuoi-duong-ngon-hong-ngu',
+    name: 'Quán Dê Tươi Dương Ngon',
+    food: 'Lẩu Dê Tươi Nhúng Mẻ & Dê Nướng Sa Tế Đậm Đà',
+    emoji: '🍲',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.80855,
+    lng: 105.35185,
+    address: 'Đường Nguyễn Thị Minh Khai (gần Công viên Võ Nguyên Giáp), TP. Hồng Ngự',
+    rating: 4.9,
+    reviews: 680,
+    price: 'mid',
+    priceText: '80k - 150k/người',
+    tags: ['street', 'ac'],
+    badge: 'Dê tươi gia truyền bổ dưỡng cho Bé 🍲',
+    tip: 'Thịt dê tươi mềm ngọt không hề ngấy, lẩu ninh xương tủy ngọt đậm đà ăn kèm mì trứng và rau má tươi mát.'
+  },
+  {
+    id: 'linh-do-chien-hong-ngu',
+    name: 'Linh Đồ Chiên & Bánh Tráng Nướng',
+    food: 'Cá Viên Chiên Mắm Tỏi & Bánh Tráng Nướng Trứng Cút',
+    emoji: '🍢',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.80829,
+    lng: 105.34923,
+    address: 'Góc Nguyễn Tất Thành & Nguyễn Thị Minh Khai (ngay trước cổng BV Tâm Trí)',
+    rating: 4.8,
+    reviews: 460,
+    price: 'cheap',
+    priceText: '15k - 30k/món',
+    tags: ['street'],
+    badge: 'Đồ chiên mắm bơ tỏi thơm nức cổng viện 🍢',
+    tip: 'Xiên que chiên ráo dầu sốt bơ tỏi keo quánh, ăn vặt buổi chiều giải tỏa áp lực ca làm việc cực kỳ đã.'
+  },
+  {
+    id: 'sky-coffee-hotel-hong-ngu',
+    name: 'Sky Coffee & Bakery (Sky Hotel)',
+    food: 'Trà Đào Cam Sả Tươi & Bánh Tiramisu Phô Mai',
+    emoji: '🍹',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.80840,
+    lng: 105.34855,
+    address: '39 Nguyễn Tất Thành, TP. Hồng Ngự (đối diện xéo cổng BV Tâm Trí)',
+    rating: 4.9,
+    reviews: 890,
+    price: 'mid',
+    priceText: '35k - 60k/món',
+    tags: ['ac', 'view', 'romantic'],
+    badge: 'Cafe tầng cao view toàn cảnh Hồng Ngự 🌇',
+    tip: 'View tầng cao ngắm trọn quảng trường Võ Nguyên Giáp và sông Tiền lãng mạn, máy lạnh mát rượi và bánh ngọt ngào.'
+  },
+  {
+    id: 'lau-de-duc-tho-hong-ngu',
+    name: 'Lẩu Dê Đức Thọ Hồng Ngự',
+    food: 'Lẩu Sườn Dê Thuốc Bắc & Vú Dê Nướng Chao Cay',
+    emoji: '🥩',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.80766,
+    lng: 105.35032,
+    address: 'Đường Bà Triệu, Phường An Thạnh (ngay sau lưng BV Tâm Trí)',
+    rating: 4.8,
+    reviews: 580,
+    price: 'mid',
+    priceText: '90k - 150k/người',
+    tags: ['street', 'ac'],
+    badge: 'Lẩu dê bổ dưỡng phục hồi năng lượng 🥩',
+    tip: 'Vú dê nướng giòn sần sật béo ngậy chấm chao ớt, sườn dê hầm thuốc bắc bồi bổ năng lượng cực tốt cho nàng.'
+  },
+  {
     id: 'com-tam-long-trieu-hong-ngu',
     name: 'Cơm Tấm Sườn Nướng Long Triều',
     food: 'Cơm Tấm Sườn Cọng Nướng Mỡ Hành Hạt Sen',
     emoji: '🍛',
     area: 'TP. Hồng Ngự, Đồng Tháp',
     city: 'dongthap',
-    lat: 10.8078,
-    lng: 105.3495,
-    address: '45 Nguyễn Tất Thành, Phường An Thạnh, TP. Hồng Ngự (~110m từ BV Tâm Trí)',
+    lat: 10.80740,
+    lng: 105.34910,
+    address: '45 Nguyễn Tất Thành, Phường An Thạnh, TP. Hồng Ngự (~70m từ BV Tâm Trí)',
     rating: 4.8,
     reviews: 420,
     price: 'cheap',
@@ -4928,9 +5036,9 @@ const mapRestaurantsDb = [
     emoji: '🍜',
     area: 'TP. Hồng Ngự, Đồng Tháp',
     city: 'dongthap',
-    lat: 10.8082,
-    lng: 105.3465,
-    address: '18 Lê Duẩn, Phường An Thạnh, TP. Hồng Ngự (~220m từ BV Tâm Trí)',
+    lat: 10.80520,
+    lng: 105.34780,
+    address: '18 Lê Duẩn, Phường An Thạnh, TP. Hồng Ngự (~350m từ BV Tâm Trí)',
     rating: 4.9,
     reviews: 690,
     price: 'cheap',
@@ -4946,9 +5054,9 @@ const mapRestaurantsDb = [
     emoji: '🧋',
     area: 'TP. Hồng Ngự, Đồng Tháp',
     city: 'dongthap',
-    lat: 10.8092,
-    lng: 105.3486,
-    address: 'Khu Đô Thị Bờ Đông, TP. Hồng Ngự (~50m đối diện BV Tâm Trí)',
+    lat: 10.80910,
+    lng: 105.34890,
+    address: 'Khu Đô Thị Bờ Đông, TP. Hồng Ngự (~130m từ BV Tâm Trí)',
     rating: 4.8,
     reviews: 340,
     price: 'cheap',
@@ -6489,9 +6597,9 @@ try {
   const saved = localStorage.getItem('an_gi_be_profile');
   if (saved) {
     beProfile = { ...defaultProfile, ...JSON.parse(saved) };
-    // Auto-migrate previous offset coordinates for BV Tâm Trí Hồng Ngự to exact building campus
-    if (beProfile.addressCoords && Math.abs(beProfile.addressCoords.lat - 10.808819) < 0.0005) {
-      beProfile.addressCoords = { lat: 10.80935, lng: 105.35005 };
+    // Auto-migrate previous coordinates for BV Tâm Trí Hồng Ngự to exact Google Maps pin
+    if (beProfile.addressCoords && (Math.abs(beProfile.addressCoords.lat - 10.808819) < 0.0015 || Math.abs(beProfile.addressCoords.lat - 10.80935) < 0.0005)) {
+      beProfile.addressCoords = { lat: 10.80788, lng: 105.34955 };
       try { localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile)); } catch(e){}
     }
   }
@@ -6742,8 +6850,8 @@ const localAddressDirectory = [
     address: 'Số 12 Đường Nguyễn Tất Thành, Khu đô thị Bờ Đông, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
     type: 'hospital',
     icon: '🏥',
-    lat: 10.80935,
-    lng: 105.35005
+    lat: 10.80788,
+    lng: 105.34955
   },
   {
     name: 'Bệnh viện Đa khoa Tâm Trí Đồng Tháp',
