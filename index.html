@@ -915,6 +915,7 @@
             <div class="flex items-center gap-1.5 flex-wrap">
               <span id="nb-address-title" class="font-label-md text-label-md text-primary font-bold truncate">Nhà của Bé 🏠</span>
               <span class="text-[9px] bg-primary text-on-primary px-1.5 py-0.2 rounded-full font-bold">Vị trí tìm quán</span>
+              <span id="nb-address-coord-badge" class="text-[9px] bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[11px]" style="font-variation-settings:'FILL' 1">check_circle</span> Bản đồ đã kết nối</span>
             </div>
             <p id="nb-address-text" class="font-body-sm text-body-sm text-on-surface font-semibold truncate mt-0.5">Quận 1, TP. HCM</p>
             <span id="nb-address-note" class="font-label-sm text-[11px] text-on-surface-variant opacity-80 block truncate">Khu vực quen thuộc của nàng</span>
@@ -1141,38 +1142,58 @@
           <span class="material-symbols-outlined text-[19px]">home_pin</span>
           <span>Địa chỉ / Nơi ở của Bé 📍</span>
         </label>
-        <span class="text-[10px] text-primary/90 font-bold bg-surface px-2 py-0.5 rounded-full border border-primary/20 shadow-2xs">Tìm quán quanh bé</span>
+        <span class="text-[10px] text-primary/90 font-bold bg-surface px-2 py-0.5 rounded-full border border-primary/20 shadow-2xs">Liên kết bản đồ vệ tinh</span>
       </div>
       
       <div class="space-y-2">
         <div class="flex gap-2">
-          <div class="w-2/5">
+          <div class="w-1/3">
             <span class="text-[10px] font-bold text-on-surface-variant block mb-1">Tên nơi ở:</span>
             <input id="edit-profile-address-title" type="text" class="w-full bg-surface text-on-surface px-3 py-2 rounded-xl text-xs focus:outline-none border border-outline-variant/30" placeholder="VD: Nhà bé yêu 🏠" />
           </div>
-          <div class="flex-1">
-            <span class="text-[10px] font-bold text-on-surface-variant block mb-1">Địa chỉ / Khu vực:</span>
-            <input id="edit-profile-address" type="text" class="w-full bg-surface text-on-surface px-3 py-2 rounded-xl text-xs focus:outline-none border border-outline-variant/30" placeholder="VD: Phan Xích Long, Phú Nhuận..." />
+          <div class="flex-1 relative">
+            <span class="text-[10px] font-bold text-on-surface-variant block mb-1 flex items-center justify-between">
+              <span>Địa chỉ / Khu vực (Bản đồ 🗺️):</span>
+              <span id="profile-address-link-tag" class="text-[9px] text-emerald-700 bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded-full hidden">✅ Có toạ độ</span>
+            </span>
+            <div class="relative">
+              <input id="edit-profile-address" type="text" autocomplete="off" oninput="handleProfileAddressInput(this.value)" onfocus="handleProfileAddressFocus()" class="w-full bg-surface text-on-surface pl-3 pr-8 py-2 rounded-xl text-xs focus:outline-none border border-outline-variant/30 focus:border-primary focus:ring-1 focus:ring-primary transition-all font-medium" placeholder="Gõ tên bệnh viện, toà nhà, con đường..." />
+              <div id="edit-profile-address-spinner" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                <span class="inline-block w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+              </div>
+            </div>
+            
+            <!-- Autocomplete suggestion list -->
+            <div id="profile-address-suggestions" class="hidden absolute top-full left-0 right-0 z-50 mt-1 max-h-56 overflow-y-auto bg-surface rounded-xl shadow-2xl border border-outline-variant/40 divide-y divide-outline-variant/10 text-xs">
+            </div>
           </div>
+        </div>
+
+        <!-- Status badge showing map link state -->
+        <div id="profile-address-map-status" class="text-[11px] px-3 py-2 rounded-xl border flex items-center justify-between gap-1.5 transition-all bg-surface-container-low text-on-surface-variant border-outline-variant/20">
+          <div class="flex items-center gap-1.5 truncate">
+            <span id="profile-address-map-status-icon" class="material-symbols-outlined text-[16px] text-primary shrink-0" style="font-variation-settings:'FILL' 1">pin_drop</span>
+            <span id="profile-address-map-status-text" class="truncate font-medium">Nhập tên hoặc địa điểm để liên kết toạ độ bản đồ</span>
+          </div>
+          <span id="profile-address-map-status-coords" class="text-[10px] font-mono font-bold text-primary shrink-0"></span>
         </div>
 
         <div>
           <span class="text-[10px] font-bold text-on-surface-variant block mb-1">Ghi chú thêm (tùy chọn):</span>
-          <input id="edit-profile-address-note" type="text" class="w-full bg-surface text-on-surface px-3 py-2 rounded-xl text-xs focus:outline-none border border-outline-variant/30" placeholder="VD: Gần ngã tư, chỗ trọ gần trường..." />
+          <input id="edit-profile-address-note" type="text" class="w-full bg-surface text-on-surface px-3 py-2 rounded-xl text-xs focus:outline-none border border-outline-variant/30" placeholder="VD: Tầng 3 khoa khám bệnh, hoặc ngõ 12..." />
         </div>
 
-        <!-- Quick suggest chips -->
+        <!-- Quick suggest chips with real coordinates -->
         <div class="pt-0.5">
-          <span class="text-[10px] text-on-surface-variant block mb-1 font-semibold">Gợi ý khu vực nhanh:</span>
+          <span class="text-[10px] text-on-surface-variant block mb-1 font-semibold">Gợi ý địa điểm & bệnh viện nhanh:</span>
           <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-[11px]">
-            <button type="button" onclick="setQuickProfileAddress('Phú Nhuận, TP. HCM')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Phú Nhuận</button>
-            <button type="button" onclick="setQuickProfileAddress('Quận 1, TP. HCM')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Quận 1</button>
-            <button type="button" onclick="setQuickProfileAddress('Bình Thạnh, TP. HCM')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Bình Thạnh</button>
-            <button type="button" onclick="setQuickProfileAddress('Quận 3, TP. HCM')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Quận 3</button>
-            <button type="button" onclick="setQuickProfileAddress('Cầu Giấy, Hà Nội')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Cầu Giấy</button>
-            <button type="button" onclick="setQuickProfileAddress('Hoàn Kiếm, Hà Nội')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Hoàn Kiếm</button>
-            <button type="button" onclick="setQuickProfileAddress('Đà Lạt, Lâm Đồng')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Đà Lạt</button>
-            <button type="button" onclick="setQuickProfileAddress('Vũng Tàu, BR-VT')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Vũng Tàu</button>
+            <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Tâm Trí Sài Gòn', {lat: 10.831663, lng: 106.621566}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Sài Gòn</button>
+            <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Hồng Ngọc - Yên Ninh', {lat: 21.04452, lng: 105.84271}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Hồng Ngọc HN</button>
+            <button type="button" onclick="setQuickProfileAddress('Bệnh viện Chợ Rẫy', {lat: 10.75782, lng: 106.65961}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Chợ Rẫy</button>
+            <button type="button" onclick="setQuickProfileAddress('Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh', {lat: 10.79812, lng: 106.68531}, 'Nhà bé yêu 🏠')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Phan Xích Long</button>
+            <button type="button" onclick="setQuickProfileAddress('Quận 1, TP. Hồ Chí Minh', {lat: 10.7769, lng: 106.7009}, 'Khu trung tâm 🏢')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Quận 1</button>
+            <button type="button" onclick="setQuickProfileAddress('Quận Cầu Giấy, Hà Nội', {lat: 21.0333, lng: 105.7937}, 'Nhà bé yêu 🏠')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Cầu Giấy</button>
+            <button type="button" onclick="setQuickProfileAddress('Quận Hải Châu, Đà Nẵng', {lat: 16.0685, lng: 108.2238}, 'Nhà bé yêu 🏠')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">Hải Châu, ĐN</button>
           </div>
         </div>
       </div>
@@ -4673,6 +4694,116 @@ const mapRestaurantsDb = [
     tags: ['street'],
     badge: 'Cua biển chắc thịt ngọt số 1 🦀',
     tip: 'Cua gạch son đầy ắp và cua thịt chắc nịch chấm muối tiêu chanh ớt hiểm thơm lừng miền Đất Mũi.'
+  },
+  // Quanh Bệnh viện Đa khoa Tâm Trí Sài Gòn & Trường Chinh (Quận 12 - Tân Bình)
+  {
+    id: 'bun-bo-hue-o-nga-truong-chinh',
+    name: 'Bún Bò Huế O Nga - Trường Chinh',
+    food: 'Bún Bò Nạm Gân Chả Cua Sa Tế Cay',
+    emoji: '🍜',
+    area: 'Quận 12, TP. HCM',
+    city: 'hcm',
+    lat: 10.8321,
+    lng: 106.6219,
+    address: '185 Trường Chinh, P. Tân Thới Nhất, Quận 12 (Cách BV Tâm Trí ~60m)',
+    rating: 4.8,
+    reviews: 640,
+    price: 'cheap',
+    priceText: '40k - 60k/người',
+    tags: ['street', 'ac'],
+    badge: 'Gần sát BV Tâm Trí Sài Gòn 🏥',
+    tip: 'Nước dùng hầm xương bò cay thơm nồng vị sả ruốc, thịt bắp hoa thái lát dày mềm thơm nức mũi.'
+  },
+  {
+    id: 'com-tam-suon-nuong-ba-muoi-q12',
+    name: 'Cơm Tấm Sườn Nướng Bà Mười',
+    food: 'Cơm Tấm Sườn Cọng Nướng Mỡ Hành Chả Trứng',
+    emoji: '🍛',
+    area: 'Quận 12, TP. HCM',
+    city: 'hcm',
+    lat: 10.8310,
+    lng: 106.6225,
+    address: '142 Trường Chinh, P. Tân Thới Nhất, Quận 12 (Cách BV Tâm Trí ~120m)',
+    rating: 4.9,
+    reviews: 820,
+    price: 'cheap',
+    priceText: '35k - 55k/người',
+    tags: ['street'],
+    badge: 'Cơm tấm sườn cọng đỉnh chóp 🥩',
+    tip: 'Sườn cọng ướp mật ong nướng than hồng thơm phức, mỡ hành béo ngậy, nước mắm kẹo ngọt vừa vặn.'
+  },
+  {
+    id: 'pho-bo-phu-gia-q12',
+    name: 'Phở Bò Gia Truyền Phú Gia',
+    food: 'Phở Bò Tái Nạm Gầu Giòn Quẩy Nóng',
+    emoji: '🍜',
+    area: 'Quận 12, TP. HCM',
+    city: 'hcm',
+    lat: 10.8329,
+    lng: 106.6208,
+    address: '210 Trường Chinh, P. Tân Thới Nhất, Quận 12 (Gần BV Tâm Trí ~180m)',
+    rating: 4.7,
+    reviews: 430,
+    price: 'cheap',
+    priceText: '45k - 65k/người',
+    tags: ['ac'],
+    badge: 'Phở bò nước trong thanh ngọt 🍲',
+    tip: 'Bánh phở mềm mướt tráng tay, nước dùng trong vắt ngọt tủy tự nhiên không gắt mì chính.'
+  },
+  {
+    id: 'tra-sua-tocotoco-truong-chinh',
+    name: 'Trà Sữa ToCoToCo Trường Chinh',
+    food: 'Trà Sữa Ba Anh Em Full Topping',
+    emoji: '🧋',
+    area: 'Quận 12, TP. HCM',
+    city: 'hcm',
+    lat: 10.8314,
+    lng: 106.6220,
+    address: '168 Trường Chinh, P. Tân Thới Nhất, Quận 12 (Đối diện BV Tâm Trí)',
+    rating: 4.8,
+    reviews: 510,
+    price: 'cheap',
+    priceText: '30k - 45k/ly',
+    tags: ['ac', 'view'],
+    badge: 'Tiếp tế năng lượng cho Bé yêu 🧋',
+    tip: 'Trân châu sợi hoàng kim dẻo quánh, puding trứng núng nính, trà đậm vị thơm ngọt dễ chịu.'
+  },
+  // Quanh Bệnh viện Đa khoa Hồng Ngọc (55 Yên Ninh, Ba Đình, Hà Nội)
+  {
+    id: 'pho-bo-yen-ninh-ba-dinh',
+    name: 'Phở Bò Gia Truyền Yên Ninh',
+    food: 'Phở Bò Tái Lăn Chín Nạm Quẩy Giòn',
+    emoji: '🍜',
+    area: 'Quận Ba Đình, Hà Nội',
+    city: 'hn',
+    lat: 21.0442,
+    lng: 105.8425,
+    address: '48 Yên Ninh, Trúc Bạch, Ba Đình (Cách BV Hồng Ngọc ~50m)',
+    rating: 4.8,
+    reviews: 790,
+    price: 'cheap',
+    priceText: '50k - 70k/người',
+    tags: ['street'],
+    badge: 'Sát vách BV Hồng Ngọc Yên Ninh 🏥',
+    tip: 'Thịt bò xào lăn lửa lớn dậy mùi tỏi gừng thơm lừng góc phố Trúc Bạch, quẩy giòn nhúng nước dùng ngậy béo.'
+  },
+  {
+    id: 'bun-cha-xua-yen-ninh',
+    name: 'Bún Chả Cổ Truyền Nem Cua Bể',
+    food: 'Bún Chả Nướng Than Hoa & Nem Cua Giòn Rụm',
+    emoji: '🍲',
+    area: 'Quận Ba Đình, Hà Nội',
+    city: 'hn',
+    lat: 21.0448,
+    lng: 105.8430,
+    address: '62 Yên Ninh, Trúc Bạch, Ba Đình (Cách BV Hồng Ngọc ~70m)',
+    rating: 4.9,
+    reviews: 910,
+    price: 'cheap',
+    priceText: '45k - 65k/người',
+    tags: ['street', 'ac'],
+    badge: 'Bún chả nướng than hoa nức mũi 🥩',
+    tip: 'Chả viên bọc lá chuối nướng xém cạnh, nước chấm đu đủ cà rốt chua ngọt thanh tao chuẩn vị người Hà thành.'
   }
 ];
 
@@ -5105,8 +5236,11 @@ function renderAreaChips(cityOrRegion) {
 }
 
 function getCoordsForArea(areaName) {
+  if (typeof beProfile !== 'undefined' && beProfile && beProfile.addressCoords && (beProfile.address === areaName || (beProfile.address && areaName && (areaName.toLowerCase().includes(beProfile.address.toLowerCase()) || beProfile.address.toLowerCase().includes(areaName.toLowerCase()))))) {
+    return beProfile.addressCoords;
+  }
   if (areaCenterCoordinates[areaName]) return areaCenterCoordinates[areaName];
-  const lower = areaName.toLowerCase();
+  const lower = (areaName || '').toLowerCase();
   for (const [key, coords] of Object.entries(areaCenterCoordinates)) {
     if (lower.includes(key.toLowerCase()) || key.toLowerCase().includes(lower.split(',')[0])) {
       return coords;
@@ -5115,9 +5249,9 @@ function getCoordsForArea(areaName) {
   return areaCenterCoordinates['Quận 1, TP. HCM'];
 }
 
-function selectArea(areaName) {
+function selectArea(areaName, customCoords = null) {
   selectedAreaName = areaName;
-  const coords = getCoordsForArea(areaName);
+  const coords = customCoords || getCoordsForArea(areaName);
   currentCenterCoords = { ...coords };
 
   // If outside HCM and radius is small walking distance, auto-expand to 5km for rich view
@@ -5140,7 +5274,7 @@ function selectArea(areaName) {
   closeAreaSelectModal();
   renderMapRestaurants();
   if (leafletMap) {
-    leafletMap.flyTo([currentCenterCoords.lat, currentCenterCoords.lng], 14, { duration: 1.0 });
+    leafletMap.flyTo([currentCenterCoords.lat, currentCenterCoords.lng], 15, { duration: 1.0 });
     renderLeafletOverlays();
   }
   showToast(`📍 Đã chuyển khu vực: ${areaName}`);
@@ -5557,8 +5691,9 @@ const defaultProfile = {
   name: 'Bé Heo',
   avatar: '🐰',
   status: 'Hôm nay: Dễ thương nhưng đói bụng 🐰',
-  address: 'Phú Nhuận, TP. HCM',
+  address: 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh',
   addressTitle: 'Nhà của Bé 🏠',
+  addressCoords: { lat: 10.79812, lng: 106.68531 },
   addressNote: 'Phan Xích Long, gần nhiều quán ngon',
   waterPercent: 70,
   spicyLevel: 2,
@@ -5612,6 +5747,15 @@ function renderProfile() {
   if (nbAddrText) nbAddrText.textContent = beProfile.address || 'Phú Nhuận, TP. HCM';
   const nbAddrNote = document.getElementById('nb-address-note');
   if (nbAddrNote) nbAddrNote.textContent = beProfile.addressNote || 'Khu vực quen thuộc của nàng';
+  const nbAddrCoordBadge = document.getElementById('nb-address-coord-badge');
+  if (nbAddrCoordBadge) {
+    if (beProfile.addressCoords && beProfile.addressCoords.lat) {
+      nbAddrCoordBadge.classList.remove('hidden');
+      nbAddrCoordBadge.title = `Toạ độ GPS: ${beProfile.addressCoords.lat.toFixed(4)}, ${beProfile.addressCoords.lng.toFixed(4)}`;
+    } else {
+      nbAddrCoordBadge.classList.add('hidden');
+    }
+  }
 
   // Map mini header indicators
   const mapBeName = document.getElementById('map-be-name-mini');
@@ -5774,7 +5918,7 @@ function openProfileEditModal() {
   const addrTitleInp = document.getElementById('edit-profile-address-title');
   if (addrTitleInp) addrTitleInp.value = beProfile.addressTitle || 'Nhà bé yêu 🏠';
   const addrInp = document.getElementById('edit-profile-address');
-  if (addrInp) addrInp.value = beProfile.address || 'Phú Nhuận, TP. HCM';
+  if (addrInp) addrInp.value = beProfile.address || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
   const addrNoteInp = document.getElementById('edit-profile-address-note');
   if (addrNoteInp) addrNoteInp.value = beProfile.addressNote || '';
   document.getElementById('edit-profile-water').value = beProfile.waterPercent || 70;
@@ -5790,35 +5934,737 @@ function openProfileEditModal() {
   editingSpicyLevel = beProfile.spicyLevel || 2;
   renderSpicyLevelButtons();
 
+  // Initialize selected address coordinates & status badge
+  tempSelectedProfileAddressCoords = beProfile.addressCoords || getCoordsForArea(beProfile.address || 'Phú Nhuận, TP. HCM');
+  updateProfileAddressMapBadge(beProfile.address || 'Phú Nhuận, TP. HCM', tempSelectedProfileAddressCoords);
+
+  const sugBox = document.getElementById('profile-address-suggestions');
+  if (sugBox) sugBox.classList.add('hidden');
+
   document.getElementById('profile-edit-modal').classList.remove('hidden');
+}
+
+// ── Address Autocomplete & Map Geocoding Engine ──
+const localAddressDirectory = [
+  // Hospitals & Clinics (Bệnh viện & Phòng khám)
+  {
+    name: 'Bệnh viện Đa khoa Tâm Trí Sài Gòn',
+    aliases: ['tam tri', 'benh vien tam tri', 'bv tam tri', 'tam tri sai gon', 'quoc te tam tri', 'truong chinh', 'tan thoi nhat'],
+    address: '171/3 Trường Chinh, Phường Tân Thới Nhất, Quận 12, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.831663,
+    lng: 106.621566
+  },
+  {
+    name: 'Bệnh viện Đa khoa Hồng Ngọc - Yên Ninh',
+    aliases: ['hong ngoc', 'bv hong ngoc', 'benh vien hong ngoc', 'yen ninh', 'hong ngoc ba dinh', 'truc bach'],
+    address: '55 Yên Ninh, Phường Trúc Bạch, Quận Ba Đình, Hà Nội',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 21.04452,
+    lng: 105.84271
+  },
+  {
+    name: 'Bệnh viện Đa khoa Hồng Ngọc - Phúc Trường Minh',
+    aliases: ['hong ngoc', 'phuc truong minh', 'bv hong ngoc my dinh', 'hong ngoc nam tu liem', 'chau van liem'],
+    address: 'Số 8 Châu Văn Liêm, Phường Phú Đô, Quận Nam Từ Liêm, Hà Nội',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 21.00684,
+    lng: 105.77252
+  },
+  {
+    name: 'Bệnh viện Chợ Rẫy',
+    aliases: ['cho ray', 'bv cho ray', 'benh vien cho ray', 'nguyen chi thanh', 'quan 5'],
+    address: '201B Nguyễn Chí Thanh, Phường 12, Quận 5, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.75782,
+    lng: 106.65961
+  },
+  {
+    name: 'Bệnh viện Từ Dũ',
+    aliases: ['tu du', 'bv tu du', 'cong quynh', 'quan 1'],
+    address: '284 Cống Quỳnh, Phường Phạm Ngũ Lão, Quận 1, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.76814,
+    lng: 106.68723
+  },
+  {
+    name: 'Bệnh viện Đại học Y Dược TP.HCM',
+    aliases: ['y duoc', 'bv dai hoc y duoc', 'hong bang', 'quan 5'],
+    address: '215 Hồng Bàng, Phường 11, Quận 5, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.75542,
+    lng: 106.65821
+  },
+  {
+    name: 'Bệnh viện Nhân dân Gia Định',
+    aliases: ['gia dinh', 'bv gia dinh', 'no trang long', 'binh thanh'],
+    address: '1 Nơ Trang Long, Phường 7, Quận Bình Thạnh, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.80371,
+    lng: 106.69532
+  },
+  {
+    name: 'Bệnh viện Thống Nhất',
+    aliases: ['thong nhat', 'bv thong nhat', 'nga tu bay hien', 'tan binh', 'ly thuong kiet'],
+    address: '1 Lý Thường Kiệt, Phường 7, Quận Tân Bình, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.79153,
+    lng: 106.65421
+  },
+  {
+    name: 'Bệnh viện Quân y 175',
+    aliases: ['175', 'quan y 175', 'bv 175', 'nguyen kiem', 'go vap'],
+    address: '786 Nguyễn Kiệm, Phường 3, Quận Gò Vấp, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.81741,
+    lng: 106.68032
+  },
+  {
+    name: 'Bệnh viện Đa khoa Hoàn Mỹ Sài Gòn',
+    aliases: ['hoan my', 'bv hoan my', 'phan xich long', 'phu nhuan'],
+    address: '60-60A Phan Xích Long, Phường 1, Quận Phú Nhuận, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.79951,
+    lng: 106.68924
+  },
+  {
+    name: 'Bệnh viện Quốc tế Vinmec Central Park',
+    aliases: ['vinmec', 'vinmec central park', 'bv vinmec', 'nguyen huu canh', 'binh thanh'],
+    address: '208 Nguyễn Hữu Cảnh, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.79321,
+    lng: 106.72183
+  },
+  {
+    name: 'Bệnh viện FV (Pháp Việt)',
+    aliases: ['fv', 'phap viet', 'bv fv', 'phu my hung', 'quan 7', 'nguyen luong bang'],
+    address: '6 Nguyễn Lương Bằng, Tân Phú, Quận 7, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.72892,
+    lng: 106.72081
+  },
+  {
+    name: 'Bệnh viện Quốc tế Hạnh Phúc',
+    aliases: ['hanh phuc', 'bv hanh phuc', 'quoc te hanh phuc', 'binh duong', 'thuan an'],
+    address: '18 Đại lộ Hữu Nghị, VSIP 1, TP. Thuận An, Bình Dương',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.88451,
+    lng: 106.70321
+  },
+  {
+    name: 'Bệnh viện Nhi Đồng 1',
+    aliases: ['nhi dong 1', 'bv nhi dong 1', 'su van hanh', 'quan 10'],
+    address: '341 Sư Vạn Hạnh, Phường 10, Quận 10, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.76751,
+    lng: 106.66982
+  },
+  {
+    name: 'Bệnh viện Nhi Đồng 2',
+    aliases: ['nhi dong 2', 'bv nhi dong 2', 'ly tu trong', 'quan 1'],
+    address: '14 Lý Tự Trọng, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.78012,
+    lng: 106.70251
+  },
+  {
+    name: 'Bệnh viện Hùng Vương',
+    aliases: ['hung vuong', 'bv hung vuong', 'hong bang', 'quan 5'],
+    address: '128 Hồng Bàng, Phường 12, Quận 5, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.75512,
+    lng: 106.65751
+  },
+  {
+    name: 'Bệnh viện Tai Mũi Họng TP.HCM',
+    aliases: ['tai mui hong', 'bv tai mui hong', 'tran quoc thao', 'quan 3'],
+    address: '155B Trần Quốc Thảo, Phường 9, Quận 3, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.78712,
+    lng: 106.68231
+  },
+  {
+    name: 'Bệnh viện Da Liễu TP.HCM',
+    aliases: ['da lieu', 'bv da lieu', 'nguyen thong', 'quan 3'],
+    address: '2 Nguyễn Thông, Phường 6, Quận 3, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.77881,
+    lng: 106.68512
+  },
+  {
+    name: 'Bệnh viện Mắt TP.HCM',
+    aliases: ['mat', 'bv mat', 'dien bien phu', 'quan 3'],
+    address: '280 Điện Biên Phủ, Phường 7, Quận 3, TP. Hồ Chí Minh',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.77732,
+    lng: 106.68721
+  },
+  {
+    name: 'Bệnh viện Bạch Mai Hà Nội',
+    aliases: ['bach mai', 'bv bach mai', 'giai phong', 'dong da'],
+    address: '78 Giải Phóng, Phường Phương Mai, Quận Đống Đa, Hà Nội',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 20.99951,
+    lng: 105.84152
+  },
+  {
+    name: 'Bệnh viện Hữu nghị Việt Đức',
+    aliases: ['viet duc', 'bv viet duc', 'trang thi', 'hoan kiem'],
+    address: '40 Tràng Thi, Phường Hàng Bông, Quận Hoàn Kiếm, Hà Nội',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 21.02891,
+    lng: 105.84882
+  },
+  {
+    name: 'Bệnh viện Phụ sản Trung ương',
+    aliases: ['phu san trung uong', 'bv phu san', 'vien c', 'trang thi', 'hoan kiem'],
+    address: '43 Tràng Thi, Phường Hàng Bông, Quận Hoàn Kiếm, Hà Nội',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 21.02851,
+    lng: 105.84821
+  },
+  {
+    name: 'Bệnh viện Nhi Trung ương',
+    aliases: ['nhi trung uong', 'bv nhi ha noi', 'de la thanh', 'dong da'],
+    address: '18/879 La Thành, Phường Láng Thượng, Quận Đống Đa, Hà Nội',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 21.02512,
+    lng: 105.80951
+  },
+  {
+    name: 'Bệnh viện Quốc tế Vinmec Times City',
+    aliases: ['vinmec times city', 'vinmec ha noi', 'minh khai', 'hai ba trung'],
+    address: '458 Minh Khai, Phường Vĩnh Tuy, Quận Hai Bà Trưng, Hà Nội',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 20.99612,
+    lng: 105.86791
+  },
+  {
+    name: 'Bệnh viện Đa khoa Đà Nẵng',
+    aliases: ['da nang', 'bv da nang', 'hai phong', 'hai chau'],
+    address: '124 Hải Phòng, Phường Thạch Thang, Quận Hải Châu, Đà Nẵng',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 16.07151,
+    lng: 108.21651
+  },
+  // Landmarks & Office Hubs
+  {
+    name: 'Landmark 81 - Vinhomes Central Park',
+    aliases: ['landmark 81', 'lm81', 'vinhomes central park', 'tan cang', 'dien bien phu', 'binh thanh'],
+    address: '720A Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh',
+    type: 'building',
+    icon: '🏢',
+    lat: 10.79512,
+    lng: 106.72183
+  },
+  {
+    name: 'Tòa nhà Bitexco Financial Tower',
+    aliases: ['bitexco', 'thap bitexco', 'hai trieu', 'ben nghe', 'quan 1'],
+    address: '2 Hải Triều, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh',
+    type: 'building',
+    icon: '🏢',
+    lat: 10.77161,
+    lng: 106.70442
+  },
+  {
+    name: 'Saigon Centre & Takashimaya',
+    aliases: ['saigon centre', 'takashimaya', 'le loi', 'quan 1'],
+    address: '65 Lê Lợi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh',
+    type: 'building',
+    icon: '🏢',
+    lat: 10.77351,
+    lng: 106.70112
+  },
+  {
+    name: 'Vincom Center Đồng Khởi',
+    aliases: ['vincom dong khoi', 'vincom quan 1', 'le thanh ton'],
+    address: '72 Lê Thánh Tôn, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh',
+    type: 'building',
+    icon: '🛍️',
+    lat: 10.77782,
+    lng: 106.70221
+  },
+  {
+    name: 'Keangnam Hanoi Landmark Tower',
+    aliases: ['keangnam', 'landmark 72', 'pham hung', 'me tri', 'nam tu liem'],
+    address: 'Phạm Hùng, Phường Mễ Trì, Quận Nam Từ Liêm, Hà Nội',
+    type: 'building',
+    icon: '🏢',
+    lat: 21.01691,
+    lng: 105.78392
+  },
+  {
+    name: 'Lotte Center Hà Nội',
+    aliases: ['lotte', 'lotte lieu giai', 'lotte ha noi', 'ba dinh'],
+    address: '54 Liễu Giai, Phường Cống Vị, Quận Ba Đình, Hà Nội',
+    type: 'building',
+    icon: '🏢',
+    lat: 21.03281,
+    lng: 105.81362
+  },
+  {
+    name: 'Crescent Mall Phú Mỹ Hưng',
+    aliases: ['crescent mall', 'phu my hung', 'ton dat tien', 'quan 7'],
+    address: '101 Tôn Dật Tiên, Phường Tân Phú, Quận 7, TP. Hồ Chí Minh',
+    type: 'building',
+    icon: '🛍️',
+    lat: 10.72921,
+    lng: 106.71982
+  },
+  {
+    name: 'Aeon Mall Tân Phú Celadon',
+    aliases: ['aeon mall tan phu', 'aeon tan phu', 'bo bao tan thang', 'son ky'],
+    address: '30 Bờ Bao Tân Thắng, Phường Sơn Kỳ, Quận Tân Phú, TP. Hồ Chí Minh',
+    type: 'building',
+    icon: '🛍️',
+    lat: 10.80162,
+    lng: 106.61861
+  },
+  {
+    name: 'Aeon Mall Bình Tân',
+    aliases: ['aeon mall binh tan', 'aeon binh tan', 'ten lua'],
+    address: '1 Đường Số 17A, Phường Bình Trị Đông B, Quận Bình Tân, TP. Hồ Chí Minh',
+    type: 'building',
+    icon: '🛍️',
+    lat: 10.74312,
+    lng: 106.61281
+  },
+  {
+    name: 'Aeon Mall Long Biên',
+    aliases: ['aeon mall long bien', 'aeon long bien', 'co linh'],
+    address: '27 Cổ Linh, Phường Long Biên, Quận Long Biên, Hà Nội',
+    type: 'building',
+    icon: '🛍️',
+    lat: 21.02681,
+    lng: 105.90152
+  },
+  {
+    name: 'Aeon Mall Hà Đông',
+    aliases: ['aeon mall ha dong', 'aeon ha dong', 'duong noi'],
+    address: 'Phường Dương Nội, Quận Hà Đông, Hà Nội',
+    type: 'building',
+    icon: '🛍️',
+    lat: 20.97821,
+    lng: 105.75382
+  },
+  // Famous Food Streets & Neighborhoods
+  {
+    name: 'Đường Phan Xích Long (Phố Ẩm Thực Phú Nhuận)',
+    aliases: ['phan xich long', 'pxl', 'phu nhuan', 'pho am thuc phu nhuan'],
+    address: 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh',
+    type: 'street',
+    icon: '🍜',
+    lat: 10.79812,
+    lng: 106.68531
+  },
+  {
+    name: 'Đường Vạn Kiếp (Thiên Đường Ẩm Thực)',
+    aliases: ['van kiep', 'binh thanh', 'pho an vat van kiep'],
+    address: 'Đường Vạn Kiếp, Phường 3, Quận Bình Thạnh, TP. Hồ Chí Minh',
+    type: 'street',
+    icon: '🍜',
+    lat: 10.79952,
+    lng: 106.69481
+  },
+  {
+    name: 'Đường Sư Vạn Hạnh (Khu Ăn Uống Quận 10)',
+    aliases: ['su van hanh', 'svh', 'quan 10', 'van hanh mall'],
+    address: 'Đường Sư Vạn Hạnh, Phường 12, Quận 10, TP. Hồ Chí Minh',
+    type: 'street',
+    icon: '🍜',
+    lat: 10.77121,
+    lng: 106.66852
+  },
+  {
+    name: 'Đường Nguyễn Tri Phương (Phố Ẩm Thực Chợ Lớn)',
+    aliases: ['nguyen tri phuong', 'ntp', 'quan 10', 'che thai y phuong'],
+    address: 'Đường Nguyễn Tri Phương, Phường 8, Quận 10, TP. Hồ Chí Minh',
+    type: 'street',
+    icon: '🍜',
+    lat: 10.76352,
+    lng: 106.66681
+  },
+  {
+    name: 'Đường Nguyễn Gia Trí (D2 Cũ - Sinh Viên Bình Thạnh)',
+    aliases: ['nguyen gia tri', 'd2', 'binh thanh', 'dai hoc hutech'],
+    address: 'Đường Nguyễn Gia Trí, Phường 25, Quận Bình Thạnh, TP. Hồ Chí Minh',
+    type: 'street',
+    icon: '🍜',
+    lat: 10.80381,
+    lng: 106.71422
+  },
+  {
+    name: 'Đường Lê Văn Sỹ (Phú Nhuận & Quận 3)',
+    aliases: ['le van sy', 'lvs', 'quan 3', 'phu nhuan'],
+    address: 'Đường Lê Văn Sỹ, Phường 13, Quận 3 & Phú Nhuận, TP. Hồ Chí Minh',
+    type: 'street',
+    icon: '🛍️',
+    lat: 10.78951,
+    lng: 106.67421
+  },
+  {
+    name: 'Đường Trường Chinh (Quận 12 & Tân Bình)',
+    aliases: ['truong chinh', 'quan 12', 'tan binh', 'nga ba ba queo', 'tan thoi nhat'],
+    address: 'Đường Trường Chinh, Phường Tân Thới Nhất, Quận 12, TP. Hồ Chí Minh',
+    type: 'street',
+    icon: '🛣️',
+    lat: 10.82512,
+    lng: 106.62851
+  },
+  {
+    name: 'Phố Cổ Tạ Hiện & Lương Ngọc Quyến',
+    aliases: ['ta hien', 'pho co', 'hoan kiem', 'bia ta hien'],
+    address: 'Phố Tạ Hiện, Phường Hàng Buồm, Quận Hoàn Kiếm, Hà Nội',
+    type: 'street',
+    icon: '🍻',
+    lat: 21.03451,
+    lng: 105.85252
+  },
+  {
+    name: 'Phố Ẩm Thực Tống Duy Tân',
+    aliases: ['tong duy tan', 'pho am thuc ha noi', 'hoan kiem'],
+    address: 'Phố Tống Duy Tân, Phường Hàng Bông, Quận Hoàn Kiếm, Hà Nội',
+    type: 'street',
+    icon: '🍜',
+    lat: 21.03051,
+    lng: 105.84452
+  },
+  {
+    name: 'Hồ Hoàn Kiếm (Phố Đi Bộ Bờ Hồ)',
+    aliases: ['ho hoan kiem', 'bo ho', 'ho guom', 'trang tien'],
+    address: 'Quận Hoàn Kiếm, Hà Nội',
+    type: 'landmark',
+    icon: '🏮',
+    lat: 21.02851,
+    lng: 105.85421
+  },
+  {
+    name: 'Hồ Tây & Đường Thanh Niên',
+    aliases: ['ho tay', 'duong thanh nien', 'chua tran quoc', 'tay ho'],
+    address: 'Đường Thanh Niên, Phường Yên Phụ, Quận Tây Hồ, Hà Nội',
+    type: 'landmark',
+    icon: '🌅',
+    lat: 21.04751,
+    lng: 105.83682
+  },
+  {
+    name: 'Đường Cầu Giấy & Xuân Thủy',
+    aliases: ['cau giay', 'xuan thuy', 'dai hoc quoc gia'],
+    address: 'Đường Cầu Giấy, Phường Dịch Vọng, Quận Cầu Giấy, Hà Nội',
+    type: 'street',
+    icon: '🎓',
+    lat: 21.03332,
+    lng: 105.79371
+  },
+  {
+    name: 'Đường Bạch Đằng ven sông Hàn',
+    aliases: ['bach dang', 'song han', 'cau rong', 'hai chau da nang'],
+    address: 'Đường Bạch Đằng, Phường Hải Châu 1, Quận Hải Châu, Đà Nẵng',
+    type: 'street',
+    icon: '🌉',
+    lat: 16.06852,
+    lng: 108.22381
+  },
+  {
+    name: 'Chợ Đêm Đà Lạt & Quảng trường Lâm Viên',
+    aliases: ['da lat', 'cho dem da lat', 'lam vien', 'ho xuan huong'],
+    address: 'Đường Nguyễn Thị Minh Khai, Phường 1, TP. Đà Lạt, Lâm Đồng',
+    type: 'landmark',
+    icon: '🍓',
+    lat: 11.94251,
+    lng: 108.43721
+  },
+  {
+    name: 'Bãi Sau & Đường Thùy Vân',
+    aliases: ['vung tau', 'bai sau', 'thuy van'],
+    address: 'Đường Thùy Vân, Phường Thắng Tam, TP. Vũng Tàu, Bà Rịa - Vũng Tàu',
+    type: 'landmark',
+    icon: '🌊',
+    lat: 10.33651,
+    lng: 107.08952
+  }
+];
+
+let tempSelectedProfileAddressCoords = null;
+let profileAddressDebounceTimer = null;
+let profileAddressAbortController = null;
+
+function escapeHtml(str) {
+  if (typeof str !== 'string') return str ? String(str) : '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function removeVietnameseDiacritics(str) {
+  if (!str) return '';
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase()
+    .trim();
+}
+
+function handleProfileAddressFocus() {
+  const addrInp = document.getElementById('edit-profile-address');
+  if (addrInp && addrInp.value.trim().length >= 2) {
+    handleProfileAddressInput(addrInp.value);
+  }
+}
+
+function handleProfileAddressInput(rawVal) {
+  const query = (rawVal || '').trim();
+  const sugBox = document.getElementById('profile-address-suggestions');
+  const spinner = document.getElementById('edit-profile-address-spinner');
+  if (!sugBox) return;
+
+  if (query.length < 2) {
+    sugBox.innerHTML = '';
+    sugBox.classList.add('hidden');
+    if (spinner) spinner.classList.add('hidden');
+    return;
+  }
+
+  // 1. Instant local POI directory match
+  const cleanQ = removeVietnameseDiacritics(query);
+  const qTokens = cleanQ.split(/\s+/).filter(t => t.length > 1);
+
+  const localMatches = localAddressDirectory.map(item => {
+    const hay = removeVietnameseDiacritics(item.name + ' ' + item.address + ' ' + (item.aliases || []).join(' '));
+    let score = 0;
+    if (hay.includes(cleanQ)) score += 100;
+    qTokens.forEach(tok => {
+      if (hay.includes(tok)) score += 15;
+    });
+    return { ...item, score, source: 'local' };
+  }).filter(r => r.score > 0).sort((a, b) => b.score - a.score).slice(0, 6);
+
+  renderProfileAddressSuggestions(localMatches, query);
+
+  // 2. Debounced Live OpenStreetMap Nominatim search for any custom address in Vietnam
+  if (profileAddressDebounceTimer) clearTimeout(profileAddressDebounceTimer);
+  if (profileAddressAbortController) profileAddressAbortController.abort();
+
+  if (query.length >= 3) {
+    if (spinner) spinner.classList.remove('hidden');
+    profileAddressAbortController = new AbortController();
+
+    profileAddressDebounceTimer = setTimeout(async () => {
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=vn&q=${encodeURIComponent(query)}`;
+        const res = await fetch(url, {
+          signal: profileAddressAbortController.signal,
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const nominatimResults = data.map(n => {
+            const shortName = n.name || (n.display_name ? n.display_name.split(',')[0] : query);
+            let icon = '📍';
+            if (n.type === 'hospital' || n.category === 'healthcare') icon = '🏥';
+            else if (n.type === 'building' || n.type === 'commercial' || n.type === 'office') icon = '🏢';
+            else if (n.type === 'school' || n.type === 'university') icon = '🎓';
+            else if (n.type === 'highway' || n.type === 'residential' || n.type === 'road') icon = '🛣️';
+
+            return {
+              name: shortName,
+              address: n.display_name,
+              lat: parseFloat(n.lat),
+              lng: parseFloat(n.lon),
+              icon,
+              source: 'osm'
+            };
+          });
+
+          // Merge without duplicate coordinates
+          const combined = [...localMatches];
+          nominatimResults.forEach(nr => {
+            const exists = combined.some(c => 
+              (Math.abs(c.lat - nr.lat) < 0.001 && Math.abs(c.lng - nr.lng) < 0.001) ||
+              c.name.toLowerCase() === nr.name.toLowerCase()
+            );
+            if (!exists) combined.push(nr);
+          });
+
+          renderProfileAddressSuggestions(combined.slice(0, 8), query);
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.warn('Geocoding search warning:', err);
+        }
+      } finally {
+        if (spinner) spinner.classList.add('hidden');
+      }
+    }, 350);
+  }
+}
+
+function renderProfileAddressSuggestions(list, currentQuery) {
+  const sugBox = document.getElementById('profile-address-suggestions');
+  if (!sugBox) return;
+
+  if (!list || list.length === 0) {
+    sugBox.innerHTML = `
+      <div class="p-3 text-center text-on-surface-variant text-[11px] space-y-1">
+        <p>Không tìm thấy toạ độ trùng khớp với "<strong>${escapeHtml(currentQuery)}</strong>".</p>
+        <p class="text-[10px] text-primary">Bạn có thể chọn các gợi ý bên dưới hoặc nhập thêm tên quận/thành phố để bản đồ nhận diện chuẩn hơn nhé!</p>
+      </div>
+    `;
+    sugBox.classList.remove('hidden');
+    return;
+  }
+
+  sugBox.innerHTML = list.map((item) => {
+    const latStr = item.lat.toFixed(4);
+    const lngStr = item.lng.toFixed(4);
+    const itemDataEscaped = encodeURIComponent(JSON.stringify(item));
+    return `
+      <div onclick="selectProfileAddressItem('${itemDataEscaped}')" class="p-2.5 hover:bg-primary-fixed/30 cursor-pointer flex items-start gap-2.5 transition-colors group">
+        <div class="w-7 h-7 rounded-lg bg-surface-container flex items-center justify-center text-sm shrink-0 shadow-2xs mt-0.5 group-hover:bg-primary group-hover:text-white transition-colors">
+          ${item.icon || '📍'}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-1">
+            <span class="font-bold text-xs text-on-surface group-hover:text-primary transition-colors truncate">${escapeHtml(item.name)}</span>
+            <span class="text-[9px] font-mono font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950 dark:text-emerald-300 px-1.5 py-0.2 rounded shrink-0">🗺️ ${latStr}, ${lngStr}</span>
+          </div>
+          <p class="text-[11px] text-on-surface-variant line-clamp-1 mt-0.5 leading-tight">${escapeHtml(item.address)}</p>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  sugBox.classList.remove('hidden');
+}
+
+function selectProfileAddressItem(encodedItem) {
+  try {
+    const item = JSON.parse(decodeURIComponent(encodedItem));
+    const addrInp = document.getElementById('edit-profile-address');
+    if (addrInp) {
+      addrInp.value = item.name.length > 3 && !item.address.startsWith(item.name) ? `${item.name}, ${item.address}` : (item.address || item.name);
+    }
+
+    const titleInp = document.getElementById('edit-profile-address-title');
+    if (titleInp && (!titleInp.value.trim() || titleInp.value === 'Nhà bé yêu 🏠')) {
+      if (item.icon === '🏥' || item.type === 'hospital' || item.name.toLowerCase().includes('bệnh viện') || item.name.toLowerCase().includes('phòng khám')) {
+        titleInp.value = 'Chỗ làm của Bé 🏥';
+      } else if (item.icon === '🏢' || item.type === 'building' || item.name.toLowerCase().includes('tòa nhà') || item.name.toLowerCase().includes('tower')) {
+        titleInp.value = 'Chỗ làm của Bé 🏢';
+      } else if (item.icon === '🎓' || item.type === 'school' || item.name.toLowerCase().includes('đại học')) {
+        titleInp.value = 'Trường học của Bé 🎓';
+      }
+    }
+
+    tempSelectedProfileAddressCoords = { lat: item.lat, lng: item.lng };
+    updateProfileAddressMapBadge(item.name, tempSelectedProfileAddressCoords);
+
+    const sugBox = document.getElementById('profile-address-suggestions');
+    if (sugBox) sugBox.classList.add('hidden');
+
+    showToast(`✅ Đã liên kết bản đồ: ${item.name} (${item.lat.toFixed(4)}, ${item.lng.toFixed(4)})`);
+  } catch (e) {
+    console.error('Error selecting address item:', e);
+  }
+}
+
+function updateProfileAddressMapBadge(nameOrAddr, coords) {
+  const statusEl = document.getElementById('profile-address-map-status');
+  const textEl = document.getElementById('profile-address-map-status-text');
+  const coordsEl = document.getElementById('profile-address-map-status-coords');
+  const iconEl = document.getElementById('profile-address-map-status-icon');
+  const linkTag = document.getElementById('profile-address-link-tag');
+  if (!statusEl || !textEl || !coordsEl) return;
+
+  if (coords && coords.lat && coords.lng) {
+    statusEl.className = 'text-[11px] px-3 py-2 rounded-xl border flex items-center justify-between gap-1.5 transition-all bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/30';
+    if (iconEl) {
+      iconEl.textContent = 'check_circle';
+      iconEl.className = 'material-symbols-outlined text-[16px] text-emerald-600 shrink-0';
+    }
+    textEl.innerHTML = `<span class="font-bold">Đã liên kết bản đồ:</span> <span class="truncate">${escapeHtml(nameOrAddr)}</span>`;
+    coordsEl.textContent = `${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`;
+    if (linkTag) linkTag.classList.remove('hidden');
+  } else {
+    statusEl.className = 'text-[11px] px-3 py-2 rounded-xl border flex items-center justify-between gap-1.5 transition-all bg-surface-container-low text-on-surface-variant border-outline-variant/20';
+    if (iconEl) {
+      iconEl.textContent = 'pin_drop';
+      iconEl.className = 'material-symbols-outlined text-[16px] text-primary shrink-0';
+    }
+    textEl.textContent = 'Nhập tên hoặc địa điểm để liên kết toạ độ bản đồ';
+    coordsEl.textContent = '';
+    if (linkTag) linkTag.classList.add('hidden');
+  }
 }
 
 function closeProfileEditModal() {
   document.getElementById('profile-edit-modal').classList.add('hidden');
+  const sugBox = document.getElementById('profile-address-suggestions');
+  if (sugBox) sugBox.classList.add('hidden');
 }
 
-function setQuickProfileAddress(addr) {
+function setQuickProfileAddress(addr, coords = null, title = null) {
   const addrInp = document.getElementById('edit-profile-address');
   if (addrInp) {
     addrInp.value = addr;
     addrInp.focus();
   }
   const titleInp = document.getElementById('edit-profile-address-title');
-  if (titleInp && !titleInp.value.trim()) {
+  if (titleInp && title) {
+    titleInp.value = title;
+  } else if (titleInp && !titleInp.value.trim()) {
     titleInp.value = 'Nhà bé yêu 🏠';
   }
+
+  tempSelectedProfileAddressCoords = coords || getCoordsForArea(addr);
+  updateProfileAddressMapBadge(addr, tempSelectedProfileAddressCoords);
+
+  const sugBox = document.getElementById('profile-address-suggestions');
+  if (sugBox) sugBox.classList.add('hidden');
+
+  showToast(`📍 Đã gắn toạ độ địa điểm: ${addr.split(',')[0]}`);
 }
 
 function goToMapAroundBe() {
-  const beAddr = beProfile.address || 'Phú Nhuận, TP. HCM';
-  selectArea(beAddr);
+  const beAddr = beProfile.address || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
+  selectArea(beAddr, beProfile.addressCoords || null);
   navigate('map');
   showToast(`📍 Đang quét quán ngon quanh ${beProfile.name || 'Bé'} (${beProfile.addressTitle || 'Nhà bé'}) 💖`);
 }
 
 function selectBeSavedAddress() {
-  const beAddr = beProfile.address || 'Phú Nhuận, TP. HCM';
-  selectArea(beAddr);
+  const beAddr = beProfile.address || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
+  selectArea(beAddr, beProfile.addressCoords || null);
   showToast(`🏡 Đã chọn địa chỉ của Bé: ${beAddr}`);
 }
 
@@ -5870,13 +6716,15 @@ function saveProfileChanges() {
   const name = document.getElementById('edit-profile-name').value.trim() || 'Bé Heo';
   const status = document.getElementById('edit-profile-status').value.trim() || 'Hôm nay: Dễ thương nhưng đói bụng 🐰';
   const addressTitle = document.getElementById('edit-profile-address-title')?.value.trim() || 'Nhà bé yêu 🏠';
-  const address = document.getElementById('edit-profile-address')?.value.trim() || 'Phú Nhuận, TP. HCM';
+  const address = document.getElementById('edit-profile-address')?.value.trim() || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
   const addressNote = document.getElementById('edit-profile-address-note')?.value.trim() || '';
   const waterPercent = parseInt(document.getElementById('edit-profile-water').value) || 70;
   const spicyNote = document.getElementById('edit-profile-spicy-note').value.trim() || 'Quá cay là quăng đũa liền!';
   const milkTeaFormula = document.getElementById('edit-profile-milktea').value.trim() || 'Luôn 30% đường, 50% đá, thêm trân châu hoàng kim mềm dẻo.';
   const blRaw = document.getElementById('edit-profile-blacklist').value.trim();
   const blacklistTags = blRaw ? blRaw.split(',').map(s => s.trim()).filter(Boolean) : ['Không ăn hành lá sống', 'Không ăn ngò gai'];
+
+  const addressCoords = tempSelectedProfileAddressCoords || (beProfile && beProfile.addressCoords) || getCoordsForArea(address);
 
   beProfile = {
     ...beProfile,
@@ -5885,6 +6733,7 @@ function saveProfileChanges() {
     status,
     address,
     addressTitle,
+    addressCoords,
     addressNote,
     waterPercent,
     spicyLevel: editingSpicyLevel,
@@ -5905,8 +6754,19 @@ function saveProfileChanges() {
   renderResultTip(currentResultData || (Rs && Rs[0]));
   if (leafletMap) renderLeafletOverlays();
   closeProfileEditModal();
-  showToast('Đã lưu thông tin và địa chỉ của bé yêu thành công! 🥰📍');
+  showToast(`Đã lưu và liên kết bản đồ thành công cho ${beProfile.name || 'Bé'}! 🥰📍`);
 }
+
+// Global click outside listener to close autocomplete suggestions
+document.addEventListener('click', (e) => {
+  const sug = document.getElementById('profile-address-suggestions');
+  const input = document.getElementById('edit-profile-address');
+  if (sug && !sug.classList.contains('hidden')) {
+    if (!sug.contains(e.target) && e.target !== input) {
+      sug.classList.add('hidden');
+    }
+  }
+});
 
 // ── Favorites Management (Quán Ruột Nàng Mê) ──
 const defaultFavDishes = [
