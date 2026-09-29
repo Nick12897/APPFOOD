@@ -1254,7 +1254,7 @@
 </div>
 
 <!-- ══ FAV DISH ADD / EDIT MODAL ══ -->
-<div id="fav-dish-modal" onclick="if(event.target === this) closeFavModal()" class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md flex">
+<div id="fav-dish-modal" onclick="if(event.target === this) closeFavModal()" class="fixed inset-0 z-[9999] bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md" style="display: none;">
   <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl space-y-3.5">
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
       <div class="flex items-center gap-2">
@@ -7299,24 +7299,43 @@ function openAddFavModal() {
   currentEditingFavId = null;
   currentSelectedFavIcon = '🍜';
   setFavModalType('shop');
-  document.getElementById('fav-modal-title').textContent = 'Thêm Quán & Món Ruột Của Hai Bạn';
-  document.getElementById('fav-modal-submit-btn').textContent = 'Lưu Quán Ruột ❤️';
-  document.getElementById('fav-input-title').value = '';
-  document.getElementById('fav-input-address').value = selectedAreaName || '';
-  document.getElementById('fav-input-badge').value = 'Bé vừa chấm điểm 10/10 ✨';
-  document.getElementById('fav-input-note').value = '';
-  const syncMap = document.getElementById('fav-sync-map'); if (syncMap) syncMap.checked = true;
-  const syncWheel = document.getElementById('fav-sync-wheel'); if (syncWheel) syncWheel.checked = true;
+  const titleEl = document.getElementById('fav-modal-title');
+  if (titleEl) titleEl.textContent = 'Thêm Quán & Món Ruột Của Hai Bạn';
+  const submitBtn = document.getElementById('fav-modal-submit-btn');
+  if (submitBtn) submitBtn.textContent = 'Lưu Quán Ruột ❤️';
+  const inpTitle = document.getElementById('fav-input-title');
+  if (inpTitle) inpTitle.value = '';
+  const inpAddr = document.getElementById('fav-input-address');
+  if (inpAddr) inpAddr.value = selectedAreaName || '';
+  const inpBadge = document.getElementById('fav-input-badge');
+  if (inpBadge) inpBadge.value = 'Bé vừa chấm điểm 10/10 ✨';
+  const inpNote = document.getElementById('fav-input-note');
+  if (inpNote) inpNote.value = '';
+  const syncMap = document.getElementById('fav-sync-map');
+  if (syncMap) syncMap.checked = true;
+  const syncWheel = document.getElementById('fav-sync-wheel');
+  if (syncWheel) syncWheel.checked = true;
+
   updateFavModalIconPreview();
   renderFavIconOptions();
-  document.getElementById('fav-dish-modal').classList.remove('hidden');
-  document.getElementById('fav-input-title').focus();
+
+  const modal = document.getElementById('fav-dish-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.style.display = 'flex';
+  }
+  setTimeout(() => {
+    const inp = document.getElementById('fav-input-title');
+    if (inp) inp.focus();
+  }, 50);
 }
 
 function openAddDishModal() {
   openAddFavModal();
 }
 window.openAddDishModal = openAddDishModal;
+window.openAddFavModal = openAddFavModal;
 
 function openEditFavModal(id) {
   const item = favDishes.find(d => d.id === id);
@@ -7324,20 +7343,41 @@ function openEditFavModal(id) {
   currentEditingFavId = id;
   currentSelectedFavIcon = item.icon || '🍜';
   setFavModalType('shop');
-  document.getElementById('fav-modal-title').textContent = 'Chỉnh Sửa Quán Ruột';
-  document.getElementById('fav-modal-submit-btn').textContent = 'Cập nhật quán ❤️';
-  document.getElementById('fav-input-title').value = item.title || '';
-  document.getElementById('fav-input-address').value = item.address || '';
-  document.getElementById('fav-input-badge').value = item.badge || '';
-  document.getElementById('fav-input-note').value = item.note || '';
+  const titleEl = document.getElementById('fav-modal-title');
+  if (titleEl) titleEl.textContent = 'Chỉnh Sửa Quán Ruột';
+  const submitBtn = document.getElementById('fav-modal-submit-btn');
+  if (submitBtn) submitBtn.textContent = 'Cập nhật quán ❤️';
+  const inpTitle = document.getElementById('fav-input-title');
+  if (inpTitle) inpTitle.value = item.title || '';
+  const inpAddr = document.getElementById('fav-input-address');
+  if (inpAddr) inpAddr.value = item.address || '';
+  const inpBadge = document.getElementById('fav-input-badge');
+  if (inpBadge) inpBadge.value = item.badge || '';
+  const inpNote = document.getElementById('fav-input-note');
+  if (inpNote) inpNote.value = item.note || '';
+
   updateFavModalIconPreview();
   renderFavIconOptions();
-  document.getElementById('fav-dish-modal').classList.remove('hidden');
-  document.getElementById('fav-input-title').focus();
+
+  const modal = document.getElementById('fav-dish-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.style.display = 'flex';
+  }
+  setTimeout(() => {
+    const inp = document.getElementById('fav-input-title');
+    if (inp) inp.focus();
+  }, 50);
 }
 
 function closeFavModal() {
-  document.getElementById('fav-dish-modal').classList.add('hidden');
+  const modal = document.getElementById('fav-dish-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    modal.style.display = 'none';
+  }
 }
 
 function saveFavDishItem() {
