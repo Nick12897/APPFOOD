@@ -1539,19 +1539,38 @@
     </div>
 
     <!-- Địa chỉ / Vị trí -->
-    <div class="space-y-1" id="fav-address-row">
+    <div class="space-y-1.5 relative" id="fav-address-row">
       <div class="flex items-center justify-between">
-        <label class="font-label-md text-label-md text-on-surface font-bold block" id="fav-address-label">Địa chỉ hoặc chi nhánh</label>
+        <label class="font-label-md text-label-md text-on-surface font-bold flex items-center gap-1" id="fav-address-label">
+          <span>Địa chỉ hoặc chi nhánh quán</span>
+          <span class="text-error">*</span>
+        </label>
         <button type="button" onclick="fillCurrentLocationToFavAddress()" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5 active:scale-95 transition-all">
           <span class="material-symbols-outlined text-[14px]">my_location</span>
-          <span>Lấy vị trí hiện tại 📍</span>
+          <span>Lấy vị trí bản đồ 📍</span>
         </button>
       </div>
       <div class="relative flex items-center">
-        <input id="fav-input-address" type="text" oninput="toggleFavAddressClearBtn()" class="w-full bg-surface-container-low text-on-surface pl-4 pr-10 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30 focus:border-primary transition-all" placeholder="VD: 12 Nguyễn Tất Thành, Hồng Ngự hoặc Quận 1..." />
-        <button type="button" id="fav-address-clear-btn" onclick="clearFavAddressInput()" class="hidden absolute right-2.5 w-7 h-7 rounded-full bg-surface-container-highest/80 hover:bg-primary hover:text-white text-on-surface-variant flex items-center justify-center transition-all active:scale-90 shadow-2xs" title="Xóa nhanh địa chỉ">
-          <span class="material-symbols-outlined text-[16px]">close</span>
+        <input id="fav-input-address" type="text" autocomplete="off" oninput="handleFavAddressInput(this.value); toggleFavAddressClearBtn();" onfocus="handleFavAddressFocus()" class="w-full bg-surface-container-low text-on-surface pl-4 pr-16 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30 focus:border-primary transition-all text-xs" placeholder="Gõ tên đường, số nhà, hoặc chọn gợi ý bên dưới..." />
+        <button type="button" id="fav-address-clear-btn" onclick="clearFavAddressInput()" class="hidden absolute right-8 w-6 h-6 rounded-full bg-surface-container-highest/80 hover:bg-primary hover:text-white text-on-surface-variant flex items-center justify-center transition-all active:scale-90 shadow-2xs" title="Xóa nhanh địa chỉ">
+          <span class="material-symbols-outlined text-[14px]">close</span>
         </button>
+        <div id="fav-address-spinner" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+          <span class="inline-block w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+        </div>
+      </div>
+
+      <!-- Autocomplete suggestion list -->
+      <div id="fav-address-suggestions" class="hidden absolute top-full left-0 right-0 z-50 mt-1 max-h-56 overflow-y-auto bg-surface rounded-xl shadow-2xl border-2 border-primary/30 divide-y divide-outline-variant/15 text-xs">
+      </div>
+
+      <!-- Status badge showing map coordinates -->
+      <div id="fav-address-coords-badge" class="flex items-center justify-between px-3 py-1.5 rounded-xl bg-surface-container text-[11px] text-on-surface-variant border border-outline-variant/20 transition-all">
+        <div class="flex items-center gap-1.5 truncate">
+          <span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings:'FILL' 1">location_on</span>
+          <span id="fav-address-coords-text" class="truncate font-medium">Tìm hoặc chọn địa chỉ để ghim toạ độ chuẩn</span>
+        </div>
+        <span id="fav-address-coords-val" class="font-mono text-[10px] text-primary font-bold shrink-0"></span>
       </div>
     </div>
 
@@ -7998,6 +8017,88 @@ const localAddressDirectory = [
     icon: '🌊',
     lat: 10.33651,
     lng: 107.08952
+  },
+  // ── Quán Ăn & Địa Điểm Nổi Bật Tại Hồng Ngự (Đồng Tháp) ──
+  {
+    name: 'Co.opmart Hồng Ngự',
+    aliases: ['coopmart hong ngu', 'co.opmart hong ngu', 'coopmart', 'co.opmart', 'sieu thi coopmart', 'nguyen tat thanh'],
+    address: 'Khu nhà cao ốc KII, Đường Nguyễn Tất Thành, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'shopping',
+    icon: '🛒',
+    lat: 10.810206,
+    lng: 105.349486
+  },
+  {
+    name: 'Jollibee Co.opmart Hồng Ngự',
+    aliases: ['jollibee', 'jollibee coopmart', 'jollibee coopmart hong ngu', 'jollibee hong ngu', 'ga ran jollibee'],
+    address: 'Tầng trệt Siêu thị Co.opmart Hồng Ngự, Đường Nguyễn Tất Thành, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'restaurant',
+    icon: '🍗',
+    lat: 10.810206,
+    lng: 105.349486
+  },
+  {
+    name: 'Linh Đồ Chiên (Ăn Vặt Hồng Ngự)',
+    aliases: ['linh do chien', 'do chien linh', 'do chien', 'an vat linh do chien', 'nguyen thi giang', 'vo nguyen giap'],
+    address: 'Đường Nguyễn Thị Giang (Gần Công viên Võ Nguyên Giáp), Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'restaurant',
+    icon: '🍢',
+    lat: 10.80939,
+    lng: 105.35190
+  },
+  {
+    name: 'Công viên Võ Nguyên Giáp Hồng Ngự',
+    aliases: ['cong vien vo nguyen giap', 'quang truong vo nguyen giap', 'vo nguyen giap hong ngu'],
+    address: 'Quảng trường Công viên Võ Nguyên Giáp, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'landmark',
+    icon: '🌳',
+    lat: 10.80939,
+    lng: 105.35190
+  },
+  {
+    name: 'Quán Bún Cá Tuyết Lan (Bún Cá Châu Đốc)',
+    aliases: ['bun ca chau doc', 'quan bun ca', 'bun ca tuyet lan', 'bun ca hong ngu', 'bun ca', 'so thuong'],
+    address: 'Số 13 Đường Sở Thượng, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'restaurant',
+    icon: '🍜',
+    lat: 10.81250,
+    lng: 105.34820
+  },
+  {
+    name: 'Nước Ép Trái Cây & Trà Sữa Hồng Ngự',
+    aliases: ['nuoc ep trai cay', 'nuoc ep', 'sinh to', 'tra sua', 'hung vuong hong ngu', 'nguyen tat thanh'],
+    address: 'Đường Nguyễn Tất Thành (Gần giao lộ Hùng Vương), Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'cafe',
+    icon: '🥤',
+    lat: 10.80890,
+    lng: 105.35120
+  },
+  {
+    name: 'Mì Cay Seoul Hồng Ngự',
+    aliases: ['mi cay seoul', 'mi cay seoul hong ngu', 'seoul hong ngu', '179 nguyen thi minh khai'],
+    address: '179 Nguyễn Thị Minh Khai, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'restaurant',
+    icon: '🍲',
+    lat: 10.80388,
+    lng: 105.35242
+  },
+  {
+    name: 'Cơm Gà Xối Mỡ Long Triều Hồng Ngự',
+    aliases: ['com ga long trieu', 'long trieu', 'com ga hong ngu'],
+    address: 'Đường Nguyễn Tất Thành, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'restaurant',
+    icon: '🍗',
+    lat: 10.80620,
+    lng: 105.34680
+  },
+  {
+    name: 'Chợ Hồng Ngự (Khu Ẩm Thực Phố Chợ)',
+    aliases: ['cho hong ngu', 'pho cho hong ngu', 'le loi hong ngu'],
+    address: 'Đường Lê Lợi, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'landmark',
+    icon: '🛍️',
+    lat: 10.80580,
+    lng: 105.34460
   }
 ];
 
@@ -8587,14 +8688,158 @@ function deduplicateFavDishes() {
 }
 deduplicateFavDishes();
 
+function resolveCoordinatesForPlace(title, address) {
+  const normTitle = removeVietnameseDiacritics((title || '').toLowerCase());
+  const normAddr = removeVietnameseDiacritics((address || '').toLowerCase());
+  const combined = `${normTitle} ${normAddr}`;
+
+  // 1. Direct match with localAddressDirectory
+  let bestItem = null;
+  let highestScore = 0;
+
+  for (const item of localAddressDirectory) {
+    if (!item.lat || !item.lng) continue;
+    const itemHay = removeVietnameseDiacritics(`${item.name} ${item.address} ${(item.aliases || []).join(' ')}`).toLowerCase();
+    
+    let score = 0;
+    if (normTitle && itemHay.includes(normTitle)) score += 300;
+    if (normAddr && itemHay.includes(normAddr)) score += 150;
+    
+    if (item.aliases) {
+      for (const al of item.aliases) {
+        const cleanAl = removeVietnameseDiacritics(al).toLowerCase();
+        if (cleanAl.length >= 3 && (normTitle.includes(cleanAl) || normAddr.includes(cleanAl))) {
+          score += 200;
+        }
+      }
+    }
+
+    if (score > highestScore) {
+      highestScore = score;
+      bestItem = item;
+    }
+  }
+
+  if (bestItem && highestScore >= 150) {
+    return { 
+      lat: bestItem.lat, 
+      lng: bestItem.lng,
+      address: bestItem.address || bestItem.name
+    };
+  }
+
+  // 2. Check areaCenterCoordinates
+  for (const [key, coords] of Object.entries(areaCenterCoordinates)) {
+    const cleanKey = removeVietnameseDiacritics(key).toLowerCase();
+    if (normAddr.includes(cleanKey) || normTitle.includes(cleanKey)) {
+      return { lat: coords.lat, lng: coords.lng, address: key };
+    }
+  }
+
+  // 3. Fallback: Base on currentCenterCoords, but distribute distinctly around the town commercial streets, NEVER clustered at 0m of Bé!
+  const baseCoords = (currentCenterCoords && currentCenterCoords.lat) ? currentCenterCoords : (beProfile && beProfile.addressCoords ? beProfile.addressCoords : { lat: 10.80788, lng: 105.34955 });
+  
+  // Deterministic offset based on title string so it stays fixed and doesn't bounce around on reloads
+  let hash = 0;
+  for (let i = 0; i < combined.length; i++) {
+    hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+    hash |= 0;
+  }
+  const angle = Math.abs(hash % 360) * (Math.PI / 180);
+  // Spread realistically between 350m and 850m across streets
+  const distance = 0.0035 + ((Math.abs(hash) % 45) / 10000);
+
+  return {
+    lat: baseCoords.lat + Math.sin(angle) * distance,
+    lng: baseCoords.lng + Math.cos(angle) * distance,
+    address: address || selectedAreaName
+  };
+}
+
+function autoFixFavAndMapCoordinates() {
+  let hasChange = false;
+  const beCoords = beProfile && beProfile.addressCoords ? beProfile.addressCoords : null;
+
+  if (Array.isArray(favDishes)) {
+    favDishes.forEach(fav => {
+      if (!fav || !fav.title) return;
+      let isCorrupted = false;
+
+      if (!fav.coords || !fav.coords.lat) {
+        isCorrupted = true;
+      } else if (beCoords) {
+        const dLat = Math.abs(fav.coords.lat - beCoords.lat);
+        const dLng = Math.abs(fav.coords.lng - beCoords.lng);
+        // If within 150m of Bé's marker, it was caught by the Math.random() bug!
+        if (dLat < 0.0018 && dLng < 0.0018) {
+          isCorrupted = true;
+        }
+      }
+
+      if (isCorrupted) {
+        const proper = resolveCoordinatesForPlace(fav.title, fav.address);
+        fav.coords = { lat: proper.lat, lng: proper.lng };
+        if (proper.address && (!fav.address || fav.address === selectedAreaName)) {
+          fav.address = proper.address;
+        }
+        hasChange = true;
+      }
+    });
+    if (hasChange) saveFavDishesToStorage();
+  }
+
+  if (Array.isArray(customMapRestaurants)) {
+    customMapRestaurants.forEach(m => {
+      if (!m || !m.name) return;
+      let isCorrupted = false;
+
+      if (!m.lat || !m.lng) {
+        isCorrupted = true;
+      } else if (beCoords) {
+        const dLat = Math.abs(m.lat - beCoords.lat);
+        const dLng = Math.abs(m.lng - beCoords.lng);
+        if (dLat < 0.0018 && dLng < 0.0018) {
+          isCorrupted = true;
+        }
+      }
+
+      if (isCorrupted) {
+        const proper = resolveCoordinatesForPlace(m.name, m.address || m.area);
+        m.lat = proper.lat;
+        m.lng = proper.lng;
+        if (proper.address && (!m.address || m.address === selectedAreaName)) {
+          m.address = proper.address;
+        }
+        hasChange = true;
+      }
+    });
+    if (hasChange) saveCustomMapRestaurantsToStorage();
+  }
+
+  if (hasChange) {
+    if (typeof renderMapRestaurants === 'function') renderMapRestaurants();
+    if (typeof leafletMap !== 'undefined' && leafletMap && typeof renderLeafletOverlays === 'function') {
+      renderLeafletOverlays();
+    }
+  }
+}
+
 function syncFavDishesToMapRestaurants() {
   if (!Array.isArray(favDishes)) return;
+  autoFixFavAndMapCoordinates();
   let hasChange = false;
+
   favDishes.forEach(fav => {
     if (!fav || !fav.title) return;
     const exists = customMapRestaurants.some(m => m.favId === fav.id || m.name.toLowerCase() === fav.title.toLowerCase());
+    
+    // Ensure fav.coords is defined
+    if (!fav.coords || !fav.coords.lat) {
+      fav.coords = resolveCoordinatesForPlace(fav.title, fav.address);
+      hasChange = true;
+    }
+
     if (!exists) {
-      const restCoords = getCoordsForArea(fav.address || (beProfile && beProfile.address) || selectedAreaName);
       const customItem = {
         id: 'custom_rest_' + (fav.id || Date.now()),
         favId: fav.id,
@@ -8602,8 +8847,9 @@ function syncFavDishesToMapRestaurants() {
         food: fav.title,
         emoji: isImageAvatar(fav.icon) ? '🍽️' : (fav.icon || '🍽️'),
         area: fav.address || selectedAreaName,
-        lat: restCoords.lat + (Math.random() - 0.5) * 0.002,
-        lng: restCoords.lng + (Math.random() - 0.5) * 0.002,
+        city: currentCenterCoords.city || 'dongthap',
+        lat: fav.coords.lat,
+        lng: fav.coords.lng,
         address: fav.address || selectedAreaName,
         rating: 5.0,
         reviews: 1,
@@ -8616,10 +8862,24 @@ function syncFavDishesToMapRestaurants() {
       };
       customMapRestaurants.unshift(customItem);
       hasChange = true;
+    } else {
+      // Sync coordinates if fav has updated coords
+      const existing = customMapRestaurants.find(m => m.favId === fav.id || m.name.toLowerCase() === fav.title.toLowerCase());
+      if (existing && fav.coords && (existing.lat !== fav.coords.lat || existing.lng !== fav.coords.lng)) {
+        existing.lat = fav.coords.lat;
+        existing.lng = fav.coords.lng;
+        hasChange = true;
+      }
     }
   });
+
   if (hasChange) {
     saveCustomMapRestaurantsToStorage();
+    saveFavDishesToStorage();
+    if (typeof renderMapRestaurants === 'function') renderMapRestaurants();
+    if (typeof leafletMap !== 'undefined' && leafletMap && typeof renderLeafletOverlays === 'function') {
+      renderLeafletOverlays();
+    }
   }
 }
 syncFavDishesToMapRestaurants();
@@ -8856,6 +9116,196 @@ function clearFavTitleInput() {
   toggleFavTitleClearBtn();
 }
 
+let currentSelectedFavCoords = null;
+let favAddressDebounceTimer = null;
+let favAddressAbortController = null;
+
+function updateFavAddressCoordsBadge(coords, customText) {
+  const badge = document.getElementById('fav-address-coords-badge');
+  const textEl = document.getElementById('fav-address-coords-text');
+  const valEl = document.getElementById('fav-address-coords-val');
+  if (!badge || !textEl || !valEl) return;
+
+  if (coords && coords.lat && coords.lng) {
+    badge.className = 'flex items-center justify-between px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-[11px] text-emerald-800 dark:text-emerald-300 border border-emerald-300/40 transition-all';
+    textEl.textContent = customText || 'Đã liên kết toạ độ GPS chính xác';
+    valEl.textContent = `${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`;
+  } else {
+    badge.className = 'flex items-center justify-between px-3 py-1.5 rounded-xl bg-surface-container text-[11px] text-on-surface-variant border border-outline-variant/20 transition-all';
+    textEl.textContent = customText || 'Tìm hoặc chọn địa chỉ để ghim toạ độ chuẩn';
+    valEl.textContent = '';
+  }
+}
+
+function handleFavAddressFocus() {
+  const inp = document.getElementById('fav-input-address');
+  const val = inp ? inp.value.trim() : '';
+  if (val.length >= 1) {
+    handleFavAddressInput(val);
+  } else {
+    // Show top featured food spots in directory
+    const topSpots = localAddressDirectory.filter(i => i.type === 'restaurant' || i.type === 'shopping' || i.type === 'cafe' || i.type === 'landmark').slice(0, 7);
+    renderFavAddressSuggestions(topSpots, '');
+  }
+}
+
+function handleFavAddressInput(rawVal) {
+  const query = (rawVal || '').trim();
+  const sugBox = document.getElementById('fav-address-suggestions');
+  const spinner = document.getElementById('fav-address-spinner');
+  if (!sugBox) return;
+
+  if (query.length < 1) {
+    const topSpots = localAddressDirectory.filter(i => i.type === 'restaurant' || i.type === 'shopping' || i.type === 'cafe' || i.type === 'landmark').slice(0, 7);
+    renderFavAddressSuggestions(topSpots, '');
+    if (spinner) spinner.classList.add('hidden');
+    return;
+  }
+
+  // 1. Instant local directory match with token scoring
+  const cleanQ = removeVietnameseDiacritics(query);
+  const STOP_WORDS = new Set(['quan', 'tiem', 'duong', 'phuong', 'thanh', 'pho', 'tp', 'tinh', 'so', 'nha', 'gan', 'tai']);
+  const allTokens = cleanQ.split(/[\s,.-]+/).filter(t => t.length > 1);
+  const contentTokens = allTokens.filter(t => !STOP_WORDS.has(t));
+  const effectiveTokens = contentTokens.length > 0 ? contentTokens : allTokens;
+
+  const localMatches = localAddressDirectory.map(item => {
+    const hay = removeVietnameseDiacritics(`${item.name} ${item.address} ${(item.aliases || []).join(' ')}`);
+    let score = 0;
+    if (hay.includes(cleanQ)) score += 500;
+    for (let i = 0; i < allTokens.length - 1; i++) {
+      const pair = allTokens[i] + ' ' + allTokens[i+1];
+      if (hay.includes(pair)) score += 120;
+    }
+    effectiveTokens.forEach(tok => {
+      if (hay.includes(tok)) score += 40;
+    });
+    return { ...item, score, source: 'local' };
+  }).filter(r => r.score > 0).sort((a, b) => b.score - a.score);
+
+  renderFavAddressSuggestions(localMatches.slice(0, 6), query);
+
+  // If match found, tentatively link coords
+  if (localMatches.length > 0 && localMatches[0].score >= 120) {
+    currentSelectedFavCoords = { lat: localMatches[0].lat, lng: localMatches[0].lng };
+    updateFavAddressCoordsBadge(currentSelectedFavCoords, `Khớp: ${localMatches[0].name}`);
+  }
+
+  // 2. Debounced OSM Nominatim search for any street
+  if (favAddressDebounceTimer) clearTimeout(favAddressDebounceTimer);
+  if (favAddressAbortController) favAddressAbortController.abort();
+
+  if (query.length >= 3) {
+    if (spinner) spinner.classList.remove('hidden');
+    favAddressAbortController = new AbortController();
+
+    favAddressDebounceTimer = setTimeout(async () => {
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=4&countrycodes=vn&q=${encodeURIComponent(query)}`;
+        const res = await fetch(url, {
+          signal: favAddressAbortController.signal,
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            const mapped = data.map(item => ({
+              name: item.display_name.split(',')[0],
+              address: item.display_name,
+              lat: parseFloat(item.lat),
+              lng: parseFloat(item.lon),
+              icon: '📍',
+              type: 'osm',
+              source: 'osm'
+            }));
+            const combined = [...localMatches.slice(0, 4), ...mapped];
+            renderFavAddressSuggestions(combined, query);
+          }
+        }
+      } catch(e) {
+      } finally {
+        if (spinner) spinner.classList.add('hidden');
+      }
+    }, 450);
+  }
+}
+
+function renderFavAddressSuggestions(list, currentQuery) {
+  const sugBox = document.getElementById('fav-address-suggestions');
+  if (!sugBox) return;
+
+  if (!list || list.length === 0) {
+    sugBox.innerHTML = `
+      <div class="p-3 text-center text-on-surface-variant text-[11px] space-y-1">
+        <p>Không tìm thấy toạ độ trùng khớp với "<strong>${escapeHtml(currentQuery)}</strong>".</p>
+        <p class="text-[10px] text-primary">Bạn có thể chọn vị trí hiện tại hoặc nhập tên đường cụ thể nhé!</p>
+      </div>
+    `;
+    sugBox.classList.remove('hidden');
+    return;
+  }
+
+  const headerHtml = currentQuery
+    ? `<div class="px-3 py-1.5 bg-surface-container-high/60 text-on-surface-variant font-bold text-[10px] flex items-center justify-between border-b border-outline-variant/15"><span>🔍 Gợi ý toạ độ cho "${escapeHtml(currentQuery)}":</span><span class="text-[9px] text-primary font-mono">Bản đồ vệ tinh 🗺️</span></div>`
+    : `<div class="px-3 py-1.5 bg-primary-fixed/30 text-primary font-bold text-[10px] flex items-center justify-between border-b border-primary/20"><span>⭐ Quán ăn & Địa điểm nổi bật (chọn nhanh):</span><span class="text-[9px] opacity-80">📍 Toạ độ chuẩn</span></div>`;
+
+  const itemsHtml = list.map(item => {
+    const latStr = item.lat.toFixed(4);
+    const lngStr = item.lng.toFixed(4);
+    const itemDataEscaped = encodeURIComponent(JSON.stringify(item));
+    return `
+      <div onclick="selectFavAddressItem('${itemDataEscaped}')" class="p-2.5 hover:bg-primary-fixed/30 cursor-pointer flex items-start gap-2.5 transition-colors group">
+        <div class="w-8 h-8 rounded-xl bg-surface-container flex items-center justify-center text-base shrink-0 shadow-2xs mt-0.5 group-hover:bg-primary group-hover:text-white transition-colors">
+          ${item.icon || '📍'}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start justify-between gap-1.5 flex-wrap">
+            <span class="font-bold text-xs text-on-surface group-hover:text-primary transition-colors leading-snug">${escapeHtml(item.name)}</span>
+            <span class="font-mono text-[9px] text-primary bg-primary-fixed/40 px-1 py-0.2 rounded font-bold">${latStr}, ${lngStr}</span>
+          </div>
+          <p class="text-[10px] text-on-surface-variant line-clamp-1 mt-0.5">${escapeHtml(item.address || '')}</p>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  sugBox.innerHTML = headerHtml + itemsHtml;
+  sugBox.classList.remove('hidden');
+}
+
+function selectFavAddressItem(escapedItemData) {
+  try {
+    const item = JSON.parse(decodeURIComponent(escapedItemData));
+    const inpAddr = document.getElementById('fav-input-address');
+    if (inpAddr) {
+      inpAddr.value = item.address || item.name;
+      toggleFavAddressClearBtn();
+    }
+    
+    // Auto fill title if title is empty
+    const inpTitle = document.getElementById('fav-input-title');
+    if (inpTitle && !inpTitle.value.trim()) {
+      inpTitle.value = item.name;
+      toggleFavTitleClearBtn();
+    }
+
+    currentSelectedFavCoords = { lat: item.lat, lng: item.lng };
+    updateFavAddressCoordsBadge(currentSelectedFavCoords, `Đã liên kết toạ độ: ${item.name}`);
+  } catch(e) {}
+
+  const sugBox = document.getElementById('fav-address-suggestions');
+  if (sugBox) sugBox.classList.add('hidden');
+}
+
+// Click outside to close suggestion dropdown
+document.addEventListener('click', function(e) {
+  const row = document.getElementById('fav-address-row');
+  const sug = document.getElementById('fav-address-suggestions');
+  if (row && sug && !row.contains(e.target)) {
+    sug.classList.add('hidden');
+  }
+});
+
 function toggleFavAddressClearBtn() {
   const inp = document.getElementById('fav-input-address');
   const btn = document.getElementById('fav-address-clear-btn');
@@ -8875,13 +9325,20 @@ function clearFavAddressInput() {
     inp.value = '';
     inp.focus();
   }
+  currentSelectedFavCoords = null;
+  updateFavAddressCoordsBadge(null, 'Tìm hoặc chọn địa chỉ để ghim toạ độ chuẩn');
   toggleFavAddressClearBtn();
 }
 
 function fillCurrentLocationToFavAddress() {
   const el = document.getElementById('fav-input-address');
   if (el) {
+    const baseCoords = (currentCenterCoords && currentCenterCoords.lat) ? currentCenterCoords : (beProfile && beProfile.addressCoords ? beProfile.addressCoords : null);
     el.value = selectedAreaName;
+    if (baseCoords) {
+      currentSelectedFavCoords = { lat: baseCoords.lat, lng: baseCoords.lng };
+      updateFavAddressCoordsBadge(currentSelectedFavCoords, `Toạ độ vùng hiện tại: ${selectedAreaName}`);
+    }
     toggleFavAddressClearBtn();
     showToast(`Đã điền vị trí hiện tại: ${selectedAreaName} 📍`);
   }
@@ -8890,6 +9347,7 @@ function fillCurrentLocationToFavAddress() {
 function openAddFavModal() {
   currentEditingFavId = null;
   currentSelectedFavIcon = '🍜';
+  currentSelectedFavCoords = null;
   setFavModalType('shop');
   const titleEl = document.getElementById('fav-modal-title');
   if (titleEl) titleEl.textContent = 'Thêm Quán & Món Ruột Của Hai Bạn';
@@ -8898,13 +9356,15 @@ function openAddFavModal() {
   const inpTitle = document.getElementById('fav-input-title');
   if (inpTitle) inpTitle.value = '';
   const inpAddr = document.getElementById('fav-input-address');
-  if (inpAddr) inpAddr.value = selectedAreaName || '';
+  if (inpAddr) inpAddr.value = '';
   const inpBadge = document.getElementById('fav-input-badge');
   if (inpBadge) inpBadge.value = 'Bé vừa chấm điểm 10/10 ✨';
   const inpNote = document.getElementById('fav-input-note');
   if (inpNote) inpNote.value = '';
   toggleFavTitleClearBtn();
   toggleFavAddressClearBtn();
+  updateFavAddressCoordsBadge(null, 'Tìm hoặc chọn địa chỉ để ghim toạ độ chuẩn');
+
   const syncMap = document.getElementById('fav-sync-map');
   if (syncMap) syncMap.checked = true;
   const syncWheel = document.getElementById('fav-sync-wheel');
@@ -8952,6 +9412,13 @@ function openEditFavModal(id) {
   toggleFavTitleClearBtn();
   toggleFavAddressClearBtn();
 
+  if (item.coords && item.coords.lat) {
+    currentSelectedFavCoords = { ...item.coords };
+  } else {
+    currentSelectedFavCoords = resolveCoordinatesForPlace(item.title, item.address);
+  }
+  updateFavAddressCoordsBadge(currentSelectedFavCoords, 'Đã liên kết toạ độ GPS chính xác');
+
   updateFavModalIconPreview();
   renderFavIconOptions();
 
@@ -8974,6 +9441,8 @@ function closeFavModal() {
     modal.classList.remove('flex');
     modal.style.display = 'none';
   }
+  const sugBox = document.getElementById('fav-address-suggestions');
+  if (sugBox) sugBox.classList.add('hidden');
 }
 
 function saveFavDishItem() {
@@ -9012,6 +9481,12 @@ function saveFavDishItem() {
   const syncMap = document.getElementById('fav-sync-map') ? document.getElementById('fav-sync-map').checked : true;
   const syncWheel = document.getElementById('fav-sync-wheel') ? document.getElementById('fav-sync-wheel').checked : true;
 
+  // Resolve accurate GPS coordinates
+  let finalCoords = currentSelectedFavCoords;
+  if (!finalCoords || !finalCoords.lat || !finalCoords.lng) {
+    finalCoords = resolveCoordinatesForPlace(title, address);
+  }
+
   const targetId = currentEditingFavId || ('fav_' + Date.now());
 
   if (currentEditingFavId) {
@@ -9021,18 +9496,20 @@ function saveFavDishItem() {
         ...favDishes[idx],
         icon: currentSelectedFavIcon,
         title,
-        address: address || favDishes[idx].address || selectedAreaName,
+        address: address || finalCoords.address || favDishes[idx].address || selectedAreaName,
+        coords: { lat: finalCoords.lat, lng: finalCoords.lng },
         badge: badge || 'Quán Ruột Của Nàng ❤️',
         note
       };
-      showToast(`Đã cập nhật "${title}"! ✨`);
+      showToast(`Đã cập nhật "${title}" với toạ độ chuẩn! ✨`);
     }
   } else {
     const newDish = {
       id: targetId,
       icon: currentSelectedFavIcon,
       title,
-      address: address || selectedAreaName,
+      address: address || finalCoords.address || selectedAreaName,
+      coords: { lat: finalCoords.lat, lng: finalCoords.lng },
       badge: badge || (currentFavModalType === 'food' ? 'Món Bé Mê ❤️' : 'Quán Ruột Mới ❤️'),
       note
     };
@@ -9057,7 +9534,7 @@ function saveFavDishItem() {
     renderWheel();
   }
 
-  // 2. Đồng bộ hiển thị lên Bản đồ quanh Bé nếu được chọn
+  // 2. Đồng bộ hiển thị lên Bản đồ quanh Bé nếu được chọn với toạ độ CHÍNH XÁC
   if (syncMap) {
     const existingIdx = customMapRestaurants.findIndex(m => m.favId === targetId || m.name === title);
     const customItem = {
@@ -9066,11 +9543,11 @@ function saveFavDishItem() {
       name: title,
       food: title,
       emoji: isImageAvatar(currentSelectedFavIcon) ? '🍽️' : currentSelectedFavIcon,
-      area: selectedAreaName,
-      city: currentCenterCoords.city || 'hcm',
-      lat: currentCenterCoords.lat + (Math.random() - 0.5) * 0.002,
-      lng: currentCenterCoords.lng + (Math.random() - 0.5) * 0.002,
-      address: address || selectedAreaName,
+      area: address || finalCoords.address || selectedAreaName,
+      city: currentCenterCoords.city || 'dongthap',
+      lat: finalCoords.lat,
+      lng: finalCoords.lng,
+      address: address || finalCoords.address || selectedAreaName,
       rating: 5.0,
       reviews: 1,
       price: 'mid',
@@ -10193,6 +10670,8 @@ initQuickEmojiBars();
 initDraggablePopup();
 initFloatingWheelWidget();
 renderProfile();
+autoFixFavAndMapCoordinates();
+syncFavDishesToMapRestaurants();
 renderFavList();
 renderHomeFavList();
 renderComfortTips();
