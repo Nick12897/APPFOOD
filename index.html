@@ -783,19 +783,22 @@
       </div>
     </div>
 
-    <!-- ══ BANNER THÊM QUÁN TỦ ══ -->
+    <!-- ══ BANNER THÊM QUÁN & MÓN RUỘT ══ -->
     <section class="px-margin -mt-1 mb-space-sm z-30">
-      <div class="w-full bg-gradient-to-r from-primary-container via-secondary-container to-primary text-on-primary p-3 rounded-2xl shadow-md flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-full bg-surface-container-lowest/20 flex items-center justify-center flex-shrink-0">
-            <span class="material-symbols-outlined text-on-primary text-[20px]">add_location_alt</span>
+      <div onclick="openAddFavModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') openAddFavModal()" class="w-full bg-gradient-to-r from-primary-container via-secondary-container to-primary text-on-primary p-3 rounded-2xl shadow-md flex items-center justify-between gap-2 cursor-pointer hover:shadow-lg hover:brightness-105 active:scale-[0.99] transition-all group select-none">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-10 h-10 rounded-full bg-surface-container-lowest/25 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-2xs">
+            <span class="material-symbols-outlined text-on-primary text-[22px]">add_location_alt</span>
           </div>
-          <div>
-            <span class="font-headline-sm text-sm font-bold block leading-tight">Thêm quán ruột của hai bạn</span>
-            <span class="font-label-sm text-[11px] text-on-primary/90">Lưu vào Sổ tay để sau đỡ phải "gì cũng được"!</span>
+          <div class="min-w-0">
+            <span class="font-headline-sm text-sm font-bold block leading-tight truncate">Thêm quán ruột của hai bạn ❤️</span>
+            <span class="font-label-sm text-[11px] text-on-primary/90 block truncate">Lưu vào Sổ tay để sau đỡ phải "gì cũng được"!</span>
           </div>
         </div>
-        <button type="button" onclick="openAddDishModal()" class="bg-surface-container-lowest text-primary px-3 py-1.5 rounded-full font-label-sm text-xs font-bold flex-shrink-0 shadow-sm active:scale-95 transition-transform">+ Thêm quán</button>
+        <button type="button" onclick="event.stopPropagation(); openAddFavModal()" class="bg-surface-container-lowest text-primary px-3.5 py-1.5 rounded-full font-label-sm text-xs font-bold flex-shrink-0 shadow-sm hover:bg-white active:scale-95 transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-[15px]">add_circle</span>
+          <span>+ Thêm quán</span>
+        </button>
       </div>
     </section>
 
@@ -1251,20 +1254,32 @@
 </div>
 
 <!-- ══ FAV DISH ADD / EDIT MODAL ══ -->
-<div id="fav-dish-modal" class="fixed inset-0 z-50 bg-inverse-surface/50 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md flex">
-  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[85vh] overflow-y-auto flex flex-col shadow-2xl space-y-4">
+<div id="fav-dish-modal" onclick="if(event.target === this) closeFavModal()" class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md flex">
+  <div class="bg-surface rounded-2xl p-space-lg w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl space-y-3.5">
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
       <div class="flex items-center gap-2">
         <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary text-xl overflow-hidden shrink-0 shadow-2xs border border-primary/20" id="fav-modal-icon-badge">
           🍜
         </div>
         <div>
-          <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold" id="fav-modal-title">Thêm Quán Ruột Của Nàng</h3>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold" id="fav-modal-title">Thêm Quán & Món Ruột Của Hai Bạn</h3>
           <span class="font-label-sm text-label-sm text-on-surface-variant">Lưu lại để chiều đúng gu bé yêu</span>
         </div>
       </div>
-      <button onclick="closeFavModal()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface">
+      <button type="button" onclick="closeFavModal()" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-95 transition-all">
         <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Chọn loại: Quán ăn ruột hay Món ăn ruột -->
+    <div class="flex items-center gap-1.5 p-1 bg-surface-container-high rounded-full">
+      <button type="button" id="fav-type-shop-btn" onclick="setFavModalType('shop')" class="flex-1 py-1.5 rounded-full text-xs font-bold transition-all bg-primary text-on-primary shadow-xs flex items-center justify-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">storefront</span>
+        <span>Quán ăn ruột</span>
+      </button>
+      <button type="button" id="fav-type-food-btn" onclick="setFavModalType('food')" class="flex-1 py-1.5 rounded-full text-xs font-bold transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">restaurant</span>
+        <span>Món ăn bé mê</span>
       </button>
     </div>
 
@@ -1304,20 +1319,32 @@
 
     <!-- Tên món / quán -->
     <div class="space-y-1">
-      <label class="font-label-md text-label-md text-on-surface font-bold block">Tên quán hoặc món ăn <span class="text-error">*</span></label>
-      <input id="fav-input-title" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Quán bún chả cô Nga, Trà sữa Maycha..." />
+      <label class="font-label-md text-label-md text-on-surface font-bold block" id="fav-name-label">Tên quán ăn / tiệm ăn <span class="text-error">*</span></label>
+      <input id="fav-input-title" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Quán Cơm Tấm Long Triều, Trà sữa Maycha, Phở Pasteur..." />
     </div>
 
     <!-- Địa chỉ / Vị trí -->
-    <div class="space-y-1">
-      <label class="font-label-md text-label-md text-on-surface font-bold block">Địa chỉ hoặc chi nhánh</label>
-      <input id="fav-input-address" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: 42 Hàng Mành, Hoàn Kiếm hoặc 115 Nguyễn Gia Trí..." />
+    <div class="space-y-1" id="fav-address-row">
+      <div class="flex items-center justify-between">
+        <label class="font-label-md text-label-md text-on-surface font-bold block" id="fav-address-label">Địa chỉ hoặc chi nhánh</label>
+        <button type="button" onclick="fillCurrentLocationToFavAddress()" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5 active:scale-95 transition-all">
+          <span class="material-symbols-outlined text-[14px]">my_location</span>
+          <span>Lấy vị trí hiện tại 📍</span>
+        </button>
+      </div>
+      <input id="fav-input-address" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: 12 Nguyễn Tất Thành, Hồng Ngự hoặc Quận 1..." />
     </div>
 
     <!-- Huy hiệu / Dịp ăn -->
     <div class="space-y-1">
       <label class="font-label-md text-label-md text-on-surface font-bold block">Huy hiệu đánh giá / Dịp ăn</label>
       <input id="fav-input-badge" type="text" class="w-full bg-surface-container-low text-on-surface px-4 py-2.5 rounded-full font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Điểm hài lòng: 10/10, Uống mỗi khi dỗi, Quán kỷ niệm..." />
+      <div class="flex items-center gap-1.5 overflow-x-auto py-1 text-xs select-none">
+        <button type="button" onclick="setFavBadgeQuick('Bé vừa chấm điểm 10/10 ✨')" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant text-[11px] font-semibold shrink-0 active:scale-95 transition-all">✨ Điểm 10/10</button>
+        <button type="button" onclick="setFavBadgeQuick('Quán hẹn hò ruột ❤️')" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant text-[11px] font-semibold shrink-0 active:scale-95 transition-all">❤️ Hẹn hò ruột</button>
+        <button type="button" onclick="setFavBadgeQuick('Món cứu nguy mỗi khi bé dỗi 🥰')" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant text-[11px] font-semibold shrink-0 active:scale-95 transition-all">🥰 Khi bé dỗi</button>
+        <button type="button" onclick="setFavBadgeQuick('Quán vỉa hè ăn vặt siêu đỉnh 🥢')" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant text-[11px] font-semibold shrink-0 active:scale-95 transition-all">🥢 Ăn vặt đỉnh</button>
+      </div>
     </div>
 
     <!-- Lưu ý chi tiết của bé -->
@@ -1326,10 +1353,23 @@
       <textarea id="fav-input-note" rows="2" class="w-full bg-surface-container-low text-on-surface p-3 rounded-xl font-body-md text-body-md focus:outline-none border border-outline-variant/30" placeholder="VD: Gọi thêm chả viên nướng, nước chấm xin thêm ớt băm riêng, không hành..."></textarea>
     </div>
 
+    <!-- Tùy chọn đồng bộ tính năng -->
+    <div class="p-3 rounded-2xl bg-surface-container-low border border-outline-variant/20 space-y-2">
+      <span class="font-label-sm text-[11px] font-bold text-on-surface-variant block uppercase tracking-wider">Tùy chọn hiển thị & tính năng:</span>
+      <label class="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-on-surface select-none">
+        <input type="checkbox" id="fav-sync-map" checked class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+        <span>Hiển thị trên Bản đồ & danh sách quán quanh Bé 🗺️</span>
+      </label>
+      <label class="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-on-surface select-none">
+        <input type="checkbox" id="fav-sync-wheel" checked class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+        <span>Thêm món này vào Vòng quay "Ăn Gì" 🎡</span>
+      </label>
+    </div>
+
     <!-- Action buttons -->
     <div class="flex gap-2 pt-2 border-t border-surface-container-high">
-      <button onclick="closeFavModal()" class="flex-1 py-2.5 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-bold">Hủy bỏ</button>
-      <button onclick="saveFavDishItem()" class="flex-1 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold shadow-md active:scale-95 transition-transform" id="fav-modal-submit-btn">Lưu quán ruột ❤️</button>
+      <button type="button" onclick="closeFavModal()" class="flex-1 py-2.5 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-bold active:scale-95 transition-transform">Hủy bỏ</button>
+      <button type="button" onclick="saveFavDishItem()" class="flex-1 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold shadow-md active:scale-95 transition-transform" id="fav-modal-submit-btn">Lưu quán ruột ❤️</button>
     </div>
   </div>
 </div>
@@ -3908,6 +3948,19 @@ const areaCenterCoordinates = {
   'Phú Thọ': { lat: 21.3228, lng: 105.4019 }
 };
 
+// ── User's Custom Added Favorite Restaurants (Synced from Map & Notebook) ──
+let customMapRestaurants = [];
+try {
+  const saved = localStorage.getItem('an_gi_custom_map_restaurants');
+  customMapRestaurants = saved ? JSON.parse(saved) : [];
+} catch(e) { customMapRestaurants = []; }
+
+function saveCustomMapRestaurantsToStorage() {
+  try {
+    localStorage.setItem('an_gi_custom_map_restaurants', JSON.stringify(customMapRestaurants));
+  } catch(e) {}
+}
+
 const mapRestaurantsDb = [
   {
     id: 'pho-hoa-pasteur',
@@ -4927,7 +4980,8 @@ function getEffectiveDistKm(r) {
 }
 
 function getFilteredRestaurants() {
-  return mapRestaurantsDb.filter(r => {
+  const allRestaurants = [...customMapRestaurants, ...mapRestaurantsDb];
+  return allRestaurants.filter(r => {
     const effDist = getEffectiveDistKm(r);
 
     // Radius filter
@@ -4938,33 +4992,33 @@ function getFilteredRestaurants() {
     // Text search
     if (currentMapSearch) {
       const q = currentMapSearch;
-      const textMatch = r.name.toLowerCase().includes(q) ||
-                        r.food.toLowerCase().includes(q) ||
-                        r.address.toLowerCase().includes(q) ||
-                        r.tip.toLowerCase().includes(q);
+      const textMatch = (r.name && r.name.toLowerCase().includes(q)) ||
+                        (r.food && r.food.toLowerCase().includes(q)) ||
+                        (r.address && r.address.toLowerCase().includes(q)) ||
+                        (r.tip && r.tip.toLowerCase().includes(q));
       if (!textMatch) return false;
     }
 
     // Tag chip filter
-    const isNotebookSaved = favDishes.some(f => f.title === r.name || f.title === r.food);
+    const isNotebookSaved = favDishes.some(f => f.title === r.name || f.title === r.food) || (r.isCustomFav === true);
     if (selectedMapTag === 'quán ruột' && !isNotebookSaved && !r.badge.includes('Sổ tay') && !r.badge.includes('ruột')) {
       return false;
     }
-    if (selectedMapTag === 'view chill' && !r.tags.includes('view') && !r.tags.includes('romantic')) {
+    if (selectedMapTag === 'view chill' && (!r.tags || (!r.tags.includes('view') && !r.tags.includes('romantic')))) {
       return false;
     }
-    if (selectedMapTag === 'vỉa hè' && !r.tags.includes('street')) {
+    if (selectedMapTag === 'vỉa hè' && (!r.tags || !r.tags.includes('street'))) {
       return false;
     }
-    if (selectedMapTag === 'điều hòa' && !r.tags.includes('ac')) {
+    if (selectedMapTag === 'điều hòa' && (!r.tags || !r.tags.includes('ac'))) {
       return false;
     }
 
     // Advanced modal filters
-    if (mapFilters.ac && !r.tags.includes('ac')) return false;
-    if (mapFilters.romantic && !r.tags.includes('romantic')) return false;
-    if (mapFilters.view && !r.tags.includes('view')) return false;
-    if (mapFilters.street && !r.tags.includes('street')) return false;
+    if (mapFilters.ac && (!r.tags || !r.tags.includes('ac'))) return false;
+    if (mapFilters.romantic && (!r.tags || !r.tags.includes('romantic'))) return false;
+    if (mapFilters.view && (!r.tags || !r.tags.includes('view'))) return false;
+    if (mapFilters.street && (!r.tags || !r.tags.includes('street'))) return false;
     if (mapFilters.price !== 'all' && r.price !== mapFilters.price) return false;
     if (mapFilters.onlyFav && !isNotebookSaved) return false;
     if (mapFilters.highRating && r.rating < 4.8) return false;
@@ -5174,7 +5228,8 @@ function centerMapOnCurrentArea() {
 }
 
 function flyToRestaurant(id) {
-  const r = mapRestaurantsDb.find(x => x.id === id);
+  const all = [...customMapRestaurants, ...mapRestaurantsDb];
+  const r = all.find(x => x.id === id);
   if (!r || !leafletMap) return;
   leafletMap.flyTo([r.lat, r.lng], 16, { duration: 0.8 });
   const marker = restaurantMarkersMap[id];
@@ -5687,10 +5742,18 @@ function renderMapRestaurants() {
 
         <!-- Actions -->
         <div class="flex items-center justify-between pt-1 border-t border-surface-container-high/60">
-          <button type="button" onclick="focusRestaurantCard('${r.id}')" class="text-[11px] font-bold text-on-surface-variant hover:text-primary flex items-center gap-1 active:scale-95 transition-all">
-            <span class="material-symbols-outlined text-[15px]">my_location</span>
-            <span>Xem trên map</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="focusRestaurantCard('${r.id}')" class="text-[11px] font-bold text-on-surface-variant hover:text-primary flex items-center gap-1 active:scale-95 transition-all">
+              <span class="material-symbols-outlined text-[15px]">my_location</span>
+              <span>Xem trên map</span>
+            </button>
+            ${r.isCustomFav ? `
+            <button type="button" onclick="deleteCustomMapRestaurant('${r.id}')" class="text-[11px] font-bold text-error hover:underline flex items-center gap-0.5 active:scale-95 transition-all" title="Xóa quán ruột tự thêm này">
+              <span class="material-symbols-outlined text-[14px]">delete</span>
+              <span>Xóa</span>
+            </button>
+            ` : ''}
+          </div>
           <div class="flex items-center gap-2">
             <button type="button" onclick="saveRestaurantToNotebook('${r.id}')" class="px-3 py-1.5 rounded-full ${isSaved ? 'bg-primary-fixed text-primary' : 'bg-surface-container-high hover:bg-primary-fixed text-on-surface'} text-xs font-bold active:scale-95 transition-all flex items-center gap-1">
               <span class="material-symbols-outlined text-[14px]" ${isSaved ? 'style="font-variation-settings:\'FILL\' 1"' : ''}>favorite</span>
@@ -5707,6 +5770,26 @@ function renderMapRestaurants() {
   }).join('');
 }
 
+function deleteCustomMapRestaurant(id) {
+  const mIdx = customMapRestaurants.findIndex(m => m.id === id);
+  if (mIdx !== -1) {
+    const removed = customMapRestaurants.splice(mIdx, 1)[0];
+    saveCustomMapRestaurantsToStorage();
+    if (removed.favId) {
+      const fIdx = favDishes.findIndex(f => f.id === removed.favId);
+      if (fIdx !== -1) {
+        favDishes.splice(fIdx, 1);
+        saveFavDishesToStorage();
+        renderFavList();
+        renderHomeFavList();
+      }
+    }
+    renderMapRestaurants();
+    if (leafletMap) renderLeafletOverlays();
+    showToast(`Đã xóa quán "${removed.name}" khỏi danh sách! 🗑️`);
+  }
+}
+
 function focusRestaurantCard(id) {
   const card = document.getElementById(`map-card-${id}`);
   if (card) {
@@ -5720,7 +5803,8 @@ function focusRestaurantCard(id) {
 }
 
 function openRestaurantInGoogleMaps(id) {
-  const r = mapRestaurantsDb.find(x => x.id === id);
+  const all = [...customMapRestaurants, ...mapRestaurantsDb];
+  const r = all.find(x => x.id === id);
   if (!r) return;
   const q = encodeURIComponent(`${r.name} ${r.address}`);
   window.open(`https://www.google.com/maps/search/?api=1&query=${q}`, '_blank');
@@ -5728,7 +5812,8 @@ function openRestaurantInGoogleMaps(id) {
 }
 
 function saveRestaurantToNotebook(id) {
-  const r = mapRestaurantsDb.find(x => x.id === id);
+  const all = [...customMapRestaurants, ...mapRestaurantsDb];
+  const r = all.find(x => x.id === id);
   if (!r) return;
   const alreadySaved = favDishes.some(f => f.title === r.name || f.title === r.food);
   if (alreadySaved) {
@@ -7171,26 +7256,74 @@ function renderFavIconOptions() {
   });
 }
 
+let currentFavModalType = 'shop';
+
+function setFavModalType(type) {
+  currentFavModalType = type;
+  const shopBtn = document.getElementById('fav-type-shop-btn');
+  const foodBtn = document.getElementById('fav-type-food-btn');
+  const titleEl = document.getElementById('fav-modal-title');
+  const nameLabel = document.getElementById('fav-name-label');
+  const titleInput = document.getElementById('fav-input-title');
+  const addressRow = document.getElementById('fav-address-row');
+
+  if (type === 'food') {
+    if (shopBtn) shopBtn.className = 'flex-1 py-1.5 rounded-full text-xs font-bold transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1';
+    if (foodBtn) foodBtn.className = 'flex-1 py-1.5 rounded-full text-xs font-bold transition-all bg-primary text-on-primary shadow-xs flex items-center justify-center gap-1';
+    if (titleEl) titleEl.textContent = 'Thêm Món Ngon Bé Mê';
+    if (nameLabel) nameLabel.innerHTML = 'Tên món ăn bé yêu thích <span class="text-error">*</span>';
+    if (titleInput) titleInput.placeholder = 'VD: Bún đậu mắm tôm, Trà đào cam sả, Lẩu cá linh, Bánh tráng nướng...';
+  } else {
+    if (shopBtn) shopBtn.className = 'flex-1 py-1.5 rounded-full text-xs font-bold transition-all bg-primary text-on-primary shadow-xs flex items-center justify-center gap-1';
+    if (foodBtn) foodBtn.className = 'flex-1 py-1.5 rounded-full text-xs font-bold transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1';
+    if (titleEl) titleEl.textContent = 'Thêm Quán Ruột Của Hai Bạn';
+    if (nameLabel) nameLabel.innerHTML = 'Tên quán ăn / tiệm ăn <span class="text-error">*</span>';
+    if (titleInput) titleInput.placeholder = 'VD: Quán Cơm Tấm Long Triều, Trà sữa Maycha, Phở Hòa Pasteur...';
+  }
+}
+
+function setFavBadgeQuick(txt) {
+  const el = document.getElementById('fav-input-badge');
+  if (el) el.value = txt;
+}
+
+function fillCurrentLocationToFavAddress() {
+  const el = document.getElementById('fav-input-address');
+  if (el) {
+    el.value = selectedAreaName;
+    showToast(`Đã điền vị trí hiện tại: ${selectedAreaName} 📍`);
+  }
+}
+
 function openAddFavModal() {
   currentEditingFavId = null;
   currentSelectedFavIcon = '🍜';
-  document.getElementById('fav-modal-title').textContent = 'Thêm Quán Ruột Của Nàng';
-  document.getElementById('fav-modal-submit-btn').textContent = 'Thêm vào Quán Ruột ❤️';
+  setFavModalType('shop');
+  document.getElementById('fav-modal-title').textContent = 'Thêm Quán & Món Ruột Của Hai Bạn';
+  document.getElementById('fav-modal-submit-btn').textContent = 'Lưu Quán Ruột ❤️';
   document.getElementById('fav-input-title').value = '';
-  document.getElementById('fav-input-address').value = '';
+  document.getElementById('fav-input-address').value = selectedAreaName || '';
   document.getElementById('fav-input-badge').value = 'Bé vừa chấm điểm 10/10 ✨';
   document.getElementById('fav-input-note').value = '';
+  const syncMap = document.getElementById('fav-sync-map'); if (syncMap) syncMap.checked = true;
+  const syncWheel = document.getElementById('fav-sync-wheel'); if (syncWheel) syncWheel.checked = true;
   updateFavModalIconPreview();
   renderFavIconOptions();
   document.getElementById('fav-dish-modal').classList.remove('hidden');
   document.getElementById('fav-input-title').focus();
 }
 
+function openAddDishModal() {
+  openAddFavModal();
+}
+window.openAddDishModal = openAddDishModal;
+
 function openEditFavModal(id) {
   const item = favDishes.find(d => d.id === id);
   if (!item) return;
   currentEditingFavId = id;
   currentSelectedFavIcon = item.icon || '🍜';
+  setFavModalType('shop');
   document.getElementById('fav-modal-title').textContent = 'Chỉnh Sửa Quán Ruột';
   document.getElementById('fav-modal-submit-btn').textContent = 'Cập nhật quán ❤️';
   document.getElementById('fav-input-title').value = item.title || '';
@@ -7216,6 +7349,10 @@ function saveFavDishItem() {
   const address = document.getElementById('fav-input-address').value.trim();
   const badge = document.getElementById('fav-input-badge').value.trim();
   const note = document.getElementById('fav-input-note').value.trim();
+  const syncMap = document.getElementById('fav-sync-map') ? document.getElementById('fav-sync-map').checked : true;
+  const syncWheel = document.getElementById('fav-sync-wheel') ? document.getElementById('fav-sync-wheel').checked : true;
+
+  const targetId = currentEditingFavId || ('fav_' + Date.now());
 
   if (currentEditingFavId) {
     const idx = favDishes.findIndex(d => d.id === currentEditingFavId);
@@ -7224,29 +7361,83 @@ function saveFavDishItem() {
         ...favDishes[idx],
         icon: currentSelectedFavIcon,
         title,
-        address,
-        badge,
+        address: address || favDishes[idx].address || selectedAreaName,
+        badge: badge || 'Quán Ruột Của Nàng ❤️',
         note
       };
-      showToast(`Đã cập nhật quán "${title}"! ✨`);
+      showToast(`Đã cập nhật "${title}"! ✨`);
     }
   } else {
     const newDish = {
-      id: 'fav_' + Date.now(),
+      id: targetId,
       icon: currentSelectedFavIcon,
       title,
-      address,
-      badge: badge || 'Quán Ruột Mới ❤️',
+      address: address || selectedAreaName,
+      badge: badge || (currentFavModalType === 'food' ? 'Món Bé Mê ❤️' : 'Quán Ruột Mới ❤️'),
       note
     };
     favDishes.unshift(newDish);
-    showToast(`Đã thêm "${title}" vào Quán Ruột nàng! 🥰`);
+    showToast(`Đã lưu "${title}" vào Sổ tay nàng! 🥰`);
   }
 
   saveFavDishesToStorage();
   renderFavList();
+  renderHomeFavList();
+
+  // 1. Đồng bộ vào Vòng quay "Ăn Gì" nếu được chọn
+  if (syncWheel) {
+    addCustomDishRecord(title);
+    if (!wheelItems.includes(title)) {
+      wheelItems.unshift(title);
+    }
+    if (isImageAvatar(currentSelectedFavIcon)) {
+      customDishImages[title] = currentSelectedFavIcon;
+      saveCustomDishImages();
+    }
+    renderWheel();
+  }
+
+  // 2. Đồng bộ hiển thị lên Bản đồ quanh Bé nếu được chọn
+  if (syncMap) {
+    const existingIdx = customMapRestaurants.findIndex(m => m.favId === targetId || m.name === title);
+    const customItem = {
+      id: existingIdx !== -1 ? customMapRestaurants[existingIdx].id : ('custom_rest_' + Date.now()),
+      favId: targetId,
+      name: title,
+      food: title,
+      emoji: isImageAvatar(currentSelectedFavIcon) ? '🍽️' : currentSelectedFavIcon,
+      area: selectedAreaName,
+      city: currentCenterCoords.city || 'hcm',
+      lat: currentCenterCoords.lat + (Math.random() - 0.5) * 0.002,
+      lng: currentCenterCoords.lng + (Math.random() - 0.5) * 0.002,
+      address: address || selectedAreaName,
+      rating: 5.0,
+      reviews: 1,
+      price: 'mid',
+      priceText: 'Quán ruột của hai bạn',
+      tags: ['ac', 'romantic', 'view', 'street'],
+      badge: badge || (currentFavModalType === 'food' ? 'Món Bé Mê ⭐' : 'Quán Ruột Bé Mê ⭐'),
+      tip: note || 'Quán / món ruột của hai bạn, dắt bé đi ăn là hết quạu liền!',
+      isCustomFav: true
+    };
+    if (existingIdx !== -1) {
+      customMapRestaurants[existingIdx] = customItem;
+    } else {
+      customMapRestaurants.unshift(customItem);
+    }
+    saveCustomMapRestaurantsToStorage();
+    renderMapRestaurants();
+    if (leafletMap) renderLeafletOverlays();
+  }
+
   closeFavModal();
-  nbTab('fav');
+  if (currentScreen === 'notebook') {
+    nbTab('fav');
+  } else if (currentScreen === 'map') {
+    renderMapRestaurants();
+    const newCard = document.getElementById(`map-card-${targetId}`);
+    if (newCard) newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 }
 
 function deleteFavDish(id) {
@@ -7254,7 +7445,16 @@ function deleteFavDish(id) {
   if (idx !== -1) {
     const removed = favDishes.splice(idx, 1)[0];
     saveFavDishesToStorage();
+    // Also remove from customMapRestaurants if linked
+    const mIdx = customMapRestaurants.findIndex(m => m.favId === id || m.name === removed.title);
+    if (mIdx !== -1) {
+      customMapRestaurants.splice(mIdx, 1);
+      saveCustomMapRestaurantsToStorage();
+      renderMapRestaurants();
+      if (leafletMap) renderLeafletOverlays();
+    }
     renderFavList();
+    renderHomeFavList();
     showToast(`Đã xóa "${removed.title}" khỏi danh sách! 🗑️`);
   }
 }
