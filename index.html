@@ -2328,9 +2328,10 @@ function navigate(s){
       initLeafletMap();
       if (leafletMap) {
         leafletMap.invalidateSize();
+        leafletMap.setView([currentCenterCoords.lat, currentCenterCoords.lng], leafletMap.getZoom() || 15);
         renderLeafletOverlays();
       }
-    }, 150);
+    }, 160);
   }
   const floatWidget = document.getElementById('floating-wheel-widget');
   if (floatWidget) {
@@ -4190,6 +4191,12 @@ const areaCenterCoordinates = {
   'Hồng Ngự (Đồng Tháp)': { lat: 10.80788, lng: 105.34955 },
   'Bệnh viện Quốc tế Tâm Trí Hồng Ngự': { lat: 10.80788, lng: 105.34955 },
   'Bệnh viện Đa khoa Khu vực Hồng Ngự': { lat: 10.803663, lng: 105.351531 },
+  'Bệnh viện Đa khoa Tâm Trí Đồng Tháp': { lat: 10.463512, lng: 105.632514 },
+  'Bệnh viện Đa khoa Tâm Trí Sài Gòn': { lat: 10.831663, lng: 106.621566 },
+  'Bệnh viện Đa khoa Tâm Anh (Tân Bình)': { lat: 10.80665, lng: 106.66695 },
+  'Bệnh viện Quốc tế Tâm Anh': { lat: 10.80665, lng: 106.66695 },
+  'Bệnh viện Đa khoa Tâm Anh': { lat: 10.80665, lng: 106.66695 },
+  'Bệnh viện Tâm Anh': { lat: 10.80665, lng: 106.66695 },
   'Cà Mau': { lat: 9.1769, lng: 105.1524 },
   'Vĩnh Long': { lat: 10.2537, lng: 105.9722 },
   'Kiên Giang (Rạch Giá)': { lat: 10.0124, lng: 105.0809 },
@@ -7944,14 +7951,74 @@ function setQuickProfileAddress(addr, coords = null, title = null) {
 
 function goToMapAroundBe() {
   const beAddr = beProfile.address || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
-  selectArea(beAddr, beProfile.addressCoords || null);
+  const beCoords = (beProfile.addressCoords && beProfile.addressCoords.lat) ? beProfile.addressCoords : getCoordsForArea(beAddr);
+  
+  // 1. Chuyển sang màn hình Bản Đồ trước để container có kích thước hiển thị
   navigate('map');
-  showToast(`📍 Đang quét quán ngon quanh ${beProfile.name || 'Bé'} (${beProfile.addressTitle || 'Nhà bé'}) 💖`);
+
+  // 2. Cập nhật vị trí tâm quanh Bé
+  selectedAreaName = beAddr;
+  currentCenterCoords = { ...beCoords };
+
+  // Đảm bảo bán kính quét tối thiểu 3km - 5km để hiển thị đầy đủ quán ăn quanh Bé
+  const isHcmDistrict = beAddr.includes('TP. HCM') || beAddr.startsWith('Quận') || beAddr.startsWith('Bình Thạnh') || beAddr.startsWith('Phú Nhuận') || beAddr.startsWith('Tân Bình') || beAddr.startsWith('Thủ Đức');
+  if (!isHcmDistrict && selectedRadiusKm < 5) {
+    selectedRadiusKm = 5;
+  } else if (selectedRadiusKm < 3) {
+    selectedRadiusKm = 3;
+  }
+  const radiusLbl = document.getElementById('radius-lbl');
+  if (radiusLbl) radiusLbl.textContent = `< ${selectedRadiusKm}km quanh Bé`;
+  const liveRadius = document.getElementById('map-live-radius-indicator');
+  if (liveRadius) liveRadius.textContent = `< ${selectedRadiusKm}km quanh Bé`;
+
+  // Cập nhật nhãn khu vực trên thanh tìm kiếm bản đồ
+  const areaDisplayName = beProfile.addressTitle ? `${beProfile.addressTitle}: ${beAddr.split(',')[0]}` : beAddr;
+  const lbl = document.getElementById('area-lbl');
+  if (lbl) lbl.textContent = areaDisplayName;
+  const mapIndicator = document.getElementById('map-area-indicator');
+  if (mapIndicator) mapIndicator.textContent = beAddr;
+  const currEl = document.getElementById('current-selected-area-text');
+  if (currEl) currEl.textContent = beAddr;
+  const miniAddr = document.getElementById('map-be-address-mini');
+  if (miniAddr) miniAddr.textContent = `${beProfile.addressTitle || 'Nhà bé'} (${beAddr.split(',')[0]})`;
+
+  // 3. Render danh sách quán ngay lập tức
+  renderMapRestaurants();
+
+  // 4. Kích hoạt và di chuyển camera bản đồ Leaflet mượt mà đến đúng vị trí Bé
+  setTimeout(() => {
+    initLeafletMap();
+    if (leafletMap) {
+      leafletMap.invalidateSize();
+      leafletMap.setView([currentCenterCoords.lat, currentCenterCoords.lng], 15, { animate: true });
+      renderLeafletOverlays();
+      if (leafletUserMarker) {
+        leafletUserMarker.openPopup();
+      }
+    }
+  }, 180);
+
+  setTimeout(() => {
+    if (leafletMap) {
+      leafletMap.invalidateSize();
+      leafletMap.panTo([currentCenterCoords.lat, currentCenterCoords.lng]);
+    }
+  }, 420);
+
+  showToast(`📍 Đã kết nối bản đồ & quét quán ngon quanh ${beProfile.name || 'Bé'} (${beProfile.addressTitle || 'Vị trí của Bé'}) 💖`);
 }
 
 function selectBeSavedAddress() {
   const beAddr = beProfile.address || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
-  selectArea(beAddr, beProfile.addressCoords || null);
+  const beCoords = (beProfile.addressCoords && beProfile.addressCoords.lat) ? beProfile.addressCoords : getCoordsForArea(beAddr);
+  selectArea(beAddr, beCoords);
+  if (leafletMap) {
+    leafletMap.invalidateSize();
+    leafletMap.setView([beCoords.lat, beCoords.lng], 15, { animate: true });
+    renderLeafletOverlays();
+    if (leafletUserMarker) leafletUserMarker.openPopup();
+  }
   showToast(`🏡 Đã chọn địa chỉ của Bé: ${beAddr}`);
 }
 
@@ -8143,6 +8210,43 @@ function deduplicateFavDishes() {
   }
 }
 deduplicateFavDishes();
+
+function syncFavDishesToMapRestaurants() {
+  if (!Array.isArray(favDishes)) return;
+  let hasChange = false;
+  favDishes.forEach(fav => {
+    if (!fav || !fav.title) return;
+    const exists = customMapRestaurants.some(m => m.favId === fav.id || m.name.toLowerCase() === fav.title.toLowerCase());
+    if (!exists) {
+      const restCoords = getCoordsForArea(fav.address || (beProfile && beProfile.address) || selectedAreaName);
+      const customItem = {
+        id: 'custom_rest_' + (fav.id || Date.now()),
+        favId: fav.id,
+        name: fav.title,
+        food: fav.title,
+        emoji: isImageAvatar(fav.icon) ? '🍽️' : (fav.icon || '🍽️'),
+        area: fav.address || selectedAreaName,
+        lat: restCoords.lat + (Math.random() - 0.5) * 0.002,
+        lng: restCoords.lng + (Math.random() - 0.5) * 0.002,
+        address: fav.address || selectedAreaName,
+        rating: 5.0,
+        reviews: 1,
+        price: 'mid',
+        priceText: 'Quán ruột của hai bạn',
+        tags: ['ac', 'romantic', 'view', 'street'],
+        badge: fav.badge || 'Quán Ruột Của Nàng ❤️',
+        tip: fav.note || 'Quán ruột nàng dặn trong Sổ tay!',
+        isCustomFav: true
+      };
+      customMapRestaurants.unshift(customItem);
+      hasChange = true;
+    }
+  });
+  if (hasChange) {
+    saveCustomMapRestaurantsToStorage();
+  }
+}
+syncFavDishesToMapRestaurants();
 
 const favFoodIcons = ['🍜', '🍲', '🧋', '🍛', '🍗', '🥩', '🥟', '🍣', '🍕', '🦀', '🍧', '🍦', '☕', '🍔', '🥖', '🍢'];
 let currentEditingFavId = null;
