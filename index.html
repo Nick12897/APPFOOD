@@ -842,9 +842,16 @@
 <!-- ══ SCREEN: NOTEBOOK ══ -->
 <main id="sc-notebook" class="screen pt-16 pb-28 bg-surface">
   <div class="flex flex-col w-full max-w-md mx-auto px-margin space-y-space-lg pb-12">
-    <div class="flex items-center justify-between bg-primary-fixed text-on-primary-fixed px-space-md py-space-sm rounded-full shadow-sm mt-space-sm">
-      <div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings:'FILL' 1">favorite</span><span class="font-label-sm text-label-sm font-semibold">Tỉ lệ hiểu bé tháng này: 96%</span></div>
-      <span class="font-label-sm text-label-sm bg-primary text-on-primary px-space-xs py-0.5 rounded-full">Level: Bạn Trai Điểm 10</span>
+    <!-- Understanding Score Banner (Clickable) -->
+    <div id="nb-understanding-banner" onclick="openUnderstandingModal()" class="flex items-center justify-between bg-primary-fixed text-on-primary-fixed px-space-md py-space-sm rounded-full shadow-sm mt-space-sm cursor-pointer hover:brightness-95 active:scale-98 transition-all group" title="Bấm để xem chi tiết Bảng Điểm Thấu Hiểu Bé">
+      <div class="flex items-center gap-space-xs">
+        <span class="material-symbols-outlined text-[18px] text-primary group-hover:scale-110 transition-transform" style="font-variation-settings:'FILL' 1">favorite</span>
+        <span id="nb-understanding-text" class="font-label-sm text-label-sm font-semibold">Tỉ lệ hiểu bé tháng này: 96%</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span id="nb-understanding-level" class="font-label-sm text-label-sm bg-primary text-on-primary px-space-xs py-0.5 rounded-full font-bold shadow-2xs">Level: Bạn Trai Điểm 10</span>
+        <span class="material-symbols-outlined text-[16px] opacity-70 group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+      </div>
     </div>
     <div><span class="font-headline-lg-mobile text-headline-lg-mobile text-primary block">Sổ tay: Ăn Gì Bé Không Quạu 📖</span><p class="font-body-md text-body-md text-on-surface-variant mt-1">Lưu lại để không bao giờ bị hỏi: "Sao anh không nhớ em thích gì?"</p></div>
     <!-- Profile Card (Editable) -->
@@ -1095,6 +1102,190 @@
     </button>
   </div>
 </nav>
+
+<!-- ══ UNDERSTANDING SCORE MODAL (BẢNG ĐIỂM THẤU HIỂU NÀNG) ══ -->
+<div id="understanding-score-modal" onclick="if(event.target === this) closeUnderstandingModal()" class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md" style="display: none;">
+  <div class="bg-surface rounded-3xl p-space-lg w-full max-w-md max-h-[88vh] overflow-y-auto flex flex-col shadow-2xl space-y-4 border border-outline-variant/15">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-3 border-b border-surface-container-high">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-white text-xl shadow-xs">
+          📊
+        </div>
+        <div>
+          <h3 class="font-headline-sm text-base text-on-surface font-bold flex items-center gap-1.5">
+            Bảng Điểm Thấu Hiểu Nàng
+            <span class="text-xs">💖</span>
+          </h3>
+          <span class="font-label-sm text-[11px] text-on-surface-variant">Chỉ số tinh tế &amp; chu đáo của bạn trai</span>
+        </div>
+      </div>
+      <button type="button" onclick="closeUnderstandingModal()" class="w-8 h-8 rounded-full bg-surface-container hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Overall Score Hero Card -->
+    <div class="relative bg-gradient-to-br from-primary-fixed/40 via-surface-container-lowest to-secondary-fixed/30 rounded-2xl p-4 border border-primary/20 shadow-xs flex flex-col items-center text-center space-y-2 overflow-hidden">
+      <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-primary/10 rounded-full blur-xl pointer-events-none"></div>
+      
+      <!-- Big Score Pill -->
+      <div class="flex items-baseline gap-1">
+        <span id="score-modal-total" class="text-4xl font-extrabold text-primary tracking-tight">96%</span>
+        <span class="text-xs font-bold text-on-surface-variant uppercase">Độ thấu hiểu</span>
+      </div>
+
+      <!-- Rank Badge -->
+      <div id="score-modal-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-on-primary font-bold text-xs shadow-2xs">
+        🏆 Level: Bạn Trai Điểm 10
+      </div>
+
+      <!-- Description / Sweet commentary -->
+      <p id="score-modal-desc" class="text-xs text-on-surface-variant leading-relaxed max-w-[90%]">
+        Tuyệt đỉnh bạn trai! Mọi gu ăn uống, toạ độ bé ở hay điều bé ghét bạn đều nằm lòng. Bé thương bạn nhất trần đời! 💕
+      </p>
+
+      <!-- Overall progress bar -->
+      <div class="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden mt-1 p-0.5 border border-outline-variant/15">
+        <div id="score-modal-bar" class="h-full bg-gradient-to-r from-secondary to-primary rounded-full transition-all duration-500" style="width: 96%"></div>
+      </div>
+    </div>
+
+    <!-- Breakdown Details Title -->
+    <div class="flex items-center justify-between pt-1">
+      <span class="font-label-md text-xs font-bold text-on-surface uppercase tracking-wider">Chi tiết tiêu chí thấu hiểu</span>
+      <span class="text-[11px] text-primary font-semibold">Tối đa 100 điểm</span>
+    </div>
+
+    <!-- Criteria Breakdown Items -->
+    <div class="space-y-2.5 text-xs">
+
+      <!-- Item 1: Vị trí & Toạ độ Bé (20 điểm) -->
+      <div class="p-3 rounded-2xl bg-surface-container-lowest border border-outline-variant/15 flex items-start justify-between gap-3 shadow-2xs">
+        <div class="flex items-start gap-2.5 flex-1 min-w-0">
+          <div class="w-8 h-8 rounded-xl bg-primary-fixed/50 flex items-center justify-center text-primary shrink-0 text-base">
+            🏠
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-on-surface text-xs">Vị trí &amp; Toạ độ Bé Yêu</span>
+              <span id="score-item-addr-pts" class="font-bold text-primary font-mono text-[11px]">20/20 đ</span>
+            </div>
+            <p id="score-item-addr-status" class="text-[11px] text-on-surface-variant mt-0.5 truncate">Đã kết nối GPS chính xác</p>
+            <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-1.5">
+              <div id="score-item-addr-bar" class="bg-primary h-full rounded-full transition-all" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="closeUnderstandingModal(); openProfileEditModal()" class="px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-primary-fixed hover:text-primary text-[11px] font-bold text-on-surface-variant shrink-0 self-center transition-colors">
+          Sửa
+        </button>
+      </div>
+
+      <!-- Item 2: Quán & Món Ruột Nàng Mê (30 điểm) -->
+      <div class="p-3 rounded-2xl bg-surface-container-lowest border border-outline-variant/15 flex items-start justify-between gap-3 shadow-2xs">
+        <div class="flex items-start gap-2.5 flex-1 min-w-0">
+          <div class="w-8 h-8 rounded-xl bg-secondary-fixed/50 flex items-center justify-center text-secondary shrink-0 text-base">
+            🍜
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-on-surface text-xs">Quán &amp; Món Ăn Ruột (Sổ tay)</span>
+              <span id="score-item-fav-pts" class="font-bold text-primary font-mono text-[11px]">30/30 đ</span>
+            </div>
+            <p id="score-item-fav-status" class="text-[11px] text-on-surface-variant mt-0.5 truncate">Đã lưu 5/5 món ruột</p>
+            <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-1.5">
+              <div id="score-item-fav-bar" class="bg-secondary h-full rounded-full transition-all" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="closeUnderstandingModal(); openAddFavModal()" class="px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-primary-fixed hover:text-primary text-[11px] font-bold text-on-surface-variant shrink-0 self-center transition-colors">
+          + Quán
+        </button>
+      </div>
+
+      <!-- Item 3: Khẩu Vị Nước/Khô, Cay & Trà Sữa (25 điểm) -->
+      <div class="p-3 rounded-2xl bg-surface-container-lowest border border-outline-variant/15 flex items-start justify-between gap-3 shadow-2xs">
+        <div class="flex items-start gap-2.5 flex-1 min-w-0">
+          <div class="w-8 h-8 rounded-xl bg-tertiary-fixed/50 flex items-center justify-center text-tertiary shrink-0 text-base">
+            🧋
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-on-surface text-xs">Khẩu Vị &amp; Công Thức Trà Sữa</span>
+              <span id="score-item-taste-pts" class="font-bold text-primary font-mono text-[11px]">25/25 đ</span>
+            </div>
+            <p id="score-item-taste-status" class="text-[11px] text-on-surface-variant mt-0.5 truncate">Đã hiểu rõ độ cay, nước &amp; trà sữa</p>
+            <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-1.5">
+              <div id="score-item-taste-bar" class="bg-tertiary h-full rounded-full transition-all" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="closeUnderstandingModal(); openProfileEditModal()" class="px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-primary-fixed hover:text-primary text-[11px] font-bold text-on-surface-variant shrink-0 self-center transition-colors">
+          Sửa gu
+        </button>
+      </div>
+
+      <!-- Item 4: Vùng Cấm Địa - Blacklist (15 điểm) -->
+      <div class="p-3 rounded-2xl bg-surface-container-lowest border border-outline-variant/15 flex items-start justify-between gap-3 shadow-2xs">
+        <div class="flex items-start gap-2.5 flex-1 min-w-0">
+          <div class="w-8 h-8 rounded-xl bg-error-container/40 flex items-center justify-center text-error shrink-0 text-base">
+            🚫
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-on-surface text-xs">Vùng Cấm Địa (Món né gấp)</span>
+              <span id="score-item-black-pts" class="font-bold text-primary font-mono text-[11px]">15/15 đ</span>
+            </div>
+            <p id="score-item-black-status" class="text-[11px] text-on-surface-variant mt-0.5 truncate">Đã ghi nhớ các món bé ghét</p>
+            <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-1.5">
+              <div id="score-item-black-bar" class="bg-error h-full rounded-full transition-all" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="closeUnderstandingModal(); nbTab('black')" class="px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-primary-fixed hover:text-primary text-[11px] font-bold text-on-surface-variant shrink-0 self-center transition-colors">
+          Xem né
+        </button>
+      </div>
+
+      <!-- Item 5: Tinh Ý Cảm Xúc & Tâm Trạng (10 điểm) -->
+      <div class="p-3 rounded-2xl bg-surface-container-lowest border border-outline-variant/15 flex items-start justify-between gap-3 shadow-2xs">
+        <div class="flex items-start gap-2.5 flex-1 min-w-0">
+          <div class="w-8 h-8 rounded-xl bg-primary-fixed/40 flex items-center justify-center text-primary shrink-0 text-base">
+            🎭
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-on-surface text-xs">Giải Mã Tâm Lý &amp; Bí Kíp Dỗ Dành</span>
+              <span id="score-item-mood-pts" class="font-bold text-primary font-mono text-[11px]">10/10 đ</span>
+            </div>
+            <p id="score-item-mood-status" class="text-[11px] text-on-surface-variant mt-0.5 truncate">Biết dỗ ngọt khi đói &amp; dỗi</p>
+            <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-1.5">
+              <div id="score-item-mood-bar" class="bg-primary h-full rounded-full transition-all" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="closeUnderstandingModal(); openComfortTipsModal()" class="px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-primary-fixed hover:text-primary text-[11px] font-bold text-on-surface-variant shrink-0 self-center transition-colors">
+          Mẹo dỗ
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Motivational Footer Tip -->
+    <div class="bg-secondary-fixed/30 rounded-xl p-3 flex items-start gap-2 text-xs text-on-secondary-fixed-variant">
+      <span class="text-base shrink-0">💡</span>
+      <p class="leading-relaxed">
+        <strong>Mẹo cho bạn trai:</strong> Cập nhật thêm nhiều quán ruột bé thích và thuộc lòng các món bé ghét để giữ vững danh hiệu <strong>Bạn Trai Điểm 10</strong> nhé!
+      </p>
+    </div>
+
+    <!-- Bottom Button -->
+    <button type="button" onclick="closeUnderstandingModal()" class="w-full py-3 rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold shadow-md hover:brightness-105 active:scale-95 transition-all">
+      Đã hiểu, anh sẽ luôn chiều bé! 💕
+    </button>
+  </div>
+</div>
 
 <!-- ══ PROFILE EDIT MODAL ══ -->
 <div id="profile-edit-modal" class="fixed inset-0 z-50 bg-inverse-surface/50 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md flex">
@@ -6971,6 +7162,193 @@ function renderProfile() {
       blTags.innerHTML += `<span class="bg-error text-on-error px-2.5 py-0.5 rounded-full font-label-sm text-xs font-semibold">🚫 ${t}</span>`;
     });
   }
+
+  // Update understanding score banner
+  updateUnderstandingBanner();
+}
+
+// ═══════════════════════════════════════════════════════════
+// BẢNG ĐIỂM THẤU HIỂU NÀNG (UNDERSTANDING SCORE)
+// ═══════════════════════════════════════════════════════════
+function calculateUnderstandingScore() {
+  // 1. Địa chỉ & Toạ độ bé (20 điểm tối đa)
+  let addrPts = 0;
+  let addrStatus = 'Chưa lưu địa chỉ';
+  if (beProfile && beProfile.address && beProfile.address.trim()) {
+    if (beProfile.addressCoords && typeof beProfile.addressCoords.lat === 'number') {
+      addrPts = 20;
+      addrStatus = `Đã kết nối GPS (${beProfile.addressTitle || 'Nhà bé'})`;
+    } else {
+      addrPts = 10;
+      addrStatus = 'Đã có địa chỉ, chưa kết nối toạ độ GPS';
+    }
+  }
+
+  // 2. Quán & Món ăn ruột trong Sổ tay (30 điểm tối đa: 6 điểm / món, tối đa 5 món)
+  const favCount = (typeof favDishes !== 'undefined' && Array.isArray(favDishes)) ? favDishes.length : 0;
+  const favPts = Math.min(30, favCount * 6);
+  const favStatus = favCount >= 5 
+    ? `Đã lưu ${favCount} quán & món ruột (Tuyệt đỉnh!)` 
+    : (favCount > 0 ? `Đã lưu ${favCount}/5 quán & món ruột` : 'Chưa có quán hoặc món ruột nào');
+
+  // 3. Khẩu vị & Trà sữa (25 điểm tối đa)
+  let tastePts = 0;
+  if (beProfile && beProfile.waterPercent !== undefined && beProfile.waterPercent !== null) tastePts += 8;
+  if (beProfile && beProfile.spicyLevel !== undefined && beProfile.spicyLevel !== null) tastePts += 8;
+  if (beProfile && beProfile.milkTeaFormula && beProfile.milkTeaFormula.trim().length > 3) tastePts += 9;
+  const tasteStatus = tastePts >= 25 
+    ? 'Đã nhớ chuẩn tỉ lệ nước, cay & công thức trà sữa' 
+    : 'Chưa cập nhật đầy đủ gu ăn uống của bé';
+
+  // 4. Vùng cấm địa - Blacklist (15 điểm tối đa)
+  const blTagsCount = (beProfile && Array.isArray(beProfile.blacklistTags) ? beProfile.blacklistTags.length : 0) + 
+                      ((typeof blackDishes !== 'undefined' && Array.isArray(blackDishes)) ? blackDishes.length : 0);
+  let blackPts = 0;
+  let blackStatus = 'Chưa ghi chú món né';
+  if (blTagsCount >= 2) {
+    blackPts = 15;
+    blackStatus = `Đã nhớ ${blTagsCount} điều cấm kỵ (Không lo bé giận)`;
+  } else if (blTagsCount === 1) {
+    blackPts = 8;
+    blackStatus = 'Đã nhớ 1 điều cấm kỵ (Nên bổ sung thêm)';
+  }
+
+  // 5. Tinh ý cảm xúc & Tâm trạng (10 điểm tối đa)
+  const moodPts = 10;
+  const moodStatus = 'Luôn sẵn sàng giải mã cơn đói của nàng';
+
+  const total = Math.min(100, Math.max(0, addrPts + favPts + tastePts + blackPts + moodPts));
+
+  let level = '🏆 Level: Bạn Trai Điểm 10';
+  let levelShort = 'Bạn Trai Điểm 10';
+  let levelDesc = 'Tuyệt đỉnh bạn trai! Mọi gu ăn uống, toạ độ nàng ở hay điều nàng ghét bạn đều nằm lòng. Bé thương bạn nhất trần đời! 💕';
+  let badgeColor = 'bg-primary text-on-primary';
+
+  if (total >= 95) {
+    level = '🏆 Level: Bạn Trai Điểm 10';
+    levelShort = 'Bạn Trai Điểm 10';
+    levelDesc = 'Tuyệt đỉnh bạn trai! Mọi gu ăn uống, toạ độ nàng ở hay điều nàng ghét bạn đều nằm lòng. Bé thương bạn nhất trần đời! 💕';
+    badgeColor = 'bg-primary text-on-primary';
+  } else if (total >= 80) {
+    level = '🌟 Level: Bạn Trai Tinh Tế';
+    levelShort = 'Bạn Trai Tinh Tế';
+    levelDesc = 'Rất tinh tế và chu đáo! Đã nắm gần như trọn vẹn sở thích của bé, chỉ cần nạp thêm 1 vài món ruột nữa là đạt điểm 10!';
+    badgeColor = 'bg-amber-600 text-white';
+  } else if (total >= 60) {
+    level = '✨ Level: Đang Cố Gắng';
+    levelShort = 'Đang Cố Gắng';
+    levelDesc = 'Đã nắm được các thói quen cơ bản, nhưng cần chăm chỉ cập nhật thêm các quán bé thích và món bé ghét để không bị hỏi khó nha!';
+    badgeColor = 'bg-indigo-600 text-white';
+  } else {
+    level = '⚠️ Level: Cần Nạp Thêm Gu';
+    levelShort = 'Cần Nạp Thêm Gu';
+    levelDesc = 'Báo động đỏ! Bé sắp quạu vì anh chưa nhớ hết gu của nàng rồi. Hãy mau bấm vào các mục bên dưới để hoàn thiện hồ sơ nhé!';
+    badgeColor = 'bg-error text-on-error';
+  }
+
+  return {
+    total,
+    level,
+    levelShort,
+    levelDesc,
+    badgeColor,
+    breakdown: {
+      addr: { pts: addrPts, max: 20, status: addrStatus },
+      fav: { pts: favPts, max: 30, status: favStatus },
+      taste: { pts: tastePts, max: 25, status: tasteStatus },
+      black: { pts: blackPts, max: 15, status: blackStatus },
+      mood: { pts: moodPts, max: 10, status: moodStatus }
+    }
+  };
+}
+
+function updateUnderstandingBanner() {
+  const scoreData = calculateUnderstandingScore();
+  const textEl = document.getElementById('nb-understanding-text');
+  if (textEl) {
+    textEl.textContent = `Tỉ lệ hiểu bé tháng này: ${scoreData.total}%`;
+  }
+  const lvlEl = document.getElementById('nb-understanding-level');
+  if (lvlEl) {
+    lvlEl.textContent = `Level: ${scoreData.levelShort}`;
+  }
+}
+
+function openUnderstandingModal() {
+  const scoreData = calculateUnderstandingScore();
+  
+  // Total score & level
+  const totalEl = document.getElementById('score-modal-total');
+  if (totalEl) totalEl.textContent = `${scoreData.total}%`;
+
+  const badgeEl = document.getElementById('score-modal-badge');
+  if (badgeEl) {
+    badgeEl.textContent = scoreData.level;
+    badgeEl.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs shadow-2xs ${scoreData.badgeColor}`;
+  }
+
+  const descEl = document.getElementById('score-modal-desc');
+  if (descEl) descEl.textContent = scoreData.levelDesc;
+
+  const barEl = document.getElementById('score-modal-bar');
+  if (barEl) barEl.style.width = `${scoreData.total}%`;
+
+  // Breakdown items
+  const b = scoreData.breakdown;
+
+  // Addr
+  const addrPtsEl = document.getElementById('score-item-addr-pts');
+  if (addrPtsEl) addrPtsEl.textContent = `${b.addr.pts}/${b.addr.max} đ`;
+  const addrStatusEl = document.getElementById('score-item-addr-status');
+  if (addrStatusEl) addrStatusEl.textContent = b.addr.status;
+  const addrBarEl = document.getElementById('score-item-addr-bar');
+  if (addrBarEl) addrBarEl.style.width = `${(b.addr.pts / b.addr.max) * 100}%`;
+
+  // Fav
+  const favPtsEl = document.getElementById('score-item-fav-pts');
+  if (favPtsEl) favPtsEl.textContent = `${b.fav.pts}/${b.fav.max} đ`;
+  const favStatusEl = document.getElementById('score-item-fav-status');
+  if (favStatusEl) favStatusEl.textContent = b.fav.status;
+  const favBarEl = document.getElementById('score-item-fav-bar');
+  if (favBarEl) favBarEl.style.width = `${(b.fav.pts / b.fav.max) * 100}%`;
+
+  // Taste
+  const tastePtsEl = document.getElementById('score-item-taste-pts');
+  if (tastePtsEl) tastePtsEl.textContent = `${b.taste.pts}/${b.taste.max} đ`;
+  const tasteStatusEl = document.getElementById('score-item-taste-status');
+  if (tasteStatusEl) tasteStatusEl.textContent = b.taste.status;
+  const tasteBarEl = document.getElementById('score-item-taste-bar');
+  if (tasteBarEl) tasteBarEl.style.width = `${(b.taste.pts / b.taste.max) * 100}%`;
+
+  // Blacklist
+  const blackPtsEl = document.getElementById('score-item-black-pts');
+  if (blackPtsEl) blackPtsEl.textContent = `${b.black.pts}/${b.black.max} đ`;
+  const blackStatusEl = document.getElementById('score-item-black-status');
+  if (blackStatusEl) blackStatusEl.textContent = b.black.status;
+  const blackBarEl = document.getElementById('score-item-black-bar');
+  if (blackBarEl) blackBarEl.style.width = `${(b.black.pts / b.black.max) * 100}%`;
+
+  // Mood
+  const moodPtsEl = document.getElementById('score-item-mood-pts');
+  if (moodPtsEl) moodPtsEl.textContent = `${b.mood.pts}/${b.mood.max} đ`;
+  const moodStatusEl = document.getElementById('score-item-mood-status');
+  if (moodStatusEl) moodStatusEl.textContent = b.mood.status;
+  const moodBarEl = document.getElementById('score-item-mood-bar');
+  if (moodBarEl) moodBarEl.style.width = `${(b.mood.pts / b.mood.max) * 100}%`;
+
+  const modal = document.getElementById('understanding-score-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
+}
+
+function closeUnderstandingModal() {
+  const modal = document.getElementById('understanding-score-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
 }
 
 function updateAvatarPreview() {
@@ -8254,6 +8632,7 @@ function renderFavList() {
   const list = document.getElementById('fav-list');
   const countEl = document.getElementById('fav-count');
   if (countEl) countEl.textContent = `${favDishes.length} quán ruột`;
+  updateUnderstandingBanner();
   if (!list) return;
 
   if (favDishes.length === 0) {
@@ -8763,6 +9142,7 @@ function renderBlackList() {
   const list = document.getElementById('black-list');
   const countEl = document.getElementById('black-count');
   if (countEl) countEl.textContent = `${blackDishes.length} món`;
+  updateUnderstandingBanner();
   if (!list) return;
 
   if (blackDishes.length === 0) {
