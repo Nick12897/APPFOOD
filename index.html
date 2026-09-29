@@ -6130,16 +6130,35 @@ function renderLeafletOverlays() {
   leafletMarkersLayer.clearLayers();
   restaurantMarkersMap = {};
 
-  // 1. User Position Marker ("Bé yêu 💕")
-  const isBeLocation = (selectedAreaName === beProfile.address || selectedAreaName.includes(beProfile.address));
+  // 1. User Position Marker (Vị trí của Bé / Điểm tìm quán)
+  const beCoords = (beProfile && beProfile.addressCoords && typeof beProfile.addressCoords.lat === 'number') 
+    ? beProfile.addressCoords 
+    : null;
+  const isCoordBe = beCoords && (
+    Math.abs(currentCenterCoords.lat - beCoords.lat) < 0.003 && 
+    Math.abs(currentCenterCoords.lng - beCoords.lng) < 0.003
+  );
+  const isNameBe = selectedAreaName && beProfile.address && (
+    selectedAreaName.toLowerCase().includes(beProfile.address.toLowerCase()) || 
+    beProfile.address.toLowerCase().includes(selectedAreaName.toLowerCase()) ||
+    (beProfile.addressTitle && selectedAreaName.toLowerCase().includes(beProfile.addressTitle.toLowerCase()))
+  );
+  const isBeLocation = Boolean(isCoordBe || isNameBe);
+
   const isImg = isImageAvatar(beProfile.avatar);
   const avatarContent = isImg 
     ? `<img src="${beProfile.avatar}" alt="Bé" class="w-full h-full object-cover rounded-full" />` 
     : `<span class="text-xs leading-none">${beProfile.avatar || '🐰'}</span>`;
 
-  const pinLabel = isBeLocation 
-    ? `📍 ${beProfile.addressTitle || 'Nhà bé'} 💕` 
-    : `📍 2 đứa mình 💕`;
+  let pinLabel = '';
+  if (isBeLocation) {
+    pinLabel = beProfile.addressTitle 
+      ? `📍 ${beProfile.addressTitle}` 
+      : `📍 Vị trí của ${beProfile.name || 'Bé'} 💕`;
+  } else {
+    const areaShort = selectedAreaName ? selectedAreaName.split(',')[0].trim() : 'Vị trí tìm quán';
+    pinLabel = `📍 ${areaShort}`;
+  }
 
   const userIcon = L.divIcon({
     className: 'custom-leaflet-pin',
