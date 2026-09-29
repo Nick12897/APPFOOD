@@ -1190,6 +1190,8 @@
         <div class="pt-0.5">
           <span class="text-[10px] text-on-surface-variant block mb-1 font-semibold">Gợi ý địa điểm & bệnh viện nhanh:</span>
           <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-[11px]">
+            <button type="button" onclick="setQuickProfileAddress('Bệnh viện Quốc tế Tâm Trí Hồng Ngự', {lat: 10.808819, lng: 105.348802}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Hồng Ngự (Đồng Tháp)</button>
+            <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Tâm Trí Đồng Tháp', {lat: 10.463512, lng: 105.632514}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Đồng Tháp (Cao Lãnh)</button>
             <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Tâm Trí Sài Gòn', {lat: 10.831663, lng: 106.621566}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Tâm Trí Sài Gòn</button>
             <button type="button" onclick="setQuickProfileAddress('Bệnh viện Đa khoa Hồng Ngọc - Yên Ninh', {lat: 21.04452, lng: 105.84271}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Hồng Ngọc HN</button>
             <button type="button" onclick="setQuickProfileAddress('Bệnh viện Chợ Rẫy', {lat: 10.75782, lng: 106.65961}, 'Chỗ làm của Bé 🏥')" class="px-2.5 py-1 rounded-full bg-surface hover:bg-primary hover:text-white font-semibold shrink-0 transition-colors border border-outline-variant/20 shadow-2xs">🏥 BV Chợ Rẫy</button>
@@ -4807,6 +4809,79 @@ const mapRestaurantsDb = [
     tags: ['street', 'ac'],
     badge: 'Bún chả nướng than hoa nức mũi 🥩',
     tip: 'Chả viên bọc lá chuối nướng xém cạnh, nước chấm đu đủ cà rốt chua ngọt thanh tao chuẩn vị người Hà thành.'
+  },
+  // Quanh Bệnh viện Quốc tế Tâm Trí Hồng Ngự (Nguyễn Tất Thành, TP. Hồng Ngự, Đồng Tháp)
+  {
+    id: 'lau-ca-linh-hong-ngu',
+    name: 'Quán Lẩu Cá Linh Bông Điên Điển Bờ Đông',
+    food: 'Lẩu Cá Linh Non Nấu Mẻ Bông Điên Điển',
+    emoji: '🍲',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.8095,
+    lng: 105.3478,
+    address: 'Bờ kè Nguyễn Tất Thành, KĐT Bờ Đông, TP. Hồng Ngự (~120m từ BV Tâm Trí Hồng Ngự)',
+    rating: 4.9,
+    reviews: 580,
+    price: 'cheap',
+    priceText: '60k - 90k/người',
+    tags: ['street', 'view'],
+    badge: 'Sát cạnh BV Tâm Trí Hồng Ngự 🏥',
+    tip: 'Cá linh non béo ngậy đầu mùa nấu nước lẩu chua thanh, nhúng bông điên điển vàng ươm giòn ngọt ngây ngất.'
+  },
+  {
+    id: 'com-tam-long-trieu-hong-ngu',
+    name: 'Cơm Tấm Sườn Nướng Long Triều',
+    food: 'Cơm Tấm Sườn Cọng Nướng Mỡ Hành Hạt Sen',
+    emoji: '🍛',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.8078,
+    lng: 105.3495,
+    address: '45 Nguyễn Tất Thành, Phường An Thạnh, TP. Hồng Ngự (~110m từ BV Tâm Trí Hồng Ngự)',
+    rating: 4.8,
+    reviews: 420,
+    price: 'cheap',
+    priceText: '35k - 50k/người',
+    tags: ['street'],
+    badge: 'Cơm tấm sườn cọng miền Tây 🥩',
+    tip: 'Sườn ướp nước dừa xiêm nướng than hồng thơm nức mũi, thêm chả trứng béo mềm ăn kèm dưa chua củ kiệu.'
+  },
+  {
+    id: 'hu-tieu-sa-dec-nam-vang-hong-ngu',
+    name: 'Hủ Tiếu Khô Sa Đéc Bà Năm',
+    food: 'Hủ Tiếu Sa Đéc Khô Sốt Tương Đen Đặc Biệt',
+    emoji: '🍜',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.8082,
+    lng: 105.3465,
+    address: '18 Lê Duẩn, Phường An Thạnh, TP. Hồng Ngự (~220m từ BV Tâm Trí Hồng Ngự)',
+    rating: 4.9,
+    reviews: 690,
+    price: 'cheap',
+    priceText: '35k - 55k/người',
+    tags: ['street', 'ac'],
+    badge: 'Hủ tiếu Sa Đéc chính gốc 🍜',
+    tip: 'Sợi hủ tiếu bột gạo Sa Đéc dai mềm thấm sốt tương đậm đà, tôm sú tươi rói và thịt xá xíu thái mỏng ngọt lịm.'
+  },
+  {
+    id: 'tra-sua-bo-ke-song-tien-hong-ngu',
+    name: 'Cà Phê & Trà Sữa Bờ Đông Sunset',
+    food: 'Trà Sữa Sen Vàng Đồng Tháp Phô Mai Tươi',
+    emoji: '🧋',
+    area: 'TP. Hồng Ngự, Đồng Tháp',
+    city: 'dongthap',
+    lat: 10.8092,
+    lng: 105.3486,
+    address: 'Khu Đô Thị Bờ Đông, TP. Hồng Ngự (~50m đối diện BV Tâm Trí Hồng Ngự)',
+    rating: 4.8,
+    reviews: 340,
+    price: 'cheap',
+    priceText: '25k - 40k/ly',
+    tags: ['ac', 'view'],
+    badge: 'Nước mát giải nhiệt cho Bé 🧋',
+    tip: 'Hạt sen Đồng Tháp ninh mềm bùi béo kết hợp trà ô long thanh mát và lớp kem phô mai bồng bềnh ngọt dịu.'
   }
 ];
 
@@ -5951,6 +6026,51 @@ function openProfileEditModal() {
 const localAddressDirectory = [
   // Hospitals & Clinics (Bệnh viện & Phòng khám)
   {
+    name: 'Bệnh viện Quốc tế Tâm Trí Hồng Ngự',
+    aliases: ['tam tri hong ngu', 'benh vien tam tri hong ngu', 'quoc te tam tri hong ngu', 'tam tri dong thap', 'hong ngu dong thap', 'nguyen tat thanh hong ngu', 'tam tri'],
+    address: 'Số 12 Đường Nguyễn Tất Thành, Khu đô thị Bờ Đông, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.808819,
+    lng: 105.348802
+  },
+  {
+    name: 'Bệnh viện Đa khoa Tâm Trí Đồng Tháp',
+    aliases: ['tam tri dong thap', 'benh vien tam tri dong thap', 'tam tri cao lanh', 'cao lanh dong thap', 'quoc lo 30', 'tam tri'],
+    address: 'Số 700 Quốc lộ 30, Phường Mỹ Ngãi, TP. Cao Lãnh, Tỉnh Đồng Tháp',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.463512,
+    lng: 105.632514
+  },
+  {
+    name: 'Bệnh viện Đa khoa Khu vực Hồng Ngự',
+    aliases: ['benh vien hong ngu', 'bv hong ngu', 'hong ngu dong thap', 'le duan hong ngu'],
+    address: 'Đường Lê Duẩn, Phường An Thạnh, TP. Hồng Ngự, Tỉnh Đồng Tháp',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.803512,
+    lng: 105.340215
+  },
+  {
+    name: 'Bệnh viện Đa khoa Tỉnh Đồng Tháp',
+    aliases: ['benh vien dong thap', 'bv dong thap', 'cao lanh dong thap'],
+    address: 'Đường Mai Văn Khải, Xã Mỹ Tân, TP. Cao Lãnh, Tỉnh Đồng Tháp',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.472514,
+    lng: 105.628512
+  },
+  {
+    name: 'Bệnh viện Đa khoa Sa Đéc',
+    aliases: ['benh vien sa dec', 'bv sa dec', 'sa dec dong thap'],
+    address: 'Số 153 Đường Hùng Vương, Khóm 1, Phường 1, TP. Sa Đéc, Tỉnh Đồng Tháp',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 10.298512,
+    lng: 105.759514
+  },
+  {
     name: 'Bệnh viện Đa khoa Tâm Trí Sài Gòn',
     aliases: ['tam tri', 'benh vien tam tri', 'bv tam tri', 'tam tri sai gon', 'quoc te tam tri', 'truong chinh', 'tan thoi nhat'],
     address: '171/3 Trường Chinh, Phường Tân Thới Nhất, Quận 12, TP. Hồ Chí Minh',
@@ -5958,6 +6078,24 @@ const localAddressDirectory = [
     icon: '🏥',
     lat: 10.831663,
     lng: 106.621566
+  },
+  {
+    name: 'Bệnh viện Đa khoa Tâm Trí Đà Nẵng',
+    aliases: ['tam tri da nang', 'benh vien tam tri da nang', 'cam le da nang', 'tam tri'],
+    address: '64 Cách Mạng Tháng 8, Phường Khuê Trung, Quận Cẩm Lệ, TP. Đà Nẵng',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 16.031512,
+    lng: 108.209815
+  },
+  {
+    name: 'Bệnh viện Đa khoa Tâm Trí Nha Trang',
+    aliases: ['tam tri nha trang', 'benh vien tam tri nha trang', 'phuoc long nha trang', 'tam tri'],
+    address: '57-59 Cao Thắng, Phường Phước Long, TP. Nha Trang, Tỉnh Khánh Hòa',
+    type: 'hospital',
+    icon: '🏥',
+    lat: 12.221512,
+    lng: 109.182514
   },
   {
     name: 'Bệnh viện Đa khoa Hồng Ngọc - Yên Ninh',
@@ -6457,27 +6595,58 @@ function handleProfileAddressInput(rawVal) {
   if (!sugBox) return;
 
   if (query.length < 1) {
-    const topFeatured = localAddressDirectory.slice(0, 5);
+    const topFeatured = localAddressDirectory.slice(0, 6);
     renderProfileAddressSuggestions(topFeatured, '');
     if (spinner) spinner.classList.add('hidden');
     return;
   }
 
-  // 1. Instant local POI directory match
+  // 1. Instant local POI directory match with intelligent token & bi-gram scoring
   const cleanQ = removeVietnameseDiacritics(query);
-  const qTokens = cleanQ.split(/\s+/).filter(t => t.length > 1);
+  const STOP_WORDS = new Set(['benh', 'vien', 'bv', 'duong', 'quan', 'huyen', 'thi', 'xa', 'thanh', 'pho', 'tp', 'tinh', 'phuong', 'khu', 'vuc', 'so', 'nha', 'quoc', 'te', 'khoa', 'gan', 'o', 'va', 'tai']);
+  const allTokens = cleanQ.split(/[\s,.-]+/).filter(t => t.length > 1);
+  const contentTokens = allTokens.filter(t => !STOP_WORDS.has(t));
+  const effectiveTokens = contentTokens.length > 0 ? contentTokens : allTokens;
 
   const localMatches = localAddressDirectory.map(item => {
     const hay = removeVietnameseDiacritics(item.name + ' ' + item.address + ' ' + (item.aliases || []).join(' '));
     let score = 0;
-    if (hay.includes(cleanQ)) score += 100;
-    qTokens.forEach(tok => {
-      if (hay.includes(tok)) score += 15;
-    });
-    return { ...item, score, source: 'local' };
-  }).filter(r => r.score > 0).sort((a, b) => b.score - a.score).slice(0, 6);
 
-  renderProfileAddressSuggestions(localMatches, query);
+    // Direct full phrase match
+    if (hay.includes(cleanQ)) score += 500;
+
+    // Multi-word sequence match (e.g. 'tam tri', 'hong ngu', 'dong thap', 'cao lanh')
+    for (let i = 0; i < allTokens.length - 1; i++) {
+      const pair = allTokens[i] + ' ' + allTokens[i+1];
+      if (hay.includes(pair)) score += 120;
+    }
+
+    // Token match
+    let matchedContent = 0;
+    effectiveTokens.forEach(tok => {
+      if (hay.includes(tok)) {
+        score += 40;
+        matchedContent++;
+      }
+    });
+
+    // Minimum required matched content tokens:
+    // If user specified 2+ distinct content words, require matching at least 2 to prevent false positives!
+    const minRequired = effectiveTokens.length >= 3 ? 2 : 1;
+    if (matchedContent < minRequired) {
+      score = 0;
+    }
+
+    return { ...item, score, source: 'local' };
+  }).filter(r => r.score > 0).sort((a, b) => b.score - a.score);
+
+  // Eliminate distant low-scoring noise if top item has very strong match
+  let topMatches = localMatches;
+  if (localMatches.length > 0 && localMatches[0].score >= 100) {
+    topMatches = localMatches.filter(r => r.score >= localMatches[0].score * 0.4);
+  }
+
+  renderProfileAddressSuggestions(topMatches, query);
 
   // 2. Debounced Live OpenStreetMap Nominatim search for any custom address in Vietnam
   if (profileAddressDebounceTimer) clearTimeout(profileAddressDebounceTimer);
@@ -6489,43 +6658,59 @@ function handleProfileAddressInput(rawVal) {
 
     profileAddressDebounceTimer = setTimeout(async () => {
       try {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=vn&q=${encodeURIComponent(query)}`;
-        const res = await fetch(url, {
-          signal: profileAddressAbortController.signal,
-          headers: { 'Accept': 'application/json' }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          const nominatimResults = data.map(n => {
-            const shortName = n.name || (n.display_name ? n.display_name.split(',')[0] : query);
-            let icon = '📍';
-            if (n.type === 'hospital' || n.category === 'healthcare') icon = '🏥';
-            else if (n.type === 'building' || n.type === 'commercial' || n.type === 'office') icon = '🏢';
-            else if (n.type === 'school' || n.type === 'university') icon = '🎓';
-            else if (n.type === 'highway' || n.type === 'residential' || n.type === 'road') icon = '🛣️';
-
-            return {
-              name: shortName,
-              address: n.display_name,
-              lat: parseFloat(n.lat),
-              lng: parseFloat(n.lon),
-              icon,
-              source: 'osm'
-            };
-          });
-
-          // Merge without duplicate coordinates
-          const combined = [...localMatches];
-          nominatimResults.forEach(nr => {
-            const exists = combined.some(c => 
-              (Math.abs(c.lat - nr.lat) < 0.001 && Math.abs(c.lng - nr.lng) < 0.001) ||
-              c.name.toLowerCase() === nr.name.toLowerCase()
-            );
-            if (!exists) combined.push(nr);
-          });
-
-          renderProfileAddressSuggestions(combined.slice(0, 8), query);
+        let nominatimResults = [];
+        // Candidate queries for progressive search
+        const candidates = [query];
+        if (query.includes(',')) {
+          const parts = query.split(',').map(s => s.trim()).filter(Boolean);
+          if (parts.length >= 2) {
+            candidates.push(parts[parts.length - 2] + ', ' + parts[parts.length - 1]);
+            candidates.push(parts[0]);
+          }
         }
+
+        for (const cand of candidates) {
+          const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=4&countrycodes=vn&q=${encodeURIComponent(cand)}`;
+          const res = await fetch(url, {
+            signal: profileAddressAbortController.signal,
+            headers: { 'Accept': 'application/json' }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.length > 0) {
+              nominatimResults = data.map(n => {
+                const shortName = n.name || (n.display_name ? n.display_name.split(',')[0] : cand);
+                let icon = '📍';
+                if (n.type === 'hospital' || n.category === 'healthcare') icon = '🏥';
+                else if (n.type === 'building' || n.type === 'commercial' || n.type === 'office') icon = '🏢';
+                else if (n.type === 'school' || n.type === 'university') icon = '🎓';
+                else if (n.type === 'highway' || n.type === 'residential' || n.type === 'road') icon = '🛣️';
+
+                return {
+                  name: shortName,
+                  address: n.display_name,
+                  lat: parseFloat(n.lat),
+                  lng: parseFloat(n.lon),
+                  icon,
+                  source: 'osm'
+                };
+              });
+              break;
+            }
+          }
+        }
+
+        // Merge without duplicate coordinates
+        const combined = [...topMatches];
+        nominatimResults.forEach(nr => {
+          const exists = combined.some(c => 
+            (Math.abs(c.lat - nr.lat) < 0.001 && Math.abs(c.lng - nr.lng) < 0.001) ||
+            c.name.toLowerCase() === nr.name.toLowerCase()
+          );
+          if (!exists) combined.push(nr);
+        });
+
+        renderProfileAddressSuggestions(combined.slice(0, 8), query);
       } catch (err) {
         if (err.name !== 'AbortError') {
           console.warn('Geocoding search warning:', err);
@@ -6553,7 +6738,7 @@ function renderProfileAddressSuggestions(list, currentQuery) {
   }
 
   const headerHtml = currentQuery
-    ? `<div class="px-3 py-1.5 bg-surface-container-high/60 text-on-surface-variant font-bold text-[10px] flex items-center justify-between border-b border-outline-variant/15"><span>🔍 Gợi ý toạ độ theo "${escapeHtml(currentQuery)}":</span><span class="text-[9px] text-primary font-mono">Bản đồ vệ tinh</span></div>`
+    ? `<div class="px-3 py-1.5 bg-surface-container-high/60 text-on-surface-variant font-bold text-[10px] flex items-center justify-between border-b border-outline-variant/15"><span>🔍 Gợi ý toạ độ theo "${escapeHtml(currentQuery)}":</span><span class="text-[9px] text-primary font-mono">Bản đồ vệ tinh 🗺️</span></div>`
     : `<div class="px-3 py-1.5 bg-primary-fixed/30 text-primary font-bold text-[10px] flex items-center justify-between border-b border-primary/20"><span>✨ Địa điểm & Bệnh viện nổi bật (chọn nhanh):</span><span class="text-[9px] opacity-80">🗺️ Có toạ độ</span></div>`;
 
   const itemsHtml = list.map((item) => {
@@ -6562,15 +6747,15 @@ function renderProfileAddressSuggestions(list, currentQuery) {
     const itemDataEscaped = encodeURIComponent(JSON.stringify(item));
     return `
       <div onclick="selectProfileAddressItem('${itemDataEscaped}')" class="p-2.5 hover:bg-primary-fixed/30 cursor-pointer flex items-start gap-2.5 transition-colors group">
-        <div class="w-7 h-7 rounded-lg bg-surface-container flex items-center justify-center text-sm shrink-0 shadow-2xs mt-0.5 group-hover:bg-primary group-hover:text-white transition-colors">
+        <div class="w-8 h-8 rounded-xl bg-surface-container flex items-center justify-center text-base shrink-0 shadow-2xs mt-0.5 group-hover:bg-primary group-hover:text-white transition-colors">
           ${item.icon || '📍'}
         </div>
         <div class="flex-1 min-w-0">
-          <div class="flex items-center justify-between gap-1">
-            <span class="font-bold text-xs text-on-surface group-hover:text-primary transition-colors truncate">${escapeHtml(item.name)}</span>
+          <div class="flex items-start justify-between gap-1.5 flex-wrap">
+            <span class="font-bold text-xs text-on-surface group-hover:text-primary transition-colors leading-snug">${escapeHtml(item.name)}</span>
             <span class="text-[9px] font-mono font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950 dark:text-emerald-300 px-1.5 py-0.2 rounded shrink-0">🗺️ ${latStr}, ${lngStr}</span>
           </div>
-          <p class="text-[11px] text-on-surface-variant line-clamp-1 mt-0.5 leading-tight">${escapeHtml(item.address)}</p>
+          <p class="text-[11px] text-on-surface-variant line-clamp-2 mt-0.5 leading-snug">${escapeHtml(item.address)}</p>
         </div>
       </div>
     `;
