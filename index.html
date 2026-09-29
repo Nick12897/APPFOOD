@@ -7992,10 +7992,8 @@ function goToMapAroundBe() {
     if (leafletMap) {
       leafletMap.invalidateSize();
       leafletMap.setView([currentCenterCoords.lat, currentCenterCoords.lng], 15, { animate: true });
+      leafletMap.closePopup();
       renderLeafletOverlays();
-      if (leafletUserMarker) {
-        leafletUserMarker.openPopup();
-      }
     }
   }, 180);
 
@@ -8016,8 +8014,8 @@ function selectBeSavedAddress() {
   if (leafletMap) {
     leafletMap.invalidateSize();
     leafletMap.setView([beCoords.lat, beCoords.lng], 15, { animate: true });
+    leafletMap.closePopup();
     renderLeafletOverlays();
-    if (leafletUserMarker) leafletUserMarker.openPopup();
   }
   showToast(`🏡 Đã chọn địa chỉ của Bé: ${beAddr}`);
 }
