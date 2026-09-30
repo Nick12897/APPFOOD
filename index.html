@@ -141,6 +141,42 @@
       <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Chào hai bạn! 💕</h1>
       <p class="font-body-md text-body-md text-on-surface-variant">Hôm nay bé yêu của bạn đang có tâm trạng thế nào nè?</p>
     </section>
+
+    <!-- ══ ROMANTIC BANNER: LỜI NHẮN TỪ BẠN TRAI (REALTIME CLOUD) ══ -->
+    <div id="partner-home-banner" class="bg-gradient-to-r from-primary-fixed/40 via-surface-container-lowest to-secondary-fixed/40 rounded-2xl p-3.5 shadow-sm border border-primary/25 space-y-2 transition-all animate-pop-in">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-primary-container text-white flex items-center justify-center text-sm shadow-xs">
+            👑
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold text-xs text-primary">Anh Người Yêu nhắn nè 💕</span>
+              <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+            </div>
+            <span id="partner-home-msg-time" class="text-[10px] text-on-surface-variant">Lời nhắn yêu thương mới nhất</span>
+          </div>
+        </div>
+        <button type="button" onclick="openPartnerMessageModal(latestPartnerMsgText, latestPartnerMsgEffect)" class="text-[11px] text-primary hover:underline font-bold flex items-center gap-0.5">
+          <span>Xem popup</span>
+          <span class="material-symbols-outlined text-[13px]">open_in_new</span>
+        </button>
+      </div>
+      <div class="bg-white/90 rounded-xl p-2.5 text-xs text-on-surface font-semibold leading-relaxed border border-primary/10">
+        <p id="partner-home-msg-text">Tối nay 7h anh qua đón công chúa đi ăn nhé! 🛵💨</p>
+      </div>
+      <div class="flex items-center gap-1.5 pt-0.5">
+        <button type="button" onclick="replyPartnerMessage('Dạ em nghe òi, thương anh! 🥰')" class="flex-1 py-1.5 rounded-full bg-primary text-on-primary text-[11px] font-bold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1">
+          <span>Thương anh!</span>
+          <span>🥰</span>
+        </button>
+        <button type="button" onclick="replyPartnerMessage('Em đang thèm trà sữa nè anh! 🧋')" class="flex-1 py-1.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold active:scale-95 transition-all flex items-center justify-center gap-1">
+          <span>Thèm trà sữa</span>
+          <span>🧋</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Mood -->
     <section class="flex flex-col space-y-space-sm">
       <div class="flex items-center justify-between">
@@ -1402,10 +1438,16 @@
           </select>
         </div>
 
-        <button onclick="sendPartnerAlertMessage()" class="w-full py-3 rounded-full bg-gradient-to-r from-primary to-primary-container text-white font-bold shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2 text-xs">
-          <span class="material-symbols-outlined text-[18px]">send</span>
-          <span>Bắn Thông Báo Tức Thì Tới Máy Bé</span>
-        </button>
+        <div class="flex gap-2 pt-1">
+          <button type="button" onclick="previewPartnerMessageOnThisDevice()" class="py-2.5 px-3.5 rounded-full bg-surface-container hover:bg-surface-variant text-on-surface font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 shrink-0 border border-outline-variant/30" title="Xem trước popup hiển thị trên máy này">
+            <span class="material-symbols-outlined text-[16px] text-primary">visibility</span>
+            <span>Xem trước</span>
+          </button>
+          <button type="button" onclick="sendPartnerAlertMessage()" class="flex-1 py-3 rounded-full bg-gradient-to-r from-primary to-primary-container text-white font-bold shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2 text-xs">
+            <span class="material-symbols-outlined text-[18px]">send</span>
+            <span>Bắn Thông Báo Tới Máy Bé 🚀</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -3118,8 +3160,12 @@
 
 
 <!-- ══ MODAL: LỜI NHẮN TỪ BẠN TRAI (POPUP HIỂN THỊ TRÊN MÁY BÉ) ══ -->
-<div id="partner-message-modal" class="fixed inset-0 z-50 bg-inverse-surface/75 backdrop-blur-md hidden items-center justify-center p-space-md">
-  <div class="bg-gradient-to-b from-white via-surface to-secondary-fixed/20 rounded-3xl p-6 w-full max-w-sm flex flex-col items-center text-center shadow-2xl space-y-4 border-2 border-primary/30 animate-pop-in relative overflow-hidden">
+<div id="partner-message-modal" onclick="if(event.target === this) closePartnerMessageModal()" class="fixed inset-0 z-[99999] bg-inverse-surface/75 backdrop-blur-md hidden items-center justify-center p-space-md" style="z-index: 99999;">
+  <div class="bg-gradient-to-b from-white via-surface to-secondary-fixed/20 rounded-3xl p-6 w-full max-w-sm flex flex-col items-center text-center shadow-2xl space-y-4 border-2 border-primary/30 animate-pop-in relative overflow-hidden" onclick="event.stopPropagation()">
+    <!-- Nút đóng góc phải -->
+    <button type="button" onclick="closePartnerMessageModal()" class="absolute top-3.5 right-3.5 w-7 h-7 rounded-full bg-surface-container/80 hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors z-20" title="Đóng">
+      <span class="material-symbols-outlined text-[16px]">close</span>
+    </button>
     <!-- Heart Floating Background -->
     <div class="absolute -top-10 -right-10 w-28 h-28 bg-primary/10 rounded-full blur-xl pointer-events-none"></div>
     <div class="absolute -bottom-10 -left-10 w-28 h-28 bg-secondary/15 rounded-full blur-xl pointer-events-none"></div>
@@ -3209,6 +3255,10 @@ let cloudActivities = [];
 let unreadNotifCount = 0;
 let adminSoundEnabled = true;
 let cloudBroadcastChannel = null;
+let cloudEventSource = null;
+let currentClientId = 'client_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 5);
+let latestPartnerMsgText = 'Tối nay 7h anh qua đón công chúa đi ăn nhé! 🛵💨';
+let latestPartnerMsgEffect = 'hearts';
 let firebaseAppInstance = null;
 let firestoreDb = null;
 let firestoreUnsubscribe = null;
@@ -3378,11 +3428,31 @@ function toggleAdminSound(enabled) {
 }
 
 function broadcastCloudEvent(eventData) {
+  if (!eventData) return;
+  const cleanCode = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+  eventData.senderId = currentClientId;
+  eventData.coupleCode = cleanCode;
+  eventData.timestamp = eventData.timestamp || Date.now();
+
+  // 1. Cross-tab BroadcastChannel on same browser
   if (cloudBroadcastChannel) {
     try {
       cloudBroadcastChannel.postMessage(eventData);
     } catch(e) {}
   }
+
+  // 2. Real-time Cloud over Internet (ntfy.sh pub-sub)
+  const topic = 'an_gi_food_' + encodeURIComponent(cleanCode);
+  try {
+    fetch(`https://ntfy.sh/${topic}`, {
+      method: 'POST',
+      body: JSON.stringify(eventData),
+      headers: {
+        'Title': 'Ăn Gì Bé Ơi Realtime Sync',
+        'Priority': 'default'
+      }
+    }).catch(err => console.log('Cloud publish error:', err));
+  } catch(e) {}
 }
 
 function initBroadcastSync() {
@@ -3399,8 +3469,99 @@ function initBroadcastSync() {
   }
 }
 
+function initCloudRealtimeSync() {
+  if (cloudEventSource) {
+    try { cloudEventSource.close(); } catch(e) {}
+    cloudEventSource = null;
+  }
+
+  const cleanCode = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+  const topic = 'an_gi_food_' + encodeURIComponent(cleanCode);
+  updateCloudSyncStatus('connecting');
+
+  try {
+    cloudEventSource = new EventSource(`https://ntfy.sh/${topic}/sse`);
+
+    cloudEventSource.onopen = () => {
+      updateCloudSyncStatus('connected');
+    };
+
+    cloudEventSource.onmessage = (event) => {
+      try {
+        const payload = JSON.parse(event.data);
+        if (payload.event === 'message' && payload.message) {
+          const data = JSON.parse(payload.message);
+          // Ignore own messages
+          if (data.senderId && data.senderId === currentClientId) return;
+          handleRemoteCloudEvent(data);
+        }
+      } catch(err) {
+        console.log('Error parsing cloud event:', err);
+      }
+    };
+
+    cloudEventSource.onerror = () => {
+      updateCloudSyncStatus('reconnecting');
+    };
+  } catch(e) {
+    console.log('EventSource init error:', e);
+    updateCloudSyncStatus('error');
+  }
+}
+
+function updateCloudSyncStatus(status) {
+  const statusEl = document.getElementById('admin-sync-status');
+  const pingEl = document.getElementById('admin-sync-ping');
+  const dotEl = document.getElementById('admin-sync-dot');
+
+  if (status === 'connected') {
+    if (statusEl) statusEl.textContent = `Đã liên kết Realtime với Bé Yêu (${currentCoupleCode}) 🟢`;
+    if (pingEl) pingEl.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75';
+    if (dotEl) dotEl.className = 'relative inline-flex rounded-full h-2.5 w-2.5 bg-green-300';
+  } else if (status === 'connecting') {
+    if (statusEl) statusEl.textContent = 'Đang kết nối Realtime Cloud... 🟡';
+    if (pingEl) pingEl.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75';
+    if (dotEl) dotEl.className = 'relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-300';
+  } else if (status === 'reconnecting') {
+    if (statusEl) statusEl.textContent = 'Đang tự kết nối lại Cloud... 🟠';
+  } else {
+    if (statusEl) statusEl.textContent = 'Chưa kết nối Cloud (Chế độ offline) ⚪';
+  }
+}
+
+function renderLatestPartnerMessage() {
+  try {
+    const raw = localStorage.getItem('an_gi_latest_partner_msg');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.message) {
+        latestPartnerMsgText = parsed.message;
+        latestPartnerMsgEffect = parsed.effect || 'hearts';
+        const txtEl = document.getElementById('partner-home-msg-text');
+        if (txtEl) txtEl.textContent = latestPartnerMsgText;
+        const timeEl = document.getElementById('partner-home-msg-time');
+        if (timeEl && parsed.timestamp) {
+          const d = new Date(parsed.timestamp);
+          timeEl.textContent = 'Gửi lúc ' + d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' (' + d.toLocaleDateString('vi-VN') + ')';
+        }
+      }
+    }
+  } catch(e) {}
+}
+
+function previewPartnerMessageOnThisDevice() {
+  const input = document.getElementById('adm-love-msg-input');
+  const msg = input ? input.value.trim() : '';
+  const effect = document.getElementById('adm-love-effect')?.value || 'hearts';
+  openPartnerMessageModal(msg || 'Tối nay 7h anh qua đón công chúa đi ăn nhé! 🛵💨', effect);
+  showToast('👁️ Đang xem trước giao diện popup trên máy này!');
+}
+
 function handleRemoteCloudEvent(data) {
-  if (!data || data.coupleCode !== currentCoupleCode) return;
+  if (!data) return;
+  const currentCode = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+  const eventCode = (data.coupleCode || '').trim().toUpperCase();
+  if (eventCode && eventCode !== currentCode) return;
   
   if (data.type === 'ACTIVITY_LOG' && data.activity) {
     if (!cloudActivities.some(a => a.id === data.activity.id)) {
@@ -3412,23 +3573,40 @@ function handleRemoteCloudEvent(data) {
       
       if (currentAuthUser.role === 'admin' && data.activity.actor !== 'admin') {
         unreadNotifCount++;
-        playChimeSound();
+        playChimeSound(true);
         showToast(`🔔 Bé: ${data.activity.title}`);
       }
       updateNotificationBadges();
       if (document.getElementById('sc-admin') && document.getElementById('sc-admin').classList.contains('active')) {
         renderAdminActivities();
       }
+      renderQuickNotifList();
     }
   } else if (data.type === 'PARTNER_ALERT') {
-    if (currentAuthUser.role === 'user') {
+    latestPartnerMsgText = data.message || 'Anh nhớ bé nhiều lắm nè! 💕';
+    latestPartnerMsgEffect = data.effect || 'hearts';
+    try {
+      localStorage.setItem('an_gi_latest_partner_msg', JSON.stringify({
+        message: latestPartnerMsgText,
+        effect: latestPartnerMsgEffect,
+        timestamp: data.timestamp || Date.now()
+      }));
+    } catch(e) {}
+    renderLatestPartnerMessage();
+
+    // Show popup immediately on Bé Yêu's screen
+    if (currentAuthUser.role !== 'admin') {
       openPartnerMessageModal(data.message, data.effect);
+      playChimeSound(true);
+      showToast('💌 Có lời nhắn mới từ Anh Bạn Trai nè công chúa ơi!');
     }
   } else if (data.type === 'PARTNER_REPLY') {
     if (currentAuthUser.role === 'admin') {
       playChimeSound(true);
-      showToast(`🐰 Bé nhắn lại: "${data.reply}" 💕`);
+      showToast(`🐰 Bé vừa nhắn lại: "${data.reply}" 💕`);
       cloudLogActivity('partner_reply', '🐰 Bé phản hồi tin nhắn:', data.reply, 'favorite');
+      renderAdminActivities();
+      renderQuickNotifList();
     }
   } else if (data.type === 'DATA_SYNC') {
     applyRemoteDataSync(data.payload);
@@ -3616,7 +3794,9 @@ function initAuthAndSync() {
 
   updateAuthUI();
   updateNotificationBadges();
+  renderLatestPartnerMessage();
   initBroadcastSync();
+  initCloudRealtimeSync();
   initFirestoreSync();
 }
 
@@ -3803,6 +3983,7 @@ function quickLoginAs(role) {
   updateAuthUI();
   closeAuthModal();
   initBroadcastSync();
+  initCloudRealtimeSync();
 
   // Clear role param from URL so refresh doesn't override
   try {
@@ -3849,6 +4030,7 @@ function handleAuthSubmit(e) {
   updateAuthUI();
   closeAuthModal();
   initBroadcastSync();
+  initCloudRealtimeSync();
 
   // Clear role param from URL so refresh doesn't override
   try {
@@ -4147,6 +4329,15 @@ function sendPartnerAlertMessage() {
   }
   const effect = document.getElementById('adm-love-effect')?.value || 'hearts';
 
+  try {
+    localStorage.setItem('an_gi_latest_partner_msg', JSON.stringify({
+      message: msg,
+      effect: effect,
+      timestamp: Date.now()
+    }));
+  } catch(e) {}
+  renderLatestPartnerMessage();
+
   broadcastCloudEvent({
     type: 'PARTNER_ALERT',
     coupleCode: currentCoupleCode,
@@ -4175,6 +4366,7 @@ function openPartnerMessageModal(msg, effect) {
   if (modal) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    modal.style.display = 'flex';
   }
 
   playChimeSound(true);
@@ -4189,6 +4381,7 @@ function closePartnerMessageModal() {
   if (modal) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    modal.style.display = 'none';
   }
 }
 
@@ -4233,6 +4426,7 @@ function updateCoupleCodeFromAdmin() {
   }
   updateAuthUI();
   initBroadcastSync();
+  initCloudRealtimeSync();
   initFirestoreSync();
   showToast(`Đã cập nhật mã cặp đôi: ${currentCoupleCode} ✨`);
 }
