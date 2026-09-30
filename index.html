@@ -810,6 +810,11 @@
           <span class="text-primary font-bold" id="map-live-radius-indicator">&lt; 2km</span>
         </div>
       </div>
+      <!-- Quick Scroll to Restaurant List Helper Button for Mobile -->
+      <button type="button" onclick="document.getElementById('map-restaurants-container').scrollIntoView({ behavior: 'smooth' })" class="w-full mt-2 py-1.5 px-3 rounded-xl bg-surface-container-low hover:bg-primary-fixed/40 text-primary font-bold text-[11px] flex items-center justify-center gap-1.5 transition-all shadow-2xs border border-outline-variant/20 active:scale-[0.98]">
+        <span class="material-symbols-outlined text-[15px]">arrow_downward</span>
+        <span>Chạm xem danh sách quán ăn bên dưới</span>
+      </button>
     </div>
 
     <!-- ══ BANNER THÊM QUÁN & MÓN RUỘT ══ -->
@@ -4199,12 +4204,27 @@ function navigate(s){
     displayCurrentCandidate(0);
   }
   if(s==='map'){
+    // Auto-sync map to Bé's address if still at default District 1
+    if (typeof beProfile !== 'undefined' && beProfile && beProfile.address && selectedAreaName === 'Quận 1, TP. HCM') {
+      const beAddrShort = beProfile.addressTitle ? `${beProfile.addressTitle}: ${beProfile.address.split(',')[0]}` : beProfile.address.split(',')[0];
+      selectedAreaName = beProfile.address;
+      if (beProfile.addressCoords && beProfile.addressCoords.lat) {
+        currentCenterCoords = { ...beProfile.addressCoords };
+      } else {
+        currentCenterCoords = getCoordsForArea(beProfile.address);
+      }
+      const lbl = document.getElementById('area-lbl');
+      if (lbl) lbl.textContent = beAddrShort;
+      const mapIndicator = document.getElementById('map-area-indicator');
+      if (mapIndicator) mapIndicator.textContent = beProfile.address.split(',')[0];
+      const currEl = document.getElementById('current-selected-area-text');
+      if (currEl) currEl.textContent = beProfile.address;
+    }
     renderMapRestaurants();
     setTimeout(() => {
       initLeafletMap();
       if (leafletMap) {
         leafletMap.invalidateSize();
-        leafletMap.setView([currentCenterCoords.lat, currentCenterCoords.lng], leafletMap.getZoom() || 15);
         renderLeafletOverlays();
       }
     }, 160);
@@ -6112,6 +6132,224 @@ function saveCustomMapRestaurantsToStorage() {
 }
 
 const mapRestaurantsDb = [
+  // ══ PHÚ NHUẬN & PHAN XÍCH LONG (THIÊN ĐƯỜNG ẨM THỰC QUANH BÉ) ══
+  {
+    id: 'bo-ne-co-ba-phan-xich-long',
+    name: 'Bò Né & Bò Kho Cô Ba',
+    food: 'Bò Né Sốt Tiêu Đen Phô Mai Bắp Trứng',
+    emoji: '🥩',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7978,
+    lng: 106.6855,
+    address: '120 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.9,
+    reviews: 680,
+    price: 'cheap',
+    priceText: '45k - 75k/phần',
+    tags: ['street', 'ac'],
+    badge: 'Bò né xèo xèo thơm nức mũi 🥩',
+    tip: 'Bò mềm ngập sốt tiêu đen đậm đà, bánh mì nóng giòn rụm chấm nước sốt thơm bơ béo ngậy bé mê tít.'
+  },
+  {
+    id: 'bun-bo-ganh-phan-xich-long',
+    name: 'Bún Bò Gánh - Phan Xích Long',
+    food: 'Bún Bò Bắp Hoa Chả Cua & Gân Mềm',
+    emoji: '🍜',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7988,
+    lng: 106.6859,
+    address: '189 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.8,
+    reviews: 540,
+    price: 'mid',
+    priceText: '60k - 85k/tô',
+    tags: ['ac', 'view'],
+    badge: 'Nước dùng thanh ngọt chuẩn Huế 🍲',
+    tip: 'Nước dùng trong veo ngọt từ xương ống, thịt bắp bò hoa giòn sần sật, không gian máy lạnh sạch sẽ.'
+  },
+  {
+    id: 'phe-la-phan-xich-long',
+    name: 'Phê La - Trà Ô Long Sữa Chà Là',
+    food: 'Ô Long Sữa Phê La & Trân Châu Hoàng Kim',
+    emoji: '🧋',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7985,
+    lng: 106.6851,
+    address: '115 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.9,
+    reviews: 1120,
+    price: 'mid',
+    priceText: '50k - 65k/ly',
+    tags: ['ac', 'romantic', 'view'],
+    badge: 'Trà ô long số 1 giới trẻ mê đắm 🧋',
+    tip: 'Vị trà Ô long rang thơm khói nồng nàn, sữa ngậy mà không ngọt gắt, góc ngồi chill ngắm phố Phan Xích Long.'
+  },
+  {
+    id: 'san-fu-lou-phan-xich-long',
+    name: 'San Fu Lou - Quảng Đông Dimsum',
+    food: 'Há Cảo Tôm Sò Điệp & Mì Vịt Quay',
+    emoji: '🥟',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7975,
+    lng: 106.6860,
+    address: '210 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.9,
+    reviews: 890,
+    price: 'high',
+    priceText: '120k - 250k/người',
+    tags: ['ac', 'romantic'],
+    badge: 'Dimsum cao cấp hẹn hò ấm cúng 🥟',
+    tip: 'Vỏ há cảo mỏng tang nhìn thấu tôm tươi giòn ngọt bên trong, không gian lồng đèn đỏ lãng mạn cho cặp đôi.'
+  },
+  {
+    id: 'kichi-kichi-phan-xich-long',
+    name: 'Kichi-Kichi Lẩu Băng Chuyền',
+    food: 'Lẩu Nấm Thanh Ngọt & Bò Mỹ Nhúng Băng Chuyền',
+    emoji: '🍲',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7968,
+    lng: 106.6858,
+    address: '145 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.8,
+    reviews: 950,
+    price: 'high',
+    priceText: '250k - 320k/người',
+    tags: ['ac', 'romantic'],
+    badge: 'Nhúng lẩu thả ga cả trăm món 🍲',
+    tip: 'Băng chuyền chuyển liên tục đồ nhúng tươi ngon, gọi nước lẩu nấm thanh ngọt dỗ bụng bé yêu.'
+  },
+  {
+    id: 'dookki-rach-mieu-phan-xich-long',
+    name: 'Dookki Tokbokki Buffet Hàn Quốc',
+    food: 'Buffet Lẩu Tokbokki Phô Mai Vòng & Gà Rán',
+    emoji: '🥘',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7965,
+    lng: 106.6872,
+    address: 'Tầng 2 Co.opmart Rạch Miễu, 48 Hoa Sứ, Phường 7, Quận Phú Nhuận',
+    rating: 4.8,
+    reviews: 1350,
+    price: 'mid',
+    priceText: '139k - 180k/người',
+    tags: ['ac', 'romantic'],
+    badge: 'Thiên đường Tokbokki phô mai 🧀',
+    tip: 'Tự tay pha sốt lẩu cay ngọt theo gu bé, ngập tràn chả cá xiên que và gà rán sốt cay Hàn Quốc.'
+  },
+  {
+    id: 'sushi-masa-phan-xich-long',
+    name: 'Sushi Masa - Phan Xích Long',
+    food: 'Sashimi Cá Hồi Tươi Rói & Sushi Cá Ngừ Nướng Tái',
+    emoji: '🍣',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7972,
+    lng: 106.6848,
+    address: '78 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.9,
+    reviews: 780,
+    price: 'mid',
+    priceText: '120k - 220k/người',
+    tags: ['ac', 'romantic'],
+    badge: 'Cá hồi tươi rói béo ngậy 🍣',
+    tip: 'Miếng cá hồi thái dày cộm ngọt thơm tan trong miệng, decor hoa phong cách Nhật Bản xinh xắn.'
+  },
+  {
+    id: 'chao-suon-chu-chen-phan-xich-long',
+    name: 'Cháo Sườn Niêu Chú Chen',
+    food: 'Cháo Sườn Hầm Niêu Đất Nóng Hổi & Trứng Bắc Thảo',
+    emoji: '🥣',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7992,
+    lng: 106.6850,
+    address: '281 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.8,
+    reviews: 620,
+    price: 'cheap',
+    priceText: '40k - 65k/niêu',
+    tags: ['ac', 'street'],
+    badge: 'Cháo niêu đất ấm bụng ngày mệt 🥣',
+    tip: 'Hạt cháo sánh mịn ngọt từ nước hầm xương sườn non, ăn kèm quẩy giòn và trứng bắc thảo thơm bùi.'
+  },
+  {
+    id: 'lau-bo-nha-go-phan-xich-long',
+    name: 'Lẩu Bò Nhà Gỗ Sài Gòn',
+    food: 'Lẩu Bò Thập Cẩm Nồi Đất Chuẩn Vị Đà Lạt',
+    emoji: '🍲',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7958,
+    lng: 106.6865,
+    address: '162 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.9,
+    reviews: 890,
+    price: 'mid',
+    priceText: '90k - 150k/người',
+    tags: ['view', 'romantic', 'ac'],
+    badge: 'Đậm đà hương vị lẩu bò xứ sương mù 🌲',
+    tip: 'Nồi lẩu bò nghi ngút khói chấm chao sa tế cay nồng, tái hiện trọn vẹn cảm giác hẹn hò se lạnh Đà Lạt.'
+  },
+  {
+    id: 'ga-nuong-o-o-o-phan-xich-long',
+    name: 'Gà Nướng Ò Ó O - Phan Xích Long',
+    food: 'Gà Nướng Muối Ớt Cay Ngọt Da Giòn & Xôi Chiên',
+    emoji: '🍗',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7995,
+    lng: 106.6845,
+    address: '220/58 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.8,
+    reviews: 510,
+    price: 'cheap',
+    priceText: '70k - 110k/người',
+    tags: ['street', 'ac'],
+    badge: 'Da gà giòn rụm sốt mê ly 🍗',
+    tip: 'Lớp da nướng vàng ươm thơm mùi thảo mộc, thịt gà đồi dai ngọt chấm muối ớt chanh chua cay xé lưỡi.'
+  },
+  {
+    id: 'haidilao-phan-xich-long',
+    name: 'Haidilao Hotpot Phan Xích Long',
+    food: 'Lẩu Cà Chua, Lẩu Thái & Múa Mì Kungfu',
+    emoji: '🍲',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7950,
+    lng: 106.6878,
+    address: 'Khu phức hợp thương mại Golden Mansion, Phường 2, Quận Phú Nhuận',
+    rating: 4.9,
+    reviews: 1450,
+    price: 'high',
+    priceText: '250k - 380k/người',
+    tags: ['ac', 'romantic', 'view'],
+    badge: 'Dịch vụ 5 sao cưng chiều công chúa 👑',
+    tip: 'Làm móng miễn phí, múa mì điêu luyện và kem ăn thoải mái, đưa bé đến đây là cười tít mắt cả ngày.'
+  },
+  {
+    id: 'koi-the-phan-xich-long',
+    name: 'KOI Thé - Phan Xích Long',
+    food: 'Lục Trà Macchiato Lớp Kem Sữa Béo Ngậy',
+    emoji: '🧋',
+    area: 'Phú Nhuận, TP. HCM',
+    city: 'hcm',
+    lat: 10.7970,
+    lng: 106.6862,
+    address: '111 Phan Xích Long, Phường 2, Quận Phú Nhuận',
+    rating: 4.8,
+    reviews: 790,
+    price: 'cheap',
+    priceText: '45k - 65k/ly',
+    tags: ['ac', 'view'],
+    badge: 'Lớp kem macchiato huyền thoại 🥛',
+    tip: 'Uống không dùng ống hút để cảm nhận lớp kem sữa mằn mặn hòa quyện vị lục trà thanh mát ngọt ngào.'
+  },
+  // ══ QUẬN 1 & TRUNG TÂM SÀI GÒN ══
   {
     id: 'pho-hoa-pasteur',
     name: 'Phở Hòa Pasteur',
@@ -7767,6 +8005,15 @@ function initLeafletMap() {
   // If profile has saved address coordinates, ensure map starts centered there
   if (typeof beProfile !== 'undefined' && beProfile && beProfile.addressCoords && beProfile.addressCoords.lat) {
     currentCenterCoords = { ...beProfile.addressCoords };
+    if (beProfile.address && selectedAreaName === 'Quận 1, TP. HCM') {
+      selectedAreaName = beProfile.address;
+      const lbl = document.getElementById('area-lbl');
+      if (lbl) lbl.textContent = beProfile.addressTitle ? `${beProfile.addressTitle}: ${beProfile.address.split(',')[0]}` : beProfile.address.split(',')[0];
+      const mapIndicator = document.getElementById('map-area-indicator');
+      if (mapIndicator) mapIndicator.textContent = beProfile.address.split(',')[0];
+      const currEl = document.getElementById('current-selected-area-text');
+      if (currEl) currEl.textContent = beProfile.address;
+    }
   }
 
   // Create real Leaflet map instance
@@ -7960,6 +8207,31 @@ function renderLeafletOverlays() {
     leafletMarkersLayer.addLayer(marker);
     restaurantMarkersMap[r.id] = marker;
   });
+
+  // Fit bounds so user sees Bé's pin AND all restaurant pins
+  if (leafletMap) {
+    if (filtered.length > 0) {
+      try {
+        const bounds = L.latLngBounds([[currentCenterCoords.lat, currentCenterCoords.lng]]);
+        let validCoordsCount = 0;
+        filtered.forEach(r => {
+          if (typeof r.lat === 'number' && typeof r.lng === 'number' && !isNaN(r.lat) && !isNaN(r.lng)) {
+            bounds.extend([r.lat, r.lng]);
+            validCoordsCount++;
+          }
+        });
+        if (validCoordsCount > 0) {
+          leafletMap.fitBounds(bounds, { padding: [35, 35], maxZoom: 16 });
+        } else {
+          leafletMap.setView([currentCenterCoords.lat, currentCenterCoords.lng], 15);
+        }
+      } catch(e) {
+        leafletMap.setView([currentCenterCoords.lat, currentCenterCoords.lng], 15);
+      }
+    } else {
+      leafletMap.setView([currentCenterCoords.lat, currentCenterCoords.lng], 15);
+    }
+  }
 }
 
 let isAdjustingLocation = false;
@@ -8482,10 +8754,11 @@ function renderMapRestaurants() {
     const customImg = customDishImages[r.food] || customDishImages[r.name];
 
     const tagBadges = [];
-    if (r.tags.includes('ac')) tagBadges.push('<span class="px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 text-[10px] font-semibold border border-sky-200">❄️ Điều hòa</span>');
-    if (r.tags.includes('romantic')) tagBadges.push('<span class="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[10px] font-semibold border border-rose-200">🕯️ Lãng mạn</span>');
-    if (r.tags.includes('view')) tagBadges.push('<span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-200">🍃 View chill</span>');
-    if (r.tags.includes('street')) tagBadges.push('<span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-semibold border border-amber-200">🥢 Vỉa hè ngon</span>');
+    const rTags = Array.isArray(r.tags) ? r.tags : [];
+    if (rTags.includes('ac')) tagBadges.push('<span class="px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 text-[10px] font-semibold border border-sky-200">❄️ Điều hòa</span>');
+    if (rTags.includes('romantic')) tagBadges.push('<span class="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[10px] font-semibold border border-rose-200">🕯️ Lãng mạn</span>');
+    if (rTags.includes('view')) tagBadges.push('<span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-200">🍃 View chill</span>');
+    if (rTags.includes('street')) tagBadges.push('<span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-semibold border border-amber-200">🥢 Vỉa hè ngon</span>');
 
     return `
       <div id="map-card-${r.id}" class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm border border-outline-variant/15 space-y-2.5 transition-all hover:shadow-md">
@@ -10158,7 +10431,6 @@ function goToMapAroundBe() {
     initLeafletMap();
     if (leafletMap) {
       leafletMap.invalidateSize();
-      leafletMap.setView([currentCenterCoords.lat, currentCenterCoords.lng], 15, { animate: true });
       leafletMap.closePopup();
       renderLeafletOverlays();
     }
@@ -10167,7 +10439,6 @@ function goToMapAroundBe() {
   setTimeout(() => {
     if (leafletMap) {
       leafletMap.invalidateSize();
-      leafletMap.panTo([currentCenterCoords.lat, currentCenterCoords.lng]);
     }
   }, 420);
 
