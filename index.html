@@ -1103,7 +1103,7 @@
           <span class="leading-relaxed">Hai bạn đang kết nối chung phòng! Mọi món quay và tâm trạng sẽ đồng bộ tức thì sang Bạn Trai.</span>
         </div>
         <div class="pt-1">
-          <button type="button" id="btn-open-admin-pin" onclick="openAdminPinModal(event)" class="w-full py-2.5 px-3.5 rounded-xl bg-surface-container-high hover:bg-primary-fixed/40 active:scale-95 border border-outline-variant/50 text-on-surface text-xs font-bold flex items-center justify-between transition-all shadow-xs cursor-pointer select-none">
+          <button type="button" id="btn-open-admin-pin" onclick="openAdminLogin()" class="w-full py-2.5 px-3.5 rounded-xl bg-surface-container-high hover:bg-primary-fixed/40 active:scale-95 border border-outline-variant/50 text-on-surface text-xs font-bold flex items-center justify-between transition-all shadow-xs cursor-pointer select-none">
             <div class="flex items-center gap-2">
               <span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-xs">👑</span>
               <span class="font-bold">Đăng nhập Bạn Trai (Admin)</span>
@@ -2971,7 +2971,7 @@
     </div>
   </div>
 <!-- ══ MODAL: ĐĂNG NHẬP & PHÂN QUYỀN CẶP ĐÔI (AUTH MODAL) ══ -->
-<div id="auth-modal" onclick="if(event.target === this) closeAuthModal()" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
+<div id="auth-modal" onclick="if(event.target === this) closeAuthModal()" class="fixed inset-0 z-[9999] bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md" style="z-index: 99999;">
   <div class="bg-surface rounded-3xl p-space-lg w-full max-w-sm flex flex-col shadow-2xl space-y-4 border border-outline-variant/20 animate-pop-in">
     <!-- Header -->
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
@@ -3115,42 +3115,7 @@
   </div>
 </div>
 
-<!-- ══ MODAL: MÃ PIN XÁC THỰC QUẢN TRỊ BẠN TRAI ══ -->
-<div id="admin-pin-modal" onclick="if(event.target === this) closeAdminPinModal(event, false)" style="display: none; position: fixed; inset: 0; z-index: 999999; background: rgba(0,0,0,0.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" class="items-center justify-center p-4">
-  <div class="relative z-10 bg-surface rounded-3xl p-6 w-full max-w-xs flex flex-col items-center text-center shadow-2xl space-y-4 border border-outline-variant/30 animate-pop-in" onclick="event.stopPropagation()">
-    <!-- Nút đóng góc phải -->
-    <button type="button" onclick="closeAdminPinModal(event, true)" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface-container hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" title="Đóng">
-      <span class="material-symbols-outlined text-[18px]">close</span>
-    </button>
 
-    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary to-primary-container text-white flex items-center justify-center text-2xl shadow-md mt-1">
-      👑
-    </div>
-    <div>
-      <h3 class="font-headline-sm text-base text-on-surface font-bold">Xác Thực Bạn Trai (Admin)</h3>
-      <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Mục này chỉ dành riêng cho Bạn Trai. Vui lòng nhập mã PIN quản trị:</p>
-    </div>
-    <form onsubmit="handleAdminPinSubmit(event)" class="w-full space-y-3">
-      <div class="relative">
-        <input type="password" id="admin-pin-input" inputmode="numeric" autocomplete="one-time-code" maxlength="10" class="w-full px-4 py-2.5 rounded-xl bg-surface-container-high border-2 border-outline-variant/30 text-on-surface text-center font-mono font-bold tracking-widest text-xl focus:outline-none focus:border-primary" placeholder="••••" />
-      </div>
-      <div class="text-[11px] text-on-surface-variant bg-surface-container-low px-2.5 py-1.5 rounded-xl border border-outline-variant/25">
-        💡 Gợi ý: Mã PIN mặc định là <strong class="text-primary font-mono font-bold">12897</strong> hoặc mã cặp đôi
-      </div>
-      <div class="flex gap-2 pt-1">
-        <button type="button" onclick="closeAdminPinModal(event, true)" class="flex-1 py-2.5 rounded-xl bg-surface-container hover:bg-surface-variant text-on-surface-variant text-xs font-bold active:scale-95 transition-all">Hủy</button>
-        <button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-bold shadow-md hover:brightness-105 active:scale-95 transition-all">Mở Quyền 👑</button>
-      </div>
-    </form>
-    <!-- Mở form đầy đủ -->
-    <div class="pt-2 border-t border-surface-container-high w-full">
-      <button type="button" onclick="closeAdminPinModal(event, true); openAuthModal();" class="text-[11px] text-primary hover:underline font-semibold flex items-center justify-center gap-1 mx-auto">
-        <span class="material-symbols-outlined text-[13px]">manage_accounts</span>
-        <span>Hoặc mở trang Đăng nhập / Đổi mã cặp đôi</span>
-      </button>
-    </div>
-  </div>
-</div>
 
 <!-- ══ MODAL: LỜI NHẮN TỪ BẠN TRAI (POPUP HIỂN THỊ TRÊN MÁY BÉ) ══ -->
 <div id="partner-message-modal" class="fixed inset-0 z-50 bg-inverse-surface/75 backdrop-blur-md hidden items-center justify-center p-space-md">
@@ -3768,100 +3733,23 @@ function switchToUserView() {
   localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
   updateAuthUI();
   playChimeSound(false);
-  showToast('🐰 Đang ở giao diện Bé Yêu! Để quay lại Admin, vào Sổ tay nàng và nhập mã PIN Bạn Trai.');
+  showToast('🐰 Đang ở giao diện Bé Yêu! Để quay lại Admin, vào Sổ tay nàng và bấm Đăng nhập Bạn Trai.');
   navigate('home');
 }
 
-let adminPinModalOpenedAt = 0;
-
-function openAdminPinModal(e) {
-  if (e) {
-    try {
-      if (typeof e.preventDefault === 'function') e.preventDefault();
-      if (typeof e.stopPropagation === 'function') e.stopPropagation();
-    } catch(err) {}
-  }
-  adminPinModalOpenedAt = Date.now();
-
-  const modal = document.getElementById('admin-pin-modal');
-  if (!modal) {
-    console.warn('admin-pin-modal element not found, falling back to prompt');
-    const pin = prompt('Nhập mã PIN Bạn Trai (Admin): [Mặc định: 12897]');
-    if (pin && (['12897', '8888', 'admin', 'bantrai', 'love'].includes(pin.trim().toLowerCase()) || (currentCoupleCode && pin.trim().toUpperCase() === currentCoupleCode.toUpperCase()))) {
-      quickLoginAs('admin');
-      showToast('👑 Xác thực Bạn Trai thành công! Đã mở quyền Quản trị.');
-      navigate('admin');
-    } else if (pin) {
-      showToast('❌ Mã PIN không đúng! Gợi ý: 12897');
-    }
-    return;
-  }
-
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
-  modal.style.display = 'flex';
-  modal.style.visibility = 'visible';
-  modal.style.opacity = '1';
-
-  playChimeSound(false);
-
-  const inp = document.getElementById('admin-pin-input');
-  if (inp) {
-    inp.value = '';
-    setTimeout(() => {
-      try { inp.focus(); } catch(err) {}
-    }, 250);
-  }
-}
-
-function closeAdminPinModal(e, force = false) {
-  if (e) {
-    try {
-      if (typeof e.preventDefault === 'function') e.preventDefault();
-      if (typeof e.stopPropagation === 'function') e.stopPropagation();
-    } catch(err) {}
-  }
-
-  // Guard against instant ghost-click closing on touch screens
-  if (!force && Date.now() - adminPinModalOpenedAt < 450) {
-    return;
-  }
-
-  const modal = document.getElementById('admin-pin-modal');
+function openAdminLogin() {
+  selectAuthRole('admin');
+  const modal = document.getElementById('auth-modal');
   if (modal) {
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-    modal.style.display = 'none';
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    playChimeSound(false);
   }
 }
-
-function handleAdminPinSubmit(e) {
-  if (e) {
-    try {
-      if (typeof e.preventDefault === 'function') e.preventDefault();
-      if (typeof e.stopPropagation === 'function') e.stopPropagation();
-    } catch(err) {}
-  }
-  const inp = document.getElementById('admin-pin-input');
-  const val = inp ? inp.value.trim() : '';
-  const validPins = ['12897', '8888', 'admin', 'bantrai', 'love', (currentCoupleCode || '').toLowerCase()];
-
-  if (validPins.includes(val.toLowerCase()) || (currentCoupleCode && val.toUpperCase() === currentCoupleCode.toUpperCase())) {
-    closeAdminPinModal(null, true);
-    quickLoginAs('admin');
-    showToast('👑 Xác thực Bạn Trai thành công! Đã mở quyền Quản trị.');
-    navigate('admin');
-  } else {
-    showToast('❌ Mã PIN không đúng! Gợi ý: 12897 hoặc mã cặp đôi');
-    if (inp) {
-      inp.select();
-      try { inp.focus(); } catch(err) {}
-    }
-  }
-}
+const openAdminPinModal = openAdminLogin;
 
 function openAuthModal() {
-  selectAuthRole(currentAuthUser.role || 'admin');
+  selectAuthRole((currentAuthUser && currentAuthUser.role) ? currentAuthUser.role : 'admin');
   const modal = document.getElementById('auth-modal');
   if (modal) {
     modal.classList.remove('hidden');
