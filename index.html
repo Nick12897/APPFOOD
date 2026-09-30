@@ -15,6 +15,10 @@
   <!-- Leaflet Map Library for Real-World Interactive Maps -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Firebase Compat SDK for Cloud Realtime Sync & Auth -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script id="tailwind-config">
     tailwind.config = {
@@ -104,9 +108,24 @@
         <span id="hdr-sub" class="font-label-sm text-label-sm text-on-surface-variant font-normal opacity-80">Giải Mã</span>
       </div>
     </button>
-    <button onclick="navigate('notebook')" id="hdr-profile-btn" class="w-9 h-9 rounded-full overflow-hidden border border-primary/20 bg-secondary-fixed flex items-center justify-center shadow-xs active:scale-90 transition-transform" title="Sổ tay của bé">
-      <span id="hdr-avatar-content" class="text-xl flex items-center justify-center w-full h-full">🐰</span>
-    </button>
+    <div class="flex items-center gap-2">
+      <!-- Role Badge Pill -->
+      <button onclick="handleRoleHeaderClick()" id="hdr-role-pill" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary text-xs font-bold active:scale-95 transition-all" title="Chuyển vai trò hoặc xem tài khoản">
+        <span id="hdr-role-icon" class="text-sm">👑</span>
+        <span id="hdr-role-text" class="text-xs">Bạn Trai</span>
+      </button>
+
+      <!-- Notification Bell with Unread Badge -->
+      <button onclick="openNotificationCenterModal()" id="hdr-notif-btn" class="relative w-9 h-9 rounded-full bg-surface-container-high hover:bg-surface-variant flex items-center justify-center text-on-surface-variant active:scale-90 transition-transform shadow-2xs" title="Trung tâm thông báo">
+        <span class="material-symbols-outlined text-[20px]">notifications</span>
+        <span id="hdr-notif-badge" class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-primary text-on-primary text-[10px] font-black rounded-full flex items-center justify-center shadow-xs hidden">0</span>
+      </button>
+
+      <!-- Profile Avatar Button -->
+      <button onclick="navigate('notebook')" id="hdr-profile-btn" class="w-9 h-9 rounded-full overflow-hidden border border-primary/20 bg-secondary-fixed flex items-center justify-center shadow-xs active:scale-90 transition-transform" title="Sổ tay của bé">
+        <span id="hdr-avatar-content" class="text-xl flex items-center justify-center w-full h-full">🐰</span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -1041,6 +1060,378 @@
   </div>
 </main>
 
+<!-- ══ SCREEN: ADMIN (TRANG QUẢN TRỊ BẠN TRAI) ══ -->
+<main id="sc-admin" class="screen pt-16 pb-28 bg-surface">
+  <div class="flex flex-col w-full px-margin space-y-4">
+    <!-- Header Hero Card -->
+    <div class="relative bg-gradient-to-br from-primary via-primary-container to-secondary rounded-3xl p-5 text-on-primary shadow-lg overflow-hidden">
+      <!-- Glow effect -->
+      <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+      
+      <div class="flex items-center justify-between relative z-10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/30">
+            👑
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-headline-sm text-lg font-extrabold leading-tight text-white">Quản Trị Bạn Trai</h1>
+              <span class="px-2 py-0.5 rounded-full bg-white/25 text-white text-[10px] font-bold tracking-wider uppercase backdrop-blur-xs">Admin Tối Cao</span>
+            </div>
+            <p class="text-xs text-white/90">Nhận thông báo tức thì &amp; chăm sóc bé yêu từ xa</p>
+          </div>
+        </div>
+        <button onclick="openAuthModal()" class="px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 border border-white/30 text-white text-xs font-bold transition-all active:scale-95 flex items-center gap-1">
+          <span class="material-symbols-outlined text-[15px]">manage_accounts</span>
+          <span>Tài khoản</span>
+        </button>
+      </div>
+
+      <!-- Couple Status & Realtime Sync Bar -->
+      <div class="mt-4 pt-3 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs text-white/95">
+        <div class="flex items-center gap-2">
+          <span class="relative flex h-2.5 w-2.5">
+            <span id="admin-sync-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span id="admin-sync-dot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-300"></span>
+          </span>
+          <span id="admin-sync-status" class="font-semibold">Đang đồng bộ Cloud thời gian thực</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="bg-black/20 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold flex items-center gap-1.5 border border-white/10">
+            <span class="opacity-70">Mã cặp đôi:</span>
+            <span id="admin-couple-code-pill" class="text-yellow-200">LOVE-2026</span>
+          </span>
+          <button onclick="copyCoupleShareLink()" class="px-2 py-1 rounded-full bg-white text-primary hover:bg-white/90 font-bold text-[11px] shadow-xs active:scale-95 transition-all flex items-center gap-1" title="Sao chép link gửi cho Bé">
+            <span class="material-symbols-outlined text-[13px]">share</span>
+            <span>Gửi link cho Bé</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Action Bar -->
+    <div class="grid grid-cols-3 gap-2">
+      <button onclick="playChimeSound(true)" class="p-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group">
+        <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm group-hover:scale-110 transition-transform">🔔</span>
+        <span class="text-[11px] font-bold text-on-surface">Test Ting-Ting</span>
+      </button>
+      <button onclick="forceSyncDataWithCloud()" class="p-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group">
+        <span class="w-8 h-8 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center text-sm group-hover:scale-110 transition-transform">🔄</span>
+        <span class="text-[11px] font-bold text-on-surface">Đồng bộ ngay</span>
+      </button>
+      <button onclick="switchAdminTab('msg')" class="p-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group">
+        <span class="w-8 h-8 rounded-full bg-primary-container/20 text-primary flex items-center justify-center text-sm group-hover:scale-110 transition-transform">💌</span>
+        <span class="text-[11px] font-bold text-on-surface">Bắn tin cho Bé</span>
+      </button>
+    </div>
+
+    <!-- 4 Admin Main Tabs Navigation -->
+    <div class="flex bg-surface-container-high/60 p-1 rounded-2xl gap-1 border border-outline-variant/15 text-xs font-bold overflow-x-auto">
+      <button onclick="switchAdminTab('feed')" id="btn-adm-tab-feed" class="admin-tab-btn flex-1 min-w-[75px] py-2 px-2 rounded-xl bg-surface-container-lowest text-primary shadow-xs transition-all flex items-center justify-center gap-1">
+        <span>🔔</span>
+        <span>Thông báo</span>
+        <span id="admin-feed-badge" class="min-w-[16px] h-4 px-1 rounded-full bg-primary text-white text-[9px] font-black flex items-center justify-center hidden">0</span>
+      </button>
+      <button onclick="switchAdminTab('data')" id="btn-adm-tab-data" class="admin-tab-btn flex-1 min-w-[75px] py-2 px-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1">
+        <span>✏️</span>
+        <span>Sửa dữ liệu</span>
+      </button>
+      <button onclick="switchAdminTab('msg')" id="btn-adm-tab-msg" class="admin-tab-btn flex-1 min-w-[75px] py-2 px-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1">
+        <span>💌</span>
+        <span>Nhắn bé</span>
+      </button>
+      <button onclick="switchAdminTab('settings')" id="btn-adm-tab-settings" class="admin-tab-btn flex-1 min-w-[75px] py-2 px-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1">
+        <span>⚙️</span>
+        <span>Đồng bộ</span>
+      </button>
+    </div>
+
+    <!-- ══ ADMIN TAB 1: LIVE NOTIFICATION FEED & ACTIVITIES ══ -->
+    <div id="adm-tab-feed" class="admin-tab-content space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="font-headline-sm text-sm font-bold text-on-surface">Hoạt động thời gian thực</span>
+          <span id="adm-activity-count-badge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">0 sự kiện</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="flex items-center gap-1.5 cursor-pointer text-xs select-none">
+            <input type="checkbox" id="adm-sound-toggle" checked onchange="toggleAdminSound(this.checked)" class="rounded text-primary accent-primary w-3.5 h-3.5" />
+            <span class="text-on-surface-variant font-medium text-[11px]">Âm báo Ting-ting</span>
+          </label>
+          <button onclick="clearAdminActivities()" class="text-on-surface-variant hover:text-error text-[11px] font-bold underline px-1">
+            Xoá
+          </button>
+        </div>
+      </div>
+
+      <!-- Feed Container -->
+      <div id="adm-activity-feed-list" class="space-y-2.5">
+        <!-- Rendered dynamically by renderAdminActivities() -->
+      </div>
+    </div>
+
+    <!-- ══ ADMIN TAB 2: EDIT BÉ'S DATA (CONTROL PANEL) ══ -->
+    <div id="adm-tab-data" class="admin-tab-content hidden space-y-4">
+      <!-- Data Subtabs: Profile / Wheel / Favorites / Blacklist -->
+      <div class="flex gap-1.5 overflow-x-auto pb-1 -mx-margin px-margin text-xs">
+        <button onclick="switchAdminDataSubtab('profile')" id="btn-admsub-profile" class="admin-subtab-btn px-3 py-1.5 rounded-full bg-primary text-on-primary font-bold shadow-xs whitespace-nowrap">
+          🐰 Hồ sơ Bé
+        </button>
+        <button onclick="switchAdminDataSubtab('favs')" id="btn-admsub-favs" class="admin-subtab-btn px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-bold whitespace-nowrap">
+          ❤️ Quán yêu thích
+        </button>
+        <button onclick="switchAdminDataSubtab('wheel')" id="btn-admsub-wheel" class="admin-subtab-btn px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-bold whitespace-nowrap">
+          🎡 Món vòng quay
+        </button>
+        <button onclick="switchAdminDataSubtab('black')" id="btn-admsub-black" class="admin-subtab-btn px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-bold whitespace-nowrap">
+          💣 Món bé ghét
+        </button>
+      </div>
+
+      <!-- Subtab A: Profile of Bé -->
+      <div id="admsub-profile" class="admin-subtab-content bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/20 space-y-3.5">
+        <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+          <span class="font-headline-sm text-sm font-bold text-on-surface">Chỉnh sửa hồ sơ của Bé</span>
+          <span class="text-xs text-primary font-semibold">Tự động đồng bộ sang máy bé</span>
+        </div>
+
+        <div class="space-y-3 text-xs">
+          <div>
+            <label class="font-bold text-on-surface block mb-1">Tên thường gọi của bé:</label>
+            <input type="text" id="adm-be-name" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-semibold focus:outline-none focus:border-primary" placeholder="Ví dụ: Bé Mèo, Bé Heo..." />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="font-bold text-on-surface block mb-1">Biệt danh:</label>
+              <input type="text" id="adm-be-nickname" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="Công chúa nhỏ" />
+            </div>
+            <div>
+              <label class="font-bold text-on-surface block mb-1">Ngày kỷ niệm:</label>
+              <input type="date" id="adm-be-anniversary" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="font-bold text-on-surface block mb-1">Độ cay bé chịu được (1-5 🌶️):</label>
+              <select id="adm-be-spicy" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary font-medium">
+                <option value="1">1/5 - Không cay xíu nào</option>
+                <option value="2">2/5 - Hơi the the thôi</option>
+                <option value="3">3/5 - Cay vừa vừa</option>
+                <option value="4">4/5 - Ăn cay tốt</option>
+                <option value="5">5/5 - Thần ăn ớt 🌶️🌶️</option>
+              </select>
+            </div>
+            <div>
+              <label class="font-bold text-on-surface block mb-1">Độ ngọt ưa thích (1-5 🍬):</label>
+              <select id="adm-be-sweet" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary font-medium">
+                <option value="1">1/5 - Ít đường (30%)</option>
+                <option value="2">2/5 - Thanh nhẹ (50%)</option>
+                <option value="3">3/5 - Chuẩn vị (70%)</option>
+                <option value="4">4/5 - Ngọt ngào (100%)</option>
+                <option value="5">5/5 - Siêu hảo ngọt</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="font-bold text-on-surface block mb-1">Lời nhắn / Dặn dò đặc biệt cho bé:</label>
+            <textarea id="adm-be-notes" rows="2" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="Bé không thích hành lá, thích ăn đá bào, say xe khi đi xa..."></textarea>
+          </div>
+
+          <button onclick="saveAdminBeProfile()" class="w-full py-2.5 rounded-full bg-primary text-on-primary font-bold shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-[18px]">save</span>
+            <span>Lưu &amp; Đồng Bộ Hồ Sơ Cho Bé</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Subtab B: Favorites list -->
+      <div id="admsub-favs" class="admin-subtab-content hidden space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="font-headline-sm text-sm font-bold text-on-surface">Quản lý Quán &amp; Món Yêu Thích</span>
+          <button onclick="openAddFavModal()" class="px-3 py-1 rounded-full bg-primary text-on-primary text-xs font-bold shadow-xs active:scale-95 flex items-center gap-1">
+            <span class="material-symbols-outlined text-[15px]">add</span>
+            <span>Thêm quán</span>
+          </button>
+        </div>
+        <div id="adm-fav-list" class="space-y-2.5">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Subtab C: Wheel Dishes -->
+      <div id="admsub-wheel" class="admin-subtab-content hidden space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="font-headline-sm text-sm font-bold text-on-surface">Danh sách món trong Vòng quay</span>
+          <button onclick="openAddAdminWheelModal()" class="px-3 py-1 rounded-full bg-primary text-on-primary text-xs font-bold shadow-xs active:scale-95 flex items-center gap-1">
+            <span class="material-symbols-outlined text-[15px]">add</span>
+            <span>Thêm món vào vòng quay</span>
+          </button>
+        </div>
+        <div id="adm-wheel-list" class="space-y-2">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Subtab D: Blacklist -->
+      <div id="admsub-black" class="admin-subtab-content hidden space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="font-headline-sm text-sm font-bold text-error">Món bé ghét / Dị ứng (Né gấp)</span>
+          <button onclick="openAddBlackModal()" class="px-3 py-1 rounded-full bg-error text-on-error text-xs font-bold shadow-xs active:scale-95 flex items-center gap-1">
+            <span class="material-symbols-outlined text-[15px]">add</span>
+            <span>Thêm món cấm</span>
+          </button>
+        </div>
+        <div id="adm-black-list" class="space-y-2">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ADMIN TAB 3: SEND LOVE POPUP / ALERT TO BÉ ══ -->
+    <div id="adm-tab-msg" class="admin-tab-content hidden space-y-3.5">
+      <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/20 space-y-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-base">
+            💌
+          </div>
+          <div>
+            <h3 class="font-headline-sm text-sm font-bold text-on-surface">Bắn Popup Lời Nhắn Tới Màn Hình Bé</h3>
+            <p class="text-[11px] text-on-surface-variant">Lời nhắn sẽ nhảy popup kèm tiếng ting-ting trên điện thoại của Bé</p>
+          </div>
+        </div>
+
+        <!-- Quick Template Chips -->
+        <div class="space-y-1.5">
+          <span class="text-[11px] font-bold text-on-surface-variant">Chọn mẫu câu nhanh ngọt ngào:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setAdminMsgTemplate(1)" class="px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-primary-fixed text-[11px] text-on-surface font-medium transition-colors">
+              🛵 Tối 7h anh qua đón đi ăn nha!
+            </button>
+            <button onclick="setAdminMsgTemplate(2)" class="px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-primary-fixed text-[11px] text-on-surface font-medium transition-colors">
+              🧋 Bé làm việc ngoan, xíu anh mua trà sữa cho nè!
+            </button>
+            <button onclick="setAdminMsgTemplate(3)" class="px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-primary-fixed text-[11px] text-on-surface font-medium transition-colors">
+              🥺 Đừng dỗi anh nữa mà, anh thương bé nhất trần đời!
+            </button>
+            <button onclick="setAdminMsgTemplate(4)" class="px-2.5 py-1 rounded-full bg-surface-container-high hover:bg-primary-fixed text-[11px] text-on-surface font-medium transition-colors">
+              🍜 Tối nay mình đi ăn lẩu/nướng nha công chúa!
+            </button>
+          </div>
+        </div>
+
+        <!-- Message Textarea -->
+        <div>
+          <label class="text-xs font-bold text-on-surface block mb-1">Nội dung lời nhắn:</label>
+          <textarea id="adm-love-msg-input" rows="3" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface text-xs focus:outline-none focus:border-primary leading-relaxed" placeholder="Nhập lời dặn dò, hẹn hò hoặc dỗ dành bé yêu..."></textarea>
+        </div>
+
+        <!-- Popup Style / Animation -->
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-on-surface">Kèm hiệu ứng:</span>
+          <select id="adm-love-effect" class="px-2.5 py-1 rounded-lg bg-surface-container-high border border-outline-variant/30 text-on-surface text-xs font-medium">
+            <option value="hearts">💖 Mưa trái tim rơi</option>
+            <option value="confetti">🎉 Pháo hoa chúc mừng</option>
+            <option value="urgent">🚨 Rủ đi ăn khẩn cấp</option>
+          </select>
+        </div>
+
+        <button onclick="sendPartnerAlertMessage()" class="w-full py-3 rounded-full bg-gradient-to-r from-primary to-primary-container text-white font-bold shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2 text-xs">
+          <span class="material-symbols-outlined text-[18px]">send</span>
+          <span>Bắn Thông Báo Tức Thì Tới Máy Bé</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ ADMIN TAB 4: FIREBASE CLOUD SETTINGS & PAIRING ══ -->
+    <div id="adm-tab-settings" class="admin-tab-content hidden space-y-3.5">
+      <!-- Device Pairing Card -->
+      <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/20 space-y-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center text-base">
+            🔗
+          </div>
+          <div>
+            <h3 class="font-headline-sm text-sm font-bold text-on-surface">Liên Kết Hai Thiết Bị</h3>
+            <p class="text-[11px] text-on-surface-variant">Mã cặp đôi giúp dữ liệu Bạn Trai &amp; Bé Yêu tự động kết nối</p>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div>
+            <label class="font-bold text-on-surface block mb-1">Mã cặp đôi hiện tại:</label>
+            <div class="flex gap-2">
+              <input type="text" id="adm-input-couple-code" class="flex-1 px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-mono font-bold text-center text-sm uppercase" value="LOVE-2026" />
+              <button onclick="updateCoupleCodeFromAdmin()" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-bold shadow-xs active:scale-95 transition-all">
+                Đổi mã
+              </button>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-primary-fixed/20 border border-primary/20 space-y-1.5">
+            <span class="font-bold text-primary block">Cách kết nối điện thoại của Bé siêu nhanh:</span>
+            <p class="text-on-surface-variant text-[11px] leading-relaxed">
+              Bạn chỉ cần bấm nút bên dưới để sao chép đường link, sau đó gửi qua Messenger hoặc Zalo cho Bé. Khi Bé mở link, máy của Bé sẽ tự động nhận vai trò Bé Yêu và kết nối vào hệ thống của bạn!
+            </p>
+            <button onclick="copyCoupleShareLink()" class="w-full py-2 rounded-lg bg-primary text-on-primary font-bold text-xs shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 mt-1">
+              <span class="material-symbols-outlined text-[16px]">content_copy</span>
+              <span>Sao chép link gửi cho Bé</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Firebase Cloud Config -->
+      <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/20 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-base">
+              ☁️
+            </div>
+            <div>
+              <h3 class="font-headline-sm text-sm font-bold text-on-surface">Cấu Hình Firebase Cloud</h3>
+              <p class="text-[11px] text-on-surface-variant">Lưu trên Google Cloud Firestore hoàn toàn miễn phí</p>
+            </div>
+          </div>
+          <button onclick="toggleFirebaseConfigForm()" class="text-xs text-primary font-bold underline">
+            Chỉnh sửa
+          </button>
+        </div>
+
+        <div id="adm-firebase-form-wrap" class="hidden space-y-2 text-xs pt-1 border-t border-surface-container-high">
+          <p class="text-[11px] text-on-surface-variant">
+            Dán đoạn cấu hình `firebaseConfig` từ Firebase Console của bạn vào đây (hoặc để trống để dùng Cloud Relay tự động):
+          </p>
+          <textarea id="adm-firebase-config-json" rows="5" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-mono text-[11px] focus:outline-none focus:border-primary" placeholder='{ "apiKey": "...", "authDomain": "...", "projectId": "..." }'></textarea>
+          <div class="flex gap-2">
+            <button onclick="saveFirebaseCustomConfig()" class="flex-1 py-2 rounded-xl bg-primary text-on-primary font-bold shadow-xs active:scale-95">
+              Lưu Cấu Hình Cloud
+            </button>
+            <button onclick="resetFirebaseConfigDefault()" class="px-3 py-2 rounded-xl bg-surface-container-high text-on-surface-variant font-bold active:scale-95">
+              Đặt lại
+            </button>
+          </div>
+        </div>
+
+        <!-- Backup & Restore -->
+        <div class="pt-2 border-t border-surface-container-high flex gap-2 text-xs">
+          <button onclick="exportAppDataJSON()" class="flex-1 py-2 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-bold active:scale-95 flex items-center justify-center gap-1">
+            <span class="material-symbols-outlined text-[15px]">download</span>
+            <span>Xuất file JSON sao lưu</span>
+          </button>
+          <button onclick="document.getElementById('adm-import-file-input').click()" class="flex-1 py-2 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-bold active:scale-95 flex items-center justify-center gap-1">
+            <span class="material-symbols-outlined text-[15px]">upload</span>
+            <span>Nhập dữ liệu</span>
+          </button>
+          <input type="file" id="adm-import-file-input" accept=".json" onchange="importAppDataJSON(event)" class="hidden" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
 <!-- ══ FLOATING DRAGGABLE MINI WHEEL WIDGET ══ -->
 <div id="floating-wheel-widget" class="fixed z-40 touch-none select-none cursor-grab active:cursor-grabbing flex flex-col items-center group transition-shadow" style="right: 18px; bottom: 92px;">
   <!-- Badge Label -->
@@ -1099,6 +1490,10 @@
     </button>
     <button onclick="navigate('notebook')" class="nav-link flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1 px-2 transition-all text-on-surface-variant" data-s="notebook">
       <span class="material-symbols-outlined text-[24px] nav-icon">menu_book</span><span class="font-label-sm text-label-sm">Sổ tay nàng</span>
+    </button>
+    <button onclick="navigate('admin')" id="nav-btn-admin" class="nav-link flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1 px-2 transition-all text-on-surface-variant relative" data-s="admin">
+      <span class="material-symbols-outlined text-[24px] nav-icon">admin_panel_settings</span><span class="font-label-sm text-label-sm">Quản trị</span>
+      <span id="nav-admin-badge" class="absolute top-1.5 right-2.5 w-2 h-2 rounded-full bg-primary ring-2 ring-white hidden"></span>
     </button>
   </div>
 </nav>
@@ -2511,11 +2906,1248 @@
       </div>
     </div>
   </div>
+<!-- ══ MODAL: ĐĂNG NHẬP & PHÂN QUYỀN CẶP ĐÔI (AUTH MODAL) ══ -->
+<div id="auth-modal" onclick="if(event.target === this) closeAuthModal()" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
+  <div class="bg-surface rounded-3xl p-space-lg w-full max-w-sm flex flex-col shadow-2xl space-y-4 border border-outline-variant/20 animate-pop-in">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-white text-xl shadow-xs">
+          🔐
+        </div>
+        <div>
+          <h3 class="font-headline-sm text-base text-on-surface font-bold">Đăng Nhập Cặp Đôi</h3>
+          <span class="font-label-sm text-[11px] text-on-surface-variant">Đồng bộ dữ liệu hai máy qua Cloud</span>
+        </div>
+      </div>
+      <button type="button" onclick="closeAuthModal()" class="w-8 h-8 rounded-full bg-surface-container hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Role Switcher -->
+    <div class="space-y-1.5">
+      <span class="text-xs font-bold text-on-surface block">Chọn vai trò của bạn:</span>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="selectAuthRole('admin')" id="auth-role-btn-admin" class="py-2 px-3 rounded-2xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+          <span class="text-base">👑</span>
+          <span>Bạn Trai (Admin)</span>
+        </button>
+        <button type="button" onclick="selectAuthRole('user')" id="auth-role-btn-user" class="py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+          <span class="text-base">🐰</span>
+          <span>Bé Yêu (Nàng)</span>
+        </button>
+      </div>
+      <p id="auth-role-desc" class="text-[11px] text-on-surface-variant italic px-1 pt-0.5 leading-relaxed">
+        👑 <b>Bạn Trai</b>: Quản trị viên tối cao, nhận thông báo chuông khi bé quay món, sửa quán ruột &amp; bắn tin dỗ dành.
+      </p>
+    </div>
+
+    <!-- Quick 1-Click Login Box -->
+    <div class="p-3 rounded-2xl bg-surface-container-lowest border border-primary/20 space-y-2">
+      <span class="text-[11px] font-bold text-primary flex items-center gap-1">
+        <span class="material-symbols-outlined text-[14px]">bolt</span>
+        Đăng nhập nhanh 1 chạm (Khuyên dùng):
+      </span>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="quickLoginAs('admin')" class="py-2 px-2.5 rounded-xl bg-primary text-on-primary font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1 shadow-xs">
+          <span>👑 Là Bạn Trai</span>
+        </button>
+        <button type="button" onclick="quickLoginAs('user')" class="py-2 px-2.5 rounded-xl bg-secondary-fixed text-on-secondary-fixed font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1 shadow-xs">
+          <span>🐰 Là Bé Yêu</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Account Details Form (Email / Password / Couple Code) -->
+    <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-2.5 text-xs">
+      <div>
+        <label class="font-bold text-on-surface block mb-1">Mã cặp đôi (Couple Code):</label>
+        <div class="relative">
+          <input type="text" id="auth-couple-code" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-mono font-bold uppercase tracking-wider text-center focus:outline-none focus:border-primary" value="LOVE-2026" placeholder="LOVE-2026" />
+        </div>
+        <span class="text-[10px] text-on-surface-variant block mt-0.5">Cả 2 bạn cùng nhập mã này để kết nối với nhau.</span>
+      </div>
+
+      <div>
+        <label class="font-bold text-on-surface block mb-1">Email:</label>
+        <input type="email" id="auth-email" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="bantrai@example.com" />
+      </div>
+
+      <div>
+        <label class="font-bold text-on-surface block mb-1">Mật khẩu:</label>
+        <input type="password" id="auth-password" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="••••••••" />
+      </div>
+
+      <div class="flex gap-2 pt-1">
+        <button type="submit" id="auth-submit-btn" class="flex-1 py-2.5 rounded-xl bg-primary text-on-primary font-bold shadow-md hover:brightness-105 active:scale-95 transition-all">
+          Đăng Nhập
+        </button>
+        <button type="button" onclick="handleAuthRegister()" class="px-3 py-2.5 rounded-xl bg-surface-container-high text-on-surface-variant hover:text-on-surface font-bold active:scale-95 transition-all">
+          Đăng Ký
+        </button>
+      </div>
+    </form>
+
+    <!-- Current User Info if logged in -->
+    <div id="auth-logged-in-box" class="hidden pt-2 border-t border-surface-container-high flex items-center justify-between text-xs">
+      <div>
+        <span class="text-on-surface-variant block">Đang đăng nhập:</span>
+        <span id="auth-current-user-email" class="font-bold text-on-surface truncate max-w-[170px] inline-block">admin@an-gi-be-oi</span>
+      </div>
+      <button type="button" onclick="handleAuthLogout()" class="px-3 py-1.5 rounded-full bg-error-container text-on-error-container font-bold text-xs active:scale-95 transition-all">
+        Đăng xuất
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: TRUNG TÂM THÔNG BÁO NHANH (NOTIFICATION CENTER) ══ -->
+<div id="notification-center-modal" onclick="if(event.target === this) closeNotificationCenterModal()" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
+  <div class="bg-surface rounded-3xl p-space-lg w-full max-w-sm max-h-[80vh] flex flex-col shadow-2xl space-y-3.5 border border-outline-variant/20 animate-pop-in">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center text-lg">
+          🔔
+        </div>
+        <div>
+          <h3 class="font-headline-sm text-base text-on-surface font-bold">Thông Báo Hoạt Động</h3>
+          <span class="font-label-sm text-[11px] text-on-surface-variant">Cập nhật tức thì từ Bé Yêu</span>
+        </div>
+      </div>
+      <button type="button" onclick="closeNotificationCenterModal()" class="w-8 h-8 rounded-full bg-surface-container hover:bg-surface-variant flex items-center justify-center text-on-surface-variant">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Quick sound & Clear bar -->
+    <div class="flex items-center justify-between text-xs">
+      <button onclick="playChimeSound(true)" class="text-primary font-bold flex items-center gap-1 active:scale-95">
+        <span>🔔 Test Ting-Ting</span>
+      </button>
+      <button onclick="markAllNotificationsAsRead()" class="text-on-surface-variant hover:text-primary font-medium text-[11px]">
+        Đánh dấu đã đọc
+      </button>
+    </div>
+
+    <!-- Notification List Container -->
+    <div id="quick-notif-list" class="space-y-2 overflow-y-auto max-h-[350px] pr-1">
+      <!-- Dynamically filled -->
+    </div>
+
+    <button type="button" onclick="closeNotificationCenterModal(); navigate('admin');" class="w-full py-2.5 rounded-full bg-primary text-on-primary font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
+      <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+      <span>Xem Chi Tiết Trong Trang Quản Trị</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ MODAL: LỜI NHẮN TỪ BẠN TRAI (POPUP HIỂN THỊ TRÊN MÁY BÉ) ══ -->
+<div id="partner-message-modal" class="fixed inset-0 z-50 bg-inverse-surface/75 backdrop-blur-md hidden items-center justify-center p-space-md">
+  <div class="bg-gradient-to-b from-white via-surface to-secondary-fixed/20 rounded-3xl p-6 w-full max-w-sm flex flex-col items-center text-center shadow-2xl space-y-4 border-2 border-primary/30 animate-pop-in relative overflow-hidden">
+    <!-- Heart Floating Background -->
+    <div class="absolute -top-10 -right-10 w-28 h-28 bg-primary/10 rounded-full blur-xl pointer-events-none"></div>
+    <div class="absolute -bottom-10 -left-10 w-28 h-28 bg-secondary/15 rounded-full blur-xl pointer-events-none"></div>
+
+    <!-- Top Badge & Avatar -->
+    <div class="relative">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-3xl shadow-lg border-2 border-white ring-4 ring-primary/20">
+        👑
+      </div>
+      <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white text-xs flex items-center justify-center shadow-xs">
+        💌
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div>
+      <h3 class="font-headline-sm text-base text-primary font-extrabold flex items-center justify-center gap-1">
+        <span>Anh Người Yêu Dặn Nè!</span>
+        <span>💕</span>
+      </h3>
+      <span id="partner-msg-time" class="text-[11px] text-on-surface-variant font-medium">Vừa gửi tức thì</span>
+    </div>
+
+    <!-- Message Bubble -->
+    <div class="w-full bg-white/95 rounded-2xl p-4 shadow-sm border border-primary/20 text-on-surface text-sm font-semibold leading-relaxed">
+      <p id="partner-msg-text">Tối nay 7h anh qua đón công chúa đi ăn nhé! 🛵💨</p>
+    </div>
+
+    <!-- Response Buttons -->
+    <div class="w-full space-y-2 pt-1">
+      <button type="button" onclick="replyPartnerMessage('Dạ em nghe òi, yêu anh nhiều! ❤️')" class="w-full py-3 rounded-full bg-primary text-on-primary font-bold text-xs shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+        <span>Dạ em nghe òi, thương anh!</span>
+        <span>🥰</span>
+      </button>
+      <button type="button" onclick="replyPartnerMessage('Em đang thèm trà sữa nè anh! 🧋')" class="w-full py-2.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5">
+        <span>Gợi ý: Mua trà sữa cho em nha!</span>
+        <span>🧋</span>
+      </button>
+      <button type="button" onclick="closePartnerMessageModal()" class="w-full py-1.5 text-on-surface-variant text-xs font-semibold hover:text-on-surface">
+        Đóng thông báo
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: ADMIN THÊM MÓN VÀO VÒNG QUAY ══ -->
+<div id="admin-add-wheel-modal" onclick="if(event.target === this) closeAdminAddWheelModal()" class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md">
+  <div class="bg-surface rounded-3xl p-space-lg w-full max-w-sm flex flex-col shadow-2xl space-y-3.5 border border-outline-variant/20 animate-pop-in">
+    <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🎡</span>
+        <h3 class="font-headline-sm text-base text-on-surface font-bold">Thêm Món Vào Vòng Quay</h3>
+      </div>
+      <button type="button" onclick="closeAdminAddWheelModal()" class="w-8 h-8 rounded-full bg-surface-container hover:bg-surface-variant flex items-center justify-center text-on-surface-variant">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+    <div class="space-y-3 text-xs">
+      <div>
+        <label class="font-bold text-on-surface block mb-1">Tên món ăn:</label>
+        <input type="text" id="adm-new-wheel-name" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="Ví dụ: Bún chả Hà Nội, Lẩu Thái..." />
+      </div>
+      <div>
+        <label class="font-bold text-on-surface block mb-1">Icon Emoji:</label>
+        <input type="text" id="adm-new-wheel-emoji" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary text-center text-lg" value="🍲" />
+      </div>
+      <button type="button" onclick="saveAdminNewWheelDish()" class="w-full py-2.5 rounded-full bg-primary text-on-primary font-bold shadow-md active:scale-95 transition-all">
+        Thêm Vào Vòng Quay Của Bé
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
+// ══════════════════════════════════════════════════════════════════
+// ── AUTHENTICATION, ADMIN MANAGEMENT & MULTI-DEVICE CLOUD SYNC ──
+// ══════════════════════════════════════════════════════════════════
+
+let currentAuthUser = {
+  role: 'admin', // 'admin' (Bạn Trai) | 'user' (Bé Yêu)
+  email: 'bantrai@an-gi-be-oi.app',
+  name: 'Anh Bạn Trai Chu Đáo',
+  coupleCode: 'LOVE-2026'
+};
+let currentCoupleCode = 'LOVE-2026';
+let cloudActivities = [];
+let unreadNotifCount = 0;
+let adminSoundEnabled = true;
+let cloudBroadcastChannel = null;
+let firebaseAppInstance = null;
+let firestoreDb = null;
+let firestoreUnsubscribe = null;
+let isRemoteUpdateInProgress = false;
+
+// ── Web Audio API: Ting-Ting Chime ──
+function playChimeSound(force = false) {
+  if (!adminSoundEnabled && !force) return;
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const now = ctx.currentTime;
+    
+    // Tone 1: 880Hz (A5)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(880, now);
+    gain1.gain.setValueAtTime(0, now);
+    gain1.gain.linearRampToValueAtTime(0.3, now + 0.03);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.35);
+
+    // Tone 2: 1320Hz (E6) ting!
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1320, now + 0.12);
+    gain2.gain.setValueAtTime(0, now + 0.12);
+    gain2.gain.linearRampToValueAtTime(0.35, now + 0.15);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now + 0.12);
+    osc2.stop(now + 0.7);
+  } catch (e) {
+    console.log('Audio error:', e);
+  }
+}
+
+// ── Activity Logging & Real-time Notification ──
+function cloudLogActivity(type, title, detail, icon = 'info') {
+  const actor = currentAuthUser ? currentAuthUser.role : 'user';
+  const activity = {
+    id: 'act_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+    type: type, // 'wheel', 'mood', 'fav', 'profile', 'partner_msg', 'quiz'
+    title: title,
+    detail: detail || '',
+    icon: icon,
+    actor: actor,
+    actorName: actor === 'admin' ? '👑 Bạn Trai' : '🐰 Bé Yêu',
+    time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+    timestamp: Date.now(),
+    read: false
+  };
+
+  cloudActivities.unshift(activity);
+  if (cloudActivities.length > 60) cloudActivities.pop();
+  try {
+    localStorage.setItem('an_gi_activities_' + currentCoupleCode, JSON.stringify(cloudActivities));
+  } catch(e) {}
+
+  if (currentAuthUser.role === 'admin' && actor !== 'admin') {
+    unreadNotifCount++;
+    playChimeSound();
+  } else if (currentAuthUser.role === 'user' && actor !== 'user') {
+    unreadNotifCount++;
+  }
+  updateNotificationBadges();
+
+  broadcastCloudEvent({
+    type: 'ACTIVITY_LOG',
+    coupleCode: currentCoupleCode,
+    activity: activity
+  });
+
+  pushDataToFirestore({ activity });
+
+  if (document.getElementById('sc-admin') && document.getElementById('sc-admin').classList.contains('active')) {
+    renderAdminActivities();
+  }
+}
+
+function updateNotificationBadges() {
+  const hdrBadge = document.getElementById('hdr-notif-badge');
+  if (hdrBadge) {
+    if (unreadNotifCount > 0) {
+      hdrBadge.textContent = unreadNotifCount > 99 ? '99+' : unreadNotifCount;
+      hdrBadge.classList.remove('hidden');
+    } else {
+      hdrBadge.classList.add('hidden');
+    }
+  }
+
+  const admFeedBadge = document.getElementById('admin-feed-badge');
+  if (admFeedBadge) {
+    if (unreadNotifCount > 0) {
+      admFeedBadge.textContent = unreadNotifCount > 99 ? '99+' : unreadNotifCount;
+      admFeedBadge.classList.remove('hidden');
+    } else {
+      admFeedBadge.classList.add('hidden');
+    }
+  }
+
+  const navBadge = document.getElementById('nav-admin-badge');
+  if (navBadge) {
+    if (unreadNotifCount > 0 && currentAuthUser.role === 'admin') {
+      navBadge.classList.remove('hidden');
+    } else {
+      navBadge.classList.add('hidden');
+    }
+  }
+
+  const actCountBadge = document.getElementById('adm-activity-count-badge');
+  if (actCountBadge) {
+    actCountBadge.textContent = `${cloudActivities.length} sự kiện`;
+  }
+}
+
+function markAllNotificationsAsRead() {
+  unreadNotifCount = 0;
+  cloudActivities.forEach(a => a.read = true);
+  try {
+    localStorage.setItem('an_gi_activities_' + currentCoupleCode, JSON.stringify(cloudActivities));
+  } catch(e) {}
+  updateNotificationBadges();
+  renderAdminActivities();
+  renderQuickNotifList();
+  showToast('Đã đánh dấu đã đọc tất cả thông báo! ✨');
+}
+
+function clearAdminActivities() {
+  if (confirm('Bạn có chắc muốn xoá toàn bộ lịch sử thông báo không?')) {
+    cloudActivities = [];
+    unreadNotifCount = 0;
+    try {
+      localStorage.setItem('an_gi_activities_' + currentCoupleCode, JSON.stringify([]));
+    } catch(e) {}
+    updateNotificationBadges();
+    renderAdminActivities();
+    renderQuickNotifList();
+    showToast('Đã xoá lịch sử hoạt động! 🧹');
+  }
+}
+
+function toggleAdminSound(enabled) {
+  adminSoundEnabled = !!enabled;
+  try {
+    localStorage.setItem('an_gi_admin_sound', adminSoundEnabled ? '1' : '0');
+  } catch(e) {}
+  showToast(adminSoundEnabled ? 'Đã bật chuông Ting-ting! 🔔' : 'Đã tắt chuông Ting-ting 🔕');
+}
+
+function broadcastCloudEvent(eventData) {
+  if (cloudBroadcastChannel) {
+    try {
+      cloudBroadcastChannel.postMessage(eventData);
+    } catch(e) {}
+  }
+}
+
+function initBroadcastSync() {
+  try {
+    if (window.BroadcastChannel) {
+      if (cloudBroadcastChannel) cloudBroadcastChannel.close();
+      cloudBroadcastChannel = new BroadcastChannel('an_gi_channel_' + currentCoupleCode);
+      cloudBroadcastChannel.onmessage = (e) => {
+        handleRemoteCloudEvent(e.data);
+      };
+    }
+  } catch(e) {
+    console.log('BroadcastChannel not supported', e);
+  }
+}
+
+function handleRemoteCloudEvent(data) {
+  if (!data || data.coupleCode !== currentCoupleCode) return;
+  
+  if (data.type === 'ACTIVITY_LOG' && data.activity) {
+    if (!cloudActivities.some(a => a.id === data.activity.id)) {
+      cloudActivities.unshift(data.activity);
+      if (cloudActivities.length > 60) cloudActivities.pop();
+      try {
+        localStorage.setItem('an_gi_activities_' + currentCoupleCode, JSON.stringify(cloudActivities));
+      } catch(e) {}
+      
+      if (currentAuthUser.role === 'admin' && data.activity.actor !== 'admin') {
+        unreadNotifCount++;
+        playChimeSound();
+        showToast(`🔔 Bé: ${data.activity.title}`);
+      }
+      updateNotificationBadges();
+      if (document.getElementById('sc-admin') && document.getElementById('sc-admin').classList.contains('active')) {
+        renderAdminActivities();
+      }
+    }
+  } else if (data.type === 'PARTNER_ALERT') {
+    if (currentAuthUser.role === 'user') {
+      openPartnerMessageModal(data.message, data.effect);
+    }
+  } else if (data.type === 'PARTNER_REPLY') {
+    if (currentAuthUser.role === 'admin') {
+      playChimeSound(true);
+      showToast(`🐰 Bé nhắn lại: "${data.reply}" 💕`);
+      cloudLogActivity('partner_reply', '🐰 Bé phản hồi tin nhắn:', data.reply, 'favorite');
+    }
+  } else if (data.type === 'DATA_SYNC') {
+    applyRemoteDataSync(data.payload);
+  }
+}
+
+function applyRemoteDataSync(payload) {
+  if (!payload || isRemoteUpdateInProgress) return;
+  isRemoteUpdateInProgress = true;
+  try {
+    if (payload.profile) {
+      beProfile = { ...beProfile, ...payload.profile };
+      localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile));
+      renderProfile();
+    }
+    if (payload.favDishes) {
+      favDishes = payload.favDishes;
+      localStorage.setItem('an_gi_fav_dishes', JSON.stringify(favDishes));
+      renderFavList();
+      renderHomeFavList();
+      syncFavDishesToMapRestaurants();
+    }
+    if (payload.wheelItems) {
+      wheelItems = payload.wheelItems;
+      localStorage.setItem('an_gi_wheel_dishes', JSON.stringify(wheelItems));
+      renderWheel();
+    }
+    if (payload.blackDishes) {
+      blackDishes = payload.blackDishes;
+      localStorage.setItem('an_gi_black_dishes', JSON.stringify(blackDishes));
+      renderBlackList();
+    }
+    if (document.getElementById('sc-admin') && document.getElementById('sc-admin').classList.contains('active')) {
+      loadAdminBeData();
+    }
+  } catch(e) {
+    console.error('Remote sync apply error:', e);
+  } finally {
+    isRemoteUpdateInProgress = false;
+  }
+}
+
+function syncDataToCloud() {
+  const payload = {
+    profile: beProfile,
+    favDishes: favDishes,
+    wheelItems: wheelItems,
+    blackDishes: blackDishes,
+    updatedAt: Date.now()
+  };
+
+  broadcastCloudEvent({
+    type: 'DATA_SYNC',
+    coupleCode: currentCoupleCode,
+    payload: payload
+  });
+
+  pushDataToFirestore(payload);
+}
+
+function initFirestoreSync() {
+  const savedCfg = localStorage.getItem('an_gi_firebase_config');
+  if (!savedCfg || !window.firebase) return;
+  try {
+    const config = JSON.parse(savedCfg);
+    if (!config.apiKey || !config.projectId) return;
+
+    if (!firebase.apps.length) {
+      firebaseAppInstance = firebase.initializeApp(config);
+    } else {
+      firebaseAppInstance = firebase.app();
+    }
+    firestoreDb = firebase.firestore();
+
+    const statusEl = document.getElementById('admin-sync-status');
+    if (statusEl) statusEl.textContent = 'Đã kết nối Firebase Cloud Firestore 🟢';
+
+    if (firestoreUnsubscribe) firestoreUnsubscribe();
+    firestoreUnsubscribe = firestoreDb.collection('couples').doc(currentCoupleCode)
+      .onSnapshot((doc) => {
+        if (doc.exists) {
+          const data = doc.data();
+          if (data && data.updatedAt && !isRemoteUpdateInProgress) {
+            applyRemoteDataSync(data);
+          }
+        }
+      }, (err) => {
+        console.log('Firestore listener error:', err);
+      });
+  } catch(e) {
+    console.log('Firebase init error:', e);
+  }
+}
+
+function pushDataToFirestore(data) {
+  if (!firestoreDb) return;
+  try {
+    firestoreDb.collection('couples').doc(currentCoupleCode).set(data, { merge: true })
+      .catch(err => console.log('Firestore write err:', err));
+  } catch(e) {}
+}
+
+function initAuthAndSync() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramCouple = urlParams.get('couple');
+  const paramRole = urlParams.get('role');
+
+  if (paramCouple) {
+    currentCoupleCode = paramCouple.toUpperCase().trim();
+    localStorage.setItem('an_gi_couple_code', currentCoupleCode);
+  } else {
+    currentCoupleCode = localStorage.getItem('an_gi_couple_code') || 'LOVE-2026';
+  }
+
+  const savedUser = localStorage.getItem('an_gi_auth_user');
+  if (savedUser) {
+    try {
+      currentAuthUser = JSON.parse(savedUser);
+    } catch(e) {}
+  } else {
+    currentAuthUser = {
+      role: paramRole || 'admin',
+      email: paramRole === 'user' ? 'beyeu@love.app' : 'bantrai@love.app',
+      name: paramRole === 'user' ? 'Bé Yêu (Công Chúa)' : 'Anh Bạn Trai Chu Đáo',
+      coupleCode: currentCoupleCode
+    };
+    try {
+      localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+    } catch(e) {}
+  }
+
+  if (paramRole && (paramRole === 'admin' || paramRole === 'user')) {
+    currentAuthUser.role = paramRole;
+    try {
+      localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+    } catch(e) {}
+  }
+
+  try {
+    const savedActs = localStorage.getItem('an_gi_activities_' + currentCoupleCode);
+    if (savedActs) {
+      cloudActivities = JSON.parse(savedActs);
+    } else {
+      cloudActivities = [
+        {
+          id: 'init_1',
+          type: 'info',
+          title: 'Chào mừng hai bạn đến với Ăn Gì Bé Ơi!',
+          detail: `Mã cặp đôi ${currentCoupleCode} đã sẵn sàng đồng bộ 2 máy.`,
+          icon: 'favorite',
+          actor: 'admin',
+          actorName: 'Hệ thống 💕',
+          time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+          timestamp: Date.now(),
+          read: true
+        }
+      ];
+    }
+  } catch(e) {
+    cloudActivities = [];
+  }
+
+  const soundPref = localStorage.getItem('an_gi_admin_sound');
+  adminSoundEnabled = soundPref !== '0';
+  const soundToggle = document.getElementById('adm-sound-toggle');
+  if (soundToggle) soundToggle.checked = adminSoundEnabled;
+
+  updateAuthUI();
+  updateNotificationBadges();
+  initBroadcastSync();
+  initFirestoreSync();
+}
+
+function updateAuthUI() {
+  const rolePill = document.getElementById('hdr-role-pill');
+  const roleIcon = document.getElementById('hdr-role-icon');
+  const roleText = document.getElementById('hdr-role-text');
+  
+  if (currentAuthUser.role === 'admin') {
+    if (roleIcon) roleIcon.textContent = '👑';
+    if (roleText) roleText.textContent = 'Bạn Trai';
+    if (rolePill) {
+      rolePill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary text-xs font-bold active:scale-95 transition-all';
+    }
+  } else {
+    if (roleIcon) roleIcon.textContent = '🐰';
+    if (roleText) roleText.textContent = 'Bé Yêu';
+    if (rolePill) {
+      rolePill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed hover:bg-secondary-fixed/80 border border-secondary text-on-secondary-fixed text-xs font-bold active:scale-95 transition-all';
+    }
+  }
+
+  const codePill = document.getElementById('admin-couple-code-pill');
+  if (codePill) codePill.textContent = currentCoupleCode;
+  const inputCode = document.getElementById('adm-input-couple-code');
+  if (inputCode) inputCode.value = currentCoupleCode;
+  const authCodeInput = document.getElementById('auth-couple-code');
+  if (authCodeInput) authCodeInput.value = currentCoupleCode;
+
+  const userEmail = document.getElementById('auth-current-user-email');
+  const loggedInBox = document.getElementById('auth-logged-in-box');
+  if (userEmail && currentAuthUser) {
+    userEmail.textContent = `${currentAuthUser.email} (${currentAuthUser.role === 'admin' ? '👑 Bạn Trai' : '🐰 Bé Yêu'})`;
+    if (loggedInBox) loggedInBox.classList.remove('hidden');
+  }
+}
+
+function handleRoleHeaderClick() {
+  if (currentAuthUser.role === 'admin') {
+    navigate('admin');
+  } else {
+    openAuthModal();
+  }
+}
+
+function openAuthModal() {
+  selectAuthRole(currentAuthUser.role || 'admin');
+  const modal = document.getElementById('auth-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+let pendingAuthRole = 'admin';
+function selectAuthRole(role) {
+  pendingAuthRole = role;
+  const btnAdmin = document.getElementById('auth-role-btn-admin');
+  const btnUser = document.getElementById('auth-role-btn-user');
+  const desc = document.getElementById('auth-role-desc');
+
+  if (role === 'admin') {
+    if (btnAdmin) btnAdmin.className = 'py-2 px-3 rounded-2xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
+    if (btnUser) btnUser.className = 'py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
+    if (desc) desc.innerHTML = '👑 <b>Bạn Trai</b>: Quản trị viên tối cao, nhận chuông Ting-ting khi bé quay món, sửa quán ruột &amp; bắn tin dỗ dành.';
+  } else {
+    if (btnAdmin) btnAdmin.className = 'py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
+    if (btnUser) btnUser.className = 'py-2 px-3 rounded-2xl border-2 border-secondary bg-secondary-fixed text-on-secondary-fixed font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
+    if (desc) desc.innerHTML = '🐰 <b>Bé Yêu</b>: Thỏa thích quay bánh xe, chọn mood tâm trạng, lưu món ngon và nhận popup cưng chiều từ Bạn Trai.';
+  }
+}
+
+function quickLoginAs(role) {
+  const code = (document.getElementById('auth-couple-code')?.value || currentCoupleCode || 'LOVE-2026').toUpperCase().trim();
+  currentCoupleCode = code;
+  localStorage.setItem('an_gi_couple_code', currentCoupleCode);
+
+  currentAuthUser = {
+    role: role,
+    email: role === 'admin' ? 'bantrai@love.app' : 'beyeu@love.app',
+    name: role === 'admin' ? 'Anh Bạn Trai Chu Đáo' : 'Bé Yêu (Công Chúa)',
+    coupleCode: currentCoupleCode
+  };
+
+  localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+  updateAuthUI();
+  closeAuthModal();
+  initBroadcastSync();
+
+  if (role === 'admin') {
+    playChimeSound(true);
+    showToast('Đã đăng nhập vai trò: 👑 Bạn Trai (Admin)!');
+    navigate('admin');
+  } else {
+    showToast('Đã đăng nhập vai trò: 🐰 Bé Yêu! 💕');
+    navigate('home');
+  }
+}
+
+function handleAuthSubmit(e) {
+  if (e) e.preventDefault();
+  const email = document.getElementById('auth-email').value.trim() || (pendingAuthRole === 'admin' ? 'bantrai@love.app' : 'beyeu@love.app');
+  const code = (document.getElementById('auth-couple-code').value || 'LOVE-2026').toUpperCase().trim();
+
+  currentCoupleCode = code;
+  localStorage.setItem('an_gi_couple_code', currentCoupleCode);
+
+  currentAuthUser = {
+    role: pendingAuthRole,
+    email: email,
+    name: pendingAuthRole === 'admin' ? 'Anh Bạn Trai Chu Đáo' : 'Bé Yêu (Công Chúa)',
+    coupleCode: currentCoupleCode
+  };
+
+  localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+  updateAuthUI();
+  closeAuthModal();
+  initBroadcastSync();
+
+  showToast(`Đăng nhập thành công với vai trò: ${pendingAuthRole === 'admin' ? '👑 Bạn Trai' : '🐰 Bé Yêu'}!`);
+  if (pendingAuthRole === 'admin') {
+    navigate('admin');
+  }
+}
+
+function handleAuthRegister() {
+  handleAuthSubmit();
+}
+
+function handleAuthLogout() {
+  localStorage.removeItem('an_gi_auth_user');
+  currentAuthUser = {
+    role: 'user',
+    email: 'khach@love.app',
+    name: 'Bé Yêu',
+    coupleCode: currentCoupleCode
+  };
+  updateAuthUI();
+  closeAuthModal();
+  showToast('Đã đăng xuất tài khoản!');
+  navigate('home');
+}
+
+function switchAdminTab(tabName) {
+  document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+    btn.className = 'admin-tab-btn flex-1 min-w-[75px] py-2 px-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1';
+  });
+  const actBtn = document.getElementById('btn-adm-tab-' + tabName);
+  if (actBtn) {
+    actBtn.className = 'admin-tab-btn flex-1 min-w-[75px] py-2 px-2 rounded-xl bg-surface-container-lowest text-primary shadow-xs transition-all flex items-center justify-center gap-1';
+  }
+
+  document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.add('hidden'));
+  const target = document.getElementById('adm-tab-' + tabName);
+  if (target) target.classList.remove('hidden');
+
+  if (tabName === 'feed') renderAdminActivities();
+  if (tabName === 'data') loadAdminBeData();
+}
+
+function switchAdminDataSubtab(subtab) {
+  document.querySelectorAll('.admin-subtab-btn').forEach(b => {
+    b.className = 'admin-subtab-btn px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-bold whitespace-nowrap';
+  });
+  const act = document.getElementById('btn-admsub-' + subtab);
+  if (act) act.className = 'admin-subtab-btn px-3 py-1.5 rounded-full bg-primary text-on-primary font-bold shadow-xs whitespace-nowrap';
+
+  document.querySelectorAll('.admin-subtab-content').forEach(c => c.classList.add('hidden'));
+  const content = document.getElementById('admsub-' + subtab);
+  if (content) content.classList.remove('hidden');
+}
+
+function renderAdminDashboard() {
+  updateAuthUI();
+  renderAdminActivities();
+  loadAdminBeData();
+}
+
+function renderAdminActivities() {
+  const container = document.getElementById('adm-activity-feed-list');
+  if (!container) return;
+  if (!cloudActivities || cloudActivities.length === 0) {
+    container.innerHTML = `
+      <div class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/15 text-center space-y-2">
+        <span class="text-3xl">📭</span>
+        <p class="text-xs font-semibold text-on-surface">Chưa có hoạt động mới nào!</p>
+        <p class="text-[11px] text-on-surface-variant">Khi Bé Yêu quay bánh xe, chọn tâm trạng hoặc thêm quán, thông báo sẽ hiển thị ở đây ngay lập tức kèm chuông Ting-ting.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = cloudActivities.map(act => {
+    let iconBg = 'bg-primary/10 text-primary';
+    if (act.type === 'wheel') iconBg = 'bg-secondary-fixed text-secondary';
+    else if (act.type === 'mood') iconBg = 'bg-amber-100 text-amber-700';
+    else if (act.type === 'partner_msg') iconBg = 'bg-pink-100 text-pink-700';
+
+    return `
+      <div class="p-3 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex items-start gap-2.5 transition-all">
+        <div class="w-9 h-9 rounded-xl ${iconBg} flex items-center justify-center text-lg shrink-0">
+          <span class="material-symbols-outlined text-[20px]">${act.icon || 'info'}</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-1">
+            <span class="font-bold text-xs text-on-surface truncate">${act.title}</span>
+            <span class="text-[10px] text-on-surface-variant shrink-0">${act.time}</span>
+          </div>
+          ${act.detail ? `<p class="text-[11px] text-on-surface-variant font-medium mt-0.5">${act.detail}</p>` : ''}
+          <div class="flex items-center gap-1.5 mt-1.5">
+            <span class="text-[9px] px-1.5 py-0.2 rounded-full font-bold ${act.actor === 'admin' ? 'bg-primary/15 text-primary' : 'bg-secondary-fixed/50 text-secondary'}">${act.actorName}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function loadAdminBeData() {
+  if (beProfile) {
+    const nameInput = document.getElementById('adm-be-name');
+    if (nameInput) nameInput.value = beProfile.name || 'Bé Heo';
+    const nickInput = document.getElementById('adm-be-nickname');
+    if (nickInput) nickInput.value = beProfile.nickname || 'Công chúa nhỏ';
+    const annivInput = document.getElementById('adm-be-anniversary');
+    if (annivInput) annivInput.value = beProfile.anniversary || '2024-02-14';
+    const spicyInput = document.getElementById('adm-be-spicy');
+    if (spicyInput) spicyInput.value = String(beProfile.spicyLevel || 2);
+    const sweetInput = document.getElementById('adm-be-sweet');
+    if (sweetInput) sweetInput.value = String(beProfile.sweetLevel || 2);
+    const notesInput = document.getElementById('adm-be-notes');
+    if (notesInput) notesInput.value = beProfile.spicyNote || '';
+  }
+
+  const favListEl = document.getElementById('adm-fav-list');
+  if (favListEl) {
+    if (!favDishes || favDishes.length === 0) {
+      favListEl.innerHTML = `<p class="text-xs text-on-surface-variant italic">Chưa có quán nào trong danh sách.</p>`;
+    } else {
+      favListEl.innerHTML = favDishes.map((fav, i) => `
+        <div class="p-3 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2.5 min-w-0 flex-1">
+            <div class="w-8 h-8 rounded-xl bg-primary-fixed flex items-center justify-center text-sm shrink-0 overflow-hidden">
+              ${isImageAvatar(fav.icon) ? `<img src="${fav.icon}" class="w-full h-full object-cover"/>` : (fav.icon || '🍜')}
+            </div>
+            <div class="min-w-0 flex-1">
+              <span class="font-bold text-xs text-on-surface truncate block">${fav.title}</span>
+              <span class="text-[10px] text-on-surface-variant truncate block">${fav.address || ''}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 shrink-0">
+            <button onclick="deleteAdminFavDish('${fav.id}')" class="w-7 h-7 rounded-full bg-error-container/60 hover:bg-error hover:text-white text-error flex items-center justify-center transition-colors" title="Xóa quán">
+              <span class="material-symbols-outlined text-[15px]">delete</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+
+  const wheelListEl = document.getElementById('adm-wheel-list');
+  if (wheelListEl) {
+    wheelListEl.innerHTML = wheelItems.map((item, i) => `
+      <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/20 flex items-center justify-between gap-2">
+        <span class="font-semibold text-xs text-on-surface truncate flex-1">${i + 1}. ${item}</span>
+        <button onclick="deleteAdminWheelDish(${i})" class="w-6 h-6 rounded-full hover:bg-error-container hover:text-error text-outline flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[15px]">close</span>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  const blackListEl = document.getElementById('adm-black-list');
+  if (blackListEl) {
+    blackListEl.innerHTML = blackDishes.map((item, i) => `
+      <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-error/20 flex items-center justify-between gap-2">
+        <span class="font-semibold text-xs text-error truncate flex-1">💣 ${item.title || item}</span>
+        <button onclick="deleteAdminBlackDish(${i})" class="w-6 h-6 rounded-full hover:bg-error hover:text-white text-error flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[15px]">close</span>
+        </button>
+      </div>
+    `).join('');
+  }
+}
+
+function saveAdminBeProfile() {
+  const name = document.getElementById('adm-be-name').value.trim() || 'Bé Heo';
+  const nick = document.getElementById('adm-be-nickname').value.trim() || 'Công chúa nhỏ';
+  const anniv = document.getElementById('adm-be-anniversary').value;
+  const spicy = parseInt(document.getElementById('adm-be-spicy').value) || 2;
+  const sweet = parseInt(document.getElementById('adm-be-sweet').value) || 2;
+  const notes = document.getElementById('adm-be-notes').value.trim();
+
+  beProfile = {
+    ...beProfile,
+    name: name,
+    nickname: nick,
+    anniversary: anniv,
+    spicyLevel: spicy,
+    sweetLevel: sweet,
+    spicyNote: notes
+  };
+
+  try {
+    localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile));
+  } catch(e) {}
+
+  renderProfile();
+  syncDataToCloud();
+  cloudLogActivity('profile_admin', '👑 Bạn Trai đã cập nhật hồ sơ cho Bé', `Tên: ${name}`, 'edit');
+  showToast('Đã lưu & đồng bộ hồ sơ Bé thành công! 💕');
+}
+
+function deleteAdminFavDish(id) {
+  if (confirm('Bạn có chắc muốn xóa quán này khỏi Sổ tay của Bé?')) {
+    favDishes = favDishes.filter(d => d.id !== id);
+    saveFavDishesToStorage();
+    renderFavList();
+    renderHomeFavList();
+    syncFavDishesToMapRestaurants();
+    loadAdminBeData();
+    syncDataToCloud();
+    cloudLogActivity('fav_delete', '👑 Bạn Trai đã xoá một quán khỏi Sổ tay', '', 'delete');
+    showToast('Đã xoá quán thành công!');
+  }
+}
+
+function deleteAdminWheelDish(idx) {
+  const item = wheelItems[idx];
+  wheelItems.splice(idx, 1);
+  localStorage.setItem('an_gi_wheel_dishes', JSON.stringify(wheelItems));
+  renderWheel();
+  loadAdminBeData();
+  syncDataToCloud();
+  cloudLogActivity('wheel_admin', '👑 Bạn Trai đã chỉnh sửa vòng quay:', `Bỏ món: ${item}`, 'tune');
+  showToast(`Đã bỏ món "${item}" khỏi vòng quay!`);
+}
+
+function openAddAdminWheelModal() {
+  const modal = document.getElementById('admin-add-wheel-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+}
+
+function closeAdminAddWheelModal() {
+  const modal = document.getElementById('admin-add-wheel-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function saveAdminNewWheelDish() {
+  const input = document.getElementById('adm-new-wheel-name');
+  const name = input ? input.value.trim() : '';
+  if (!name) {
+    showToast('Vui lòng nhập tên món nhé!');
+    return;
+  }
+  wheelItems.push(name);
+  localStorage.setItem('an_gi_wheel_dishes', JSON.stringify(wheelItems));
+  renderWheel();
+  loadAdminBeData();
+  closeAdminAddWheelModal();
+  input.value = '';
+  syncDataToCloud();
+  cloudLogActivity('wheel_admin', '👑 Bạn Trai thêm món bất ngờ vào vòng quay:', name, 'add_circle');
+  showToast(`Đã thêm món "${name}" vào vòng quay của Bé! 🎡`);
+}
+
+function deleteAdminBlackDish(idx) {
+  blackDishes.splice(idx, 1);
+  localStorage.setItem('an_gi_black_dishes', JSON.stringify(blackDishes));
+  renderBlackList();
+  loadAdminBeData();
+  syncDataToCloud();
+  showToast('Đã xoá món khỏi danh sách cấm!');
+}
+
+function setAdminMsgTemplate(idx) {
+  const templates = [
+    '',
+    'Tối nay 7h anh qua đón công chúa đi ăn nha! 🛵💨',
+    'Bé làm việc ngoan, xíu anh mua trà sữa cho nè! 🧋',
+    'Đừng dỗi anh nữa mà, anh thương bé nhất trần đời! 🥺💖',
+    'Tối nay mình đi ăn lẩu/nướng nha công chúa! 🍲'
+  ];
+  const input = document.getElementById('adm-love-msg-input');
+  if (input && templates[idx]) {
+    input.value = templates[idx];
+  }
+}
+
+function sendPartnerAlertMessage() {
+  const input = document.getElementById('adm-love-msg-input');
+  const msg = input ? input.value.trim() : '';
+  if (!msg) {
+    showToast('Vui lòng nhập lời nhắn gửi cho Bé nhé!');
+    return;
+  }
+  const effect = document.getElementById('adm-love-effect')?.value || 'hearts';
+
+  broadcastCloudEvent({
+    type: 'PARTNER_ALERT',
+    coupleCode: currentCoupleCode,
+    message: msg,
+    effect: effect
+  });
+
+  pushDataToFirestore({
+    latestMessage: {
+      message: msg,
+      effect: effect,
+      timestamp: Date.now()
+    }
+  });
+
+  cloudLogActivity('partner_msg', '💌 Bạn Trai vừa gửi tin nhắn:', msg, 'favorite');
+  playChimeSound(true);
+  showToast('Đã bắn thông báo tức thì tới máy của Bé! 🚀💕');
+  input.value = '';
+}
+
+function openPartnerMessageModal(msg, effect) {
+  const textEl = document.getElementById('partner-msg-text');
+  if (textEl) textEl.textContent = msg || 'Anh nhớ bé nhiều lắm nè! 💕';
+  const modal = document.getElementById('partner-message-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  playChimeSound(true);
+
+  if (effect === 'hearts' || effect === 'confetti') {
+    if (typeof fireConfetti === 'function') fireConfetti();
+  }
+}
+
+function closePartnerMessageModal() {
+  const modal = document.getElementById('partner-message-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function replyPartnerMessage(replyText) {
+  closePartnerMessageModal();
+  broadcastCloudEvent({
+    type: 'PARTNER_REPLY',
+    coupleCode: currentCoupleCode,
+    reply: replyText
+  });
+  pushDataToFirestore({
+    latestReply: {
+      reply: replyText,
+      timestamp: Date.now()
+    }
+  });
+  cloudLogActivity('partner_reply', '🐰 Bé nhắn lại:', replyText, 'mark_email_read');
+  showToast('Đã gửi phản hồi lại cho Anh Bạn Trai! 💕');
+}
+
+function copyCoupleShareLink() {
+  const link = window.location.origin + window.location.pathname + '?couple=' + encodeURIComponent(currentCoupleCode) + '&role=user';
+  navigator.clipboard.writeText(link).then(() => {
+    showToast('Đã sao chép link! Hãy gửi link này cho Bé qua Zalo/Messenger nha 💕');
+  }).catch(() => {
+    prompt('Sao chép link này gửi cho Bé:', link);
+  });
+}
+
+function updateCoupleCodeFromAdmin() {
+  const input = document.getElementById('adm-input-couple-code');
+  const newCode = input ? input.value.trim().toUpperCase() : '';
+  if (!newCode) {
+    showToast('Mã cặp đôi không được để trống nhé!');
+    return;
+  }
+  currentCoupleCode = newCode;
+  localStorage.setItem('an_gi_couple_code', currentCoupleCode);
+  if (currentAuthUser) {
+    currentAuthUser.coupleCode = currentCoupleCode;
+    localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+  }
+  updateAuthUI();
+  initBroadcastSync();
+  initFirestoreSync();
+  showToast(`Đã cập nhật mã cặp đôi: ${currentCoupleCode} ✨`);
+}
+
+function forceSyncDataWithCloud() {
+  syncDataToCloud();
+  playChimeSound(true);
+  showToast('Đang buộc đồng bộ dữ liệu tới Cloud... Xong! 🟢');
+}
+
+function toggleFirebaseConfigForm() {
+  const wrap = document.getElementById('adm-firebase-form-wrap');
+  if (wrap) wrap.classList.toggle('hidden');
+}
+
+function saveFirebaseCustomConfig() {
+  const jsonText = document.getElementById('adm-firebase-config-json')?.value.trim();
+  if (!jsonText) {
+    showToast('Vui lòng dán đoạn JSON cấu hình Firebase nhé!');
+    return;
+  }
+  try {
+    const parsed = JSON.parse(jsonText);
+    localStorage.setItem('an_gi_firebase_config', JSON.stringify(parsed));
+    initFirestoreSync();
+    showToast('Đã lưu cấu hình Firebase thành công! ☁️');
+    toggleFirebaseConfigForm();
+  } catch(e) {
+    showToast('Đoạn JSON cấu hình chưa hợp lệ! Vui lòng kiểm tra lại.');
+  }
+}
+
+function resetFirebaseConfigDefault() {
+  localStorage.removeItem('an_gi_firebase_config');
+  showToast('Đã đặt lại cấu hình Firebase mặc định (Chế độ Hybrid Relay).');
+  toggleFirebaseConfigForm();
+}
+
+function exportAppDataJSON() {
+  const data = {
+    profile: beProfile,
+    favDishes: favDishes,
+    wheelDishes: wheelItems,
+    blackDishes: blackDishes,
+    activities: cloudActivities,
+    coupleCode: currentCoupleCode,
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `AnGiBeOi_Backup_${currentCoupleCode}_${Date.now()}.json`;
+  a.click();
+  showToast('Đã xuất file dữ liệu sao lưu thành công! 📥');
+}
+
+function importAppDataJSON(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.profile) beProfile = data.profile;
+      if (data.favDishes) favDishes = data.favDishes;
+      if (data.wheelDishes) wheelItems = data.wheelDishes;
+      if (data.blackDishes) blackDishes = data.blackDishes;
+      if (data.coupleCode) currentCoupleCode = data.coupleCode;
+      
+      localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile));
+      localStorage.setItem('an_gi_fav_dishes', JSON.stringify(favDishes));
+      localStorage.setItem('an_gi_wheel_dishes', JSON.stringify(wheelItems));
+      localStorage.setItem('an_gi_black_dishes', JSON.stringify(blackDishes));
+      localStorage.setItem('an_gi_couple_code', currentCoupleCode);
+
+      renderProfile();
+      renderWheel();
+      renderFavList();
+      renderBlackList();
+      loadAdminBeData();
+      syncDataToCloud();
+      showToast('Đã khôi phục dữ liệu từ file JSON thành công! 🎉');
+    } catch(err) {
+      showToast('File JSON không hợp lệ! Vui lòng thử lại.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function openNotificationCenterModal() {
+  renderQuickNotifList();
+  const modal = document.getElementById('notification-center-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+}
+
+function closeNotificationCenterModal() {
+  const modal = document.getElementById('notification-center-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function renderQuickNotifList() {
+  const container = document.getElementById('quick-notif-list');
+  if (!container) return;
+  if (!cloudActivities || cloudActivities.length === 0) {
+    container.innerHTML = `<p class="text-xs text-on-surface-variant text-center py-4">Chưa có thông báo nào.</p>`;
+    return;
+  }
+  container.innerHTML = cloudActivities.slice(0, 15).map(act => `
+    <div class="p-2.5 rounded-xl bg-surface-container-high/60 flex items-start gap-2 text-xs">
+      <span class="material-symbols-outlined text-[18px] text-primary shrink-0">${act.icon || 'info'}</span>
+      <div class="flex-1 min-w-0">
+        <span class="font-bold text-on-surface block truncate">${act.title}</span>
+        ${act.detail ? `<span class="text-[11px] text-on-surface-variant block truncate">${act.detail}</span>` : ''}
+        <span class="text-[10px] text-outline">${act.time}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
 // ── Navigation ──
-const subs={home:'Giải Mã',quiz:'Trắc Nghiệm',result:'Kết Quả',wheel:'Vòng Quay',map:'Bản Đồ Quán',notebook:'Sổ Tay Nàng'};
+const subs = {
+  home: 'Giải Mã',
+  quiz: 'Trắc Nghiệm',
+  result: 'Kết Quả',
+  wheel: 'Vòng Quay',
+  map: 'Bản Đồ Quán',
+  notebook: 'Sổ Tay Nàng',
+  admin: 'Quản Trị Bạn Trai'
+};
+
 function navigate(s){
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
   const sc=document.getElementById('sc-'+s);
@@ -2527,6 +4159,9 @@ function navigate(s){
   document.querySelectorAll('.nav-link').forEach(l=>{
     l.classList.toggle('act',l.dataset.s===s);
   });
+  if(s==='admin'){
+    renderAdminDashboard();
+  }
   if(s==='quiz')initQuiz();
   if(s==='result'&&(!currentResultData || !currentMatchingCandidates || currentMatchingCandidates.length === 0)){
     evaluateAndPickDishes([selectedMoodIdx || 0, 0, 1]);
@@ -2648,6 +4283,8 @@ function selectMood(idx, silent = false) {
     // Switch wheel preset automatically
     applyPreset(mood.wheelPreset);
     showToast(mood.tipToast);
+    cloudLogActivity('mood', `☀️ Bé chọn tâm trạng: ${curTitle}`, mood.tipToast, 'mood');
+    syncDataToCloud();
   }
 }
 
@@ -4168,6 +5805,7 @@ function openWinModal(dishName) {
   modal.classList.remove('hidden');
   fireConfetti();
   playCelebrationSound();
+  cloudLogActivity('wheel', '🎡 Bé vừa quay trúng món:', dishName, 'casino');
 }
 
 function closeWinModal() {
@@ -8604,6 +10242,8 @@ function saveProfileChanges() {
   renderResultTip(currentResultData || (Rs && Rs[0]));
   if (leafletMap) renderLeafletOverlays();
   closeProfileEditModal();
+  cloudLogActivity('profile', `✏️ Bé đã cập nhật hồ sơ cá nhân (${name})`, `Toạ độ & thông tin đã được đồng bộ`, 'person');
+  syncDataToCloud();
   showToast(`Đã lưu và liên kết bản đồ thành công cho ${beProfile.name || 'Bé'}! 🥰📍`);
 }
 
@@ -9587,6 +11227,8 @@ function saveFavDishItem() {
   }
 
   closeFavModal();
+  cloudLogActivity('fav', (currentEditingFavId ? '✏️ Cập nhật quán yêu thích: ' : '❤️ Thêm quán yêu thích mới: ') + title, address || selectedAreaName, 'bookmark_heart');
+  syncDataToCloud();
   if (currentScreen === 'notebook') {
     nbTab('fav');
   } else if (currentScreen === 'map') {
@@ -9605,12 +11247,14 @@ function deleteFavDish(id) {
     const mIdx = customMapRestaurants.findIndex(m => m.favId === id || m.name === removed.title);
     if (mIdx !== -1) {
       customMapRestaurants.splice(mIdx, 1);
-      saveCustomMapRestaurantsToStorage();
-      renderMapRestaurants();
-      if (leafletMap) renderLeafletOverlays();
     }
+    saveCustomMapRestaurantsToStorage();
+    renderMapRestaurants();
+    if (leafletMap) renderLeafletOverlays();
     renderFavList();
     renderHomeFavList();
+    cloudLogActivity('fav_delete', `🗑️ Đã xoá quán "${removed.title}" khỏi Sổ tay`, '', 'delete');
+    syncDataToCloud();
     showToast(`Đã xóa "${removed.title}" khỏi danh sách! 🗑️`);
   }
 }
@@ -10683,6 +12327,7 @@ function resetResultTipToDefault() {
 evaluateAndPickDishes([0, 0, 1]);
 displayCurrentCandidate(0);
 navigate('home');
+initAuthAndSync();
 renderWheel();
 updateCustomBadge();
 initQuickEmojiBars();
