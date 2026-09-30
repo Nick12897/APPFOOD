@@ -1491,7 +1491,7 @@
     <button onclick="navigate('notebook')" class="nav-link flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1 px-2 transition-all text-on-surface-variant" data-s="notebook">
       <span class="material-symbols-outlined text-[24px] nav-icon">menu_book</span><span class="font-label-sm text-label-sm">Sổ tay nàng</span>
     </button>
-    <button onclick="navigate('admin')" id="nav-btn-admin" class="nav-link flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1 px-2 transition-all text-on-surface-variant relative" data-s="admin">
+    <button onclick="navigate('admin')" id="nav-btn-admin" class="nav-link flex flex-col items-center justify-center gap-1 min-w-[44px] min-h-[44px] py-1 px-2 transition-all text-on-surface-variant relative hidden" data-s="admin" style="display: none;">
       <span class="material-symbols-outlined text-[24px] nav-icon">admin_panel_settings</span><span class="font-label-sm text-label-sm">Quản trị</span>
       <span id="nav-admin-badge" class="absolute top-1.5 right-2.5 w-2 h-2 rounded-full bg-primary ring-2 ring-white hidden"></span>
     </button>
@@ -3549,6 +3549,30 @@ function updateAuthUI() {
     userEmail.textContent = `${currentAuthUser.email} (${currentAuthUser.role === 'admin' ? '👑 Bạn Trai' : '🐰 Bé Yêu'})`;
     if (loggedInBox) loggedInBox.classList.remove('hidden');
   }
+
+  // Show / Hide Admin Tab on Bottom Nav (Only for Admin Bạn Trai)
+  const navAdminBtn = document.getElementById('nav-btn-admin');
+  if (navAdminBtn) {
+    if (currentAuthUser.role === 'admin') {
+      navAdminBtn.classList.remove('hidden');
+      navAdminBtn.style.display = 'flex';
+    } else {
+      navAdminBtn.classList.add('hidden');
+      navAdminBtn.style.display = 'none';
+    }
+  }
+
+  // Show / Hide Notification Bell on Header (Only for Admin Bạn Trai)
+  const notifBtn = document.getElementById('hdr-notif-btn');
+  if (notifBtn) {
+    if (currentAuthUser.role === 'admin') {
+      notifBtn.classList.remove('hidden');
+      notifBtn.style.display = 'flex';
+    } else {
+      notifBtn.classList.add('hidden');
+      notifBtn.style.display = 'none';
+    }
+  }
 }
 
 function handleRoleHeaderClick() {
@@ -3644,6 +3668,8 @@ function handleAuthSubmit(e) {
   showToast(`Đăng nhập thành công với vai trò: ${pendingAuthRole === 'admin' ? '👑 Bạn Trai' : '🐰 Bé Yêu'}!`);
   if (pendingAuthRole === 'admin') {
     navigate('admin');
+  } else {
+    navigate('home');
   }
 }
 
@@ -4160,6 +4186,11 @@ function navigate(s){
     l.classList.toggle('act',l.dataset.s===s);
   });
   if(s==='admin'){
+    if (!currentAuthUser || currentAuthUser.role !== 'admin') {
+      showToast('🔒 Mục Quản Trị chỉ dành riêng cho Bạn Trai thôi nè! 💕');
+      navigate('home');
+      return;
+    }
     renderAdminDashboard();
   }
   if(s==='quiz')initQuiz();
