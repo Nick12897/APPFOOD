@@ -3116,11 +3116,10 @@
 </div>
 
 <!-- ══ MODAL: MÃ PIN XÁC THỰC QUẢN TRỊ BẠN TRAI ══ -->
-<div id="admin-pin-modal" style="display: none; position: fixed; inset: 0; z-index: 999999; background: rgba(0,0,0,0.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" class="items-center justify-center p-4">
-  <div class="fixed inset-0" onclick="closeAdminPinModal(event)"></div>
+<div id="admin-pin-modal" onclick="if(event.target === this) closeAdminPinModal(event, false)" style="display: none; position: fixed; inset: 0; z-index: 999999; background: rgba(0,0,0,0.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" class="items-center justify-center p-4">
   <div class="relative z-10 bg-surface rounded-3xl p-6 w-full max-w-xs flex flex-col items-center text-center shadow-2xl space-y-4 border border-outline-variant/30 animate-pop-in" onclick="event.stopPropagation()">
     <!-- Nút đóng góc phải -->
-    <button type="button" onclick="closeAdminPinModal(event)" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface-container hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" title="Đóng">
+    <button type="button" onclick="closeAdminPinModal(event, true)" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface-container hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" title="Đóng">
       <span class="material-symbols-outlined text-[18px]">close</span>
     </button>
 
@@ -3139,13 +3138,13 @@
         💡 Gợi ý: Mã PIN mặc định là <strong class="text-primary font-mono font-bold">12897</strong> hoặc mã cặp đôi
       </div>
       <div class="flex gap-2 pt-1">
-        <button type="button" onclick="closeAdminPinModal(event)" class="flex-1 py-2.5 rounded-xl bg-surface-container hover:bg-surface-variant text-on-surface-variant text-xs font-bold active:scale-95 transition-all">Hủy</button>
+        <button type="button" onclick="closeAdminPinModal(event, true)" class="flex-1 py-2.5 rounded-xl bg-surface-container hover:bg-surface-variant text-on-surface-variant text-xs font-bold active:scale-95 transition-all">Hủy</button>
         <button type="submit" class="flex-1 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-bold shadow-md hover:brightness-105 active:scale-95 transition-all">Mở Quyền 👑</button>
       </div>
     </form>
     <!-- Mở form đầy đủ -->
     <div class="pt-2 border-t border-surface-container-high w-full">
-      <button type="button" onclick="closeAdminPinModal(event); openAuthModal();" class="text-[11px] text-primary hover:underline font-semibold flex items-center justify-center gap-1 mx-auto">
+      <button type="button" onclick="closeAdminPinModal(event, true); openAuthModal();" class="text-[11px] text-primary hover:underline font-semibold flex items-center justify-center gap-1 mx-auto">
         <span class="material-symbols-outlined text-[13px]">manage_accounts</span>
         <span>Hoặc mở trang Đăng nhập / Đổi mã cặp đôi</span>
       </button>
@@ -3773,6 +3772,8 @@ function switchToUserView() {
   navigate('home');
 }
 
+let adminPinModalOpenedAt = 0;
+
 function openAdminPinModal(e) {
   if (e) {
     try {
@@ -3780,6 +3781,8 @@ function openAdminPinModal(e) {
       if (typeof e.stopPropagation === 'function') e.stopPropagation();
     } catch(err) {}
   }
+  adminPinModalOpenedAt = Date.now();
+
   const modal = document.getElementById('admin-pin-modal');
   if (!modal) {
     console.warn('admin-pin-modal element not found, falling back to prompt');
@@ -3800,22 +3803,30 @@ function openAdminPinModal(e) {
   modal.style.visibility = 'visible';
   modal.style.opacity = '1';
 
+  playChimeSound(false);
+
   const inp = document.getElementById('admin-pin-input');
   if (inp) {
     inp.value = '';
     setTimeout(() => {
       try { inp.focus(); } catch(err) {}
-    }, 200);
+    }, 250);
   }
 }
 
-function closeAdminPinModal(e) {
+function closeAdminPinModal(e, force = false) {
   if (e) {
     try {
       if (typeof e.preventDefault === 'function') e.preventDefault();
       if (typeof e.stopPropagation === 'function') e.stopPropagation();
     } catch(err) {}
   }
+
+  // Guard against instant ghost-click closing on touch screens
+  if (!force && Date.now() - adminPinModalOpenedAt < 450) {
+    return;
+  }
+
   const modal = document.getElementById('admin-pin-modal');
   if (modal) {
     modal.classList.add('hidden');
@@ -3836,7 +3847,7 @@ function handleAdminPinSubmit(e) {
   const validPins = ['12897', '8888', 'admin', 'bantrai', 'love', (currentCoupleCode || '').toLowerCase()];
 
   if (validPins.includes(val.toLowerCase()) || (currentCoupleCode && val.toUpperCase() === currentCoupleCode.toUpperCase())) {
-    closeAdminPinModal();
+    closeAdminPinModal(null, true);
     quickLoginAs('admin');
     showToast('👑 Xác thực Bạn Trai thành công! Đã mở quyền Quản trị.');
     navigate('admin');
