@@ -92,6 +92,24 @@
     .leaflet-popup-tip { background: white !important; }
     .leaflet-container { font-family: 'Plus Jakarta Sans', sans-serif !important; background: #eef2f5 !important; }
     .custom-leaflet-pin { background: transparent !important; border: none !important; }
+
+    /* Material Symbols Typography & Fallback */
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined' !important;
+      font-weight: normal;
+      font-style: normal;
+      font-size: inherit;
+      line-height: 1;
+      display: inline-block;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: 'liga';
+    }
   </style>
 </head>
 <body class="bg-surface font-body-md text-on-surface">
@@ -3012,9 +3030,11 @@
       </div>
     </div>
   </div>
+</div>
+
 <!-- ══ MODAL: ĐĂNG NHẬP & PHÂN QUYỀN CẶP ĐÔI (AUTH MODAL) ══ -->
-<div id="auth-modal" onclick="if(event.target === this) closeAuthModal()" class="fixed inset-0 z-[9999] bg-inverse-surface/65 backdrop-blur-sm hidden items-end sm:items-center justify-center p-space-md" style="z-index: 99999;">
-  <div class="bg-surface rounded-3xl p-space-lg w-full max-w-sm flex flex-col shadow-2xl space-y-4 border border-outline-variant/20 animate-pop-in">
+<div id="auth-modal" onclick="if(event.target === this) closeAuthModal()" class="fixed inset-0 z-[99999] bg-inverse-surface/75 backdrop-blur-md hidden items-center justify-center p-space-md" style="z-index: 99999;">
+  <div class="bg-surface rounded-3xl p-space-lg w-full max-w-sm flex flex-col shadow-2xl space-y-4 border border-outline-variant/20 animate-pop-in relative" onclick="event.stopPropagation()">
     <!-- Header -->
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
       <div class="flex items-center gap-2.5">
@@ -3993,6 +4013,8 @@ function openAdminLogin() {
   if (modal) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    modal.style.display = 'flex';
+    modal.style.zIndex = '99999';
     playChimeSound(false);
   }
 }
@@ -4004,6 +4026,8 @@ function openAuthModal() {
   if (modal) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    modal.style.display = 'flex';
+    modal.style.zIndex = '99999';
   }
 }
 
@@ -4012,6 +4036,7 @@ function closeAuthModal() {
   if (modal) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    modal.style.display = 'none';
   }
 }
 
@@ -4430,18 +4455,21 @@ function sendPartnerAlertMessage() {
 }
 
 function openPartnerMessageModal(msg, effect) {
+  const messageToDisplay = msg || latestPartnerMsgText || 'Anh nhớ bé nhiều lắm nè! 💕';
   const textEl = document.getElementById('partner-msg-text');
-  if (textEl) textEl.textContent = msg || 'Anh nhớ bé nhiều lắm nè! 💕';
+  if (textEl) textEl.textContent = messageToDisplay;
   const modal = document.getElementById('partner-message-modal');
   if (modal) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     modal.style.display = 'flex';
+    modal.style.zIndex = '99999';
   }
 
   playChimeSound(true);
 
-  if (effect === 'hearts' || effect === 'confetti') {
+  const eff = effect || latestPartnerMsgEffect || 'hearts';
+  if (eff === 'hearts' || eff === 'confetti') {
     if (typeof fireConfetti === 'function') fireConfetti();
   }
 }
@@ -4469,7 +4497,16 @@ function replyPartnerMessage(replyText) {
     }
   });
   cloudLogActivity('partner_reply', '🐰 Bé nhắn lại:', replyText, 'mark_email_read');
-  showToast('Đã gửi phản hồi lại cho Anh Bạn Trai! 💕');
+  
+  // Show instant romantic confirmation badge on the home banner!
+  const bannerTime = document.getElementById('partner-home-msg-time');
+  if (bannerTime) {
+    bannerTime.innerHTML = `<span class="text-primary font-bold">✓ Đã nhắn lại: "${replyText}" lúc ${new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} 💕</span>`;
+  }
+
+  if (typeof fireConfetti === 'function') fireConfetti();
+  playChimeSound(true);
+  showToast(`Đã gửi phản hồi: "${replyText}" tới Bạn Trai! 💕`);
 }
 
 function copyCoupleShareLink() {
