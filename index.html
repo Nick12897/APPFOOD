@@ -3089,8 +3089,56 @@
       </button>
     </div>
 
-    <!-- Segmented Tabs: Đăng Nhập vs Đăng Ký -->
-    <div class="flex p-1 bg-surface-container-high rounded-2xl">
+    <!-- ══ PANE 0: THÔNG TIN TÀI KHOẢN ĐÃ ĐĂNG NHẬP (PROFILE CARD) ══ -->
+    <div id="auth-pane-profile" class="hidden space-y-4">
+      <div class="p-4 rounded-2xl bg-surface-container-lowest border border-primary/20 space-y-3 text-center shadow-xs">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-primary-container text-white text-3xl flex items-center justify-center mx-auto shadow-sm" id="auth-profile-avatar">
+          👑
+        </div>
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs mb-1" id="auth-profile-badge">
+            <span>👑 Bạn Trai (Admin)</span>
+          </div>
+          <h4 class="font-bold text-sm text-on-surface" id="auth-profile-name">Anh Bạn Trai</h4>
+          <p class="text-xs text-on-surface-variant font-medium" id="auth-profile-email">sang.khanhhn@gmail.com</p>
+        </div>
+        <div class="pt-2 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant">
+          <span>Mã cặp đôi kết nối:</span>
+          <span class="font-mono font-bold text-primary text-sm" id="auth-profile-code">LOVE-2026</span>
+        </div>
+        <div class="flex items-center justify-between text-xs text-on-surface-variant">
+          <span>Trạng thái Cloud:</span>
+          <span class="font-semibold text-emerald-600 flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Đang trực tuyến 2 máy
+          </span>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="space-y-2">
+        <button type="button" id="auth-profile-admin-btn" onclick="closeAuthModal(); navigate('admin');" class="w-full py-2.5 rounded-xl bg-primary text-on-primary font-bold text-xs shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+          <span>Mở Trang Quản Trị Bạn Trai 👑</span>
+        </button>
+        <button type="button" id="auth-profile-user-switch-btn" onclick="switchToUserView(); closeAuthModal();" class="w-full py-2 rounded-xl bg-surface-container-high text-on-surface font-bold text-xs hover:bg-surface-variant active:scale-95 transition-all flex items-center justify-center gap-1.5">
+          <span>🐰 Chuyển sang xem giao diện Bé Yêu</span>
+        </button>
+      </div>
+
+      <!-- Footer switch/logout buttons -->
+      <div class="pt-2 border-t border-surface-container-high flex items-center justify-between">
+        <button type="button" onclick="showAuthLoginForm()" class="text-xs text-primary hover:underline font-bold flex items-center gap-1">
+          <span>Đổi tài khoản khác</span>
+          <span>➔</span>
+        </button>
+        <button type="button" onclick="handleAuthLogout()" class="px-3.5 py-1.5 rounded-full bg-error-container text-on-error-container font-bold text-xs active:scale-95 transition-all hover:brightness-105 flex items-center gap-1">
+          <span>Đăng xuất</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Segmented Tabs: Đăng Nhập vs Đăng Ký (Hidden when showing profile) -->
+    <div id="auth-tabs-header" class="flex p-1 bg-surface-container-high rounded-2xl">
       <button type="button" id="auth-tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 py-1.5 text-xs font-bold rounded-xl bg-white text-primary shadow-xs transition-all flex items-center justify-center gap-1">
         <span>🔑 Đăng Nhập</span>
       </button>
@@ -3223,17 +3271,6 @@
           </button>
         </div>
       </form>
-    </div>
-
-    <!-- Current User Info if logged in -->
-    <div id="auth-logged-in-box" class="hidden pt-2 border-t border-surface-container-high flex items-center justify-between text-xs">
-      <div>
-        <span class="text-on-surface-variant block text-[11px]">Đang đăng nhập:</span>
-        <span id="auth-current-user-email" class="font-bold text-on-surface truncate max-w-[170px] inline-block">admin@an-gi-be-oi</span>
-      </div>
-      <button type="button" onclick="handleAuthLogout()" class="px-3 py-1.5 rounded-full bg-error-container text-on-error-container font-bold text-xs active:scale-95 transition-all hover:brightness-105">
-        Đăng xuất
-      </button>
     </div>
   </div>
 </div>
@@ -4173,7 +4210,81 @@ function switchToUserView() {
 let pendingAuthRole = 'admin';
 let pendingRegRole = 'admin';
 
+function showAuthProfile() {
+  const modalTitle = document.getElementById('auth-modal-title');
+  if (modalTitle) modalTitle.textContent = 'Thông Tin Tài Khoản';
+
+  const tabsHeader = document.getElementById('auth-tabs-header');
+  if (tabsHeader) tabsHeader.classList.add('hidden');
+
+  const paneLogin = document.getElementById('auth-pane-login');
+  if (paneLogin) paneLogin.classList.add('hidden');
+
+  const paneReg = document.getElementById('auth-pane-register');
+  if (paneReg) paneReg.classList.add('hidden');
+
+  const paneProfile = document.getElementById('auth-pane-profile');
+  if (paneProfile) paneProfile.classList.remove('hidden');
+
+  const isAdmin = currentAuthUser && currentAuthUser.role === 'admin';
+  const avatar = document.getElementById('auth-profile-avatar');
+  const badge = document.getElementById('auth-profile-badge');
+  const nameEl = document.getElementById('auth-profile-name');
+  const emailEl = document.getElementById('auth-profile-email');
+  const codeEl = document.getElementById('auth-profile-code');
+  const adminBtn = document.getElementById('auth-profile-admin-btn');
+  const userSwitchBtn = document.getElementById('auth-profile-user-switch-btn');
+
+  if (avatar) avatar.textContent = isAdmin ? '👑' : '🐰';
+  if (badge) {
+    badge.className = isAdmin
+      ? 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs mb-1'
+      : 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold text-xs mb-1';
+    badge.innerHTML = isAdmin ? '<span>👑 Bạn Trai (Admin)</span>' : '<span>🐰 Bé Yêu (Nàng)</span>';
+  }
+  if (nameEl) nameEl.textContent = (currentAuthUser && currentAuthUser.name) ? currentAuthUser.name : (isAdmin ? 'Anh Bạn Trai' : 'Bé Yêu');
+  if (emailEl) emailEl.textContent = (currentAuthUser && currentAuthUser.email) ? currentAuthUser.email : 'Chưa có email';
+  if (codeEl) codeEl.textContent = currentCoupleCode;
+
+  if (adminBtn) {
+    if (isAdmin) {
+      adminBtn.classList.remove('hidden');
+    } else {
+      adminBtn.classList.add('hidden');
+    }
+  }
+
+  if (userSwitchBtn) {
+    if (isAdmin) {
+      userSwitchBtn.innerHTML = '<span>🐰 Chuyển sang xem giao diện Bé Yêu</span>';
+      userSwitchBtn.onclick = () => { switchToUserView(); closeAuthModal(); };
+    } else {
+      userSwitchBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">lock_open</span><span>Đăng nhập Bạn Trai (Admin) 👑</span>';
+      userSwitchBtn.onclick = () => { showAuthLoginForm(); selectAuthRole('admin'); };
+    }
+  }
+}
+
+function showAuthLoginForm() {
+  const modalTitle = document.getElementById('auth-modal-title');
+  if (modalTitle) modalTitle.textContent = 'Tài Khoản Cặp Đôi';
+
+  const paneProfile = document.getElementById('auth-pane-profile');
+  if (paneProfile) paneProfile.classList.add('hidden');
+
+  const tabsHeader = document.getElementById('auth-tabs-header');
+  if (tabsHeader) tabsHeader.classList.remove('hidden');
+
+  switchAuthTab('login');
+}
+
 function switchAuthTab(tab) {
+  const paneProfile = document.getElementById('auth-pane-profile');
+  if (paneProfile) paneProfile.classList.add('hidden');
+
+  const tabsHeader = document.getElementById('auth-tabs-header');
+  if (tabsHeader) tabsHeader.classList.remove('hidden');
+
   const btnLogin = document.getElementById('auth-tab-btn-login');
   const btnReg = document.getElementById('auth-tab-btn-register');
   const paneLogin = document.getElementById('auth-pane-login');
@@ -4275,7 +4386,13 @@ function saveStoredAccounts(accounts) {
 }
 
 function openAdminLogin() {
-  switchAuthTab('login');
+  const isAlreadyAdmin = currentAuthUser && currentAuthUser.role === 'admin' && currentAuthUser.email && !['khach@love.app', 'guest'].includes(currentAuthUser.email);
+  if (isAlreadyAdmin) {
+    showToast('👑 Bạn đang ở phiên đăng nhập Quản Trị Bạn Trai!');
+    navigate('admin');
+    return;
+  }
+  showAuthLoginForm();
   selectAuthRole('admin');
   const passInp = document.getElementById('auth-password');
   if (passInp) passInp.value = '';
@@ -4291,8 +4408,13 @@ function openAdminLogin() {
 const openAdminPinModal = openAdminLogin;
 
 function openAuthModal() {
-  switchAuthTab('login');
-  selectAuthRole((currentAuthUser && currentAuthUser.role) ? currentAuthUser.role : 'admin');
+  const isUserLoggedIn = currentAuthUser && currentAuthUser.email && !['khach@love.app', 'guest'].includes(currentAuthUser.email);
+  if (isUserLoggedIn) {
+    showAuthProfile();
+  } else {
+    showAuthLoginForm();
+    selectAuthRole((currentAuthUser && currentAuthUser.role) ? currentAuthUser.role : 'admin');
+  }
   const passInp = document.getElementById('auth-password');
   if (passInp) passInp.value = '';
   const modal = document.getElementById('auth-modal');
