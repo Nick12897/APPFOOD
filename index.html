@@ -177,21 +177,59 @@
         </div>
         <button type="button" onclick="openPartnerMessageModal(latestPartnerMsgText, latestPartnerMsgEffect)" class="text-[11px] text-primary hover:underline font-bold flex items-center gap-0.5">
           <span>Xem popup</span>
-          <span class="material-symbols-outlined text-[13px]">open_in_new</span>
+          <span class="text-xs opacity-75">↗</span>
         </button>
       </div>
       <div class="bg-white/90 rounded-xl p-2.5 text-xs text-on-surface font-semibold leading-relaxed border border-primary/10">
         <p id="partner-home-msg-text">Tối nay 7h anh qua đón công chúa đi ăn nhé! 🛵💨</p>
       </div>
-      <div class="flex items-center gap-1.5 pt-0.5">
-        <button type="button" onclick="replyPartnerMessage('Dạ em nghe òi, thương anh! 🥰')" class="flex-1 py-1.5 rounded-full bg-primary text-on-primary text-[11px] font-bold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1">
-          <span>Thương anh!</span>
-          <span>🥰</span>
-        </button>
-        <button type="button" onclick="replyPartnerMessage('Em đang thèm trà sữa nè anh! 🧋')" class="flex-1 py-1.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold active:scale-95 transition-all flex items-center justify-center gap-1">
-          <span>Thèm trà sữa</span>
-          <span>🧋</span>
-        </button>
+      <!-- Phản hồi nhanh & Gợi ý món bé thích -->
+      <div class="space-y-2 pt-1">
+        <!-- Quick Craving & Mood Chips -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] select-none" style="scrollbar-width: none;">
+          <button type="button" onclick="selectQuickHomeReply('Dạ em nghe òi, thương anh nhất trần đời! 🥰')" class="shrink-0 px-2.5 py-1 rounded-full bg-primary text-on-primary font-bold shadow-2xs active:scale-95 transition-all flex items-center gap-1">
+            <span>Thương anh!</span>
+            <span>🥰</span>
+          </button>
+          <button type="button" onclick="selectQuickHomeReply('Em đang thèm trà sữa full topping nè anh! 🥤', 'Trà sữa')" class="shrink-0 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold active:scale-95 transition-all flex items-center gap-1">
+            <span>Thèm trà sữa</span>
+            <span>🥤</span>
+          </button>
+          <button type="button" onclick="selectQuickHomeReply('Tối nay mình đi ăn lẩu Thái chua cay nha anh! 🍲', 'Lẩu Thái')" class="shrink-0 px-2.5 py-1 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold active:scale-95 transition-all flex items-center gap-1 border border-amber-200">
+            <span>Thèm lẩu Thái</span>
+            <span>🍲</span>
+          </button>
+          <button type="button" onclick="selectQuickHomeReply('Em thèm đồ nướng xèo xèo BBQ quá nè anh! 🥩', 'Nướng BBQ')" class="shrink-0 px-2.5 py-1 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-900 font-bold active:scale-95 transition-all flex items-center gap-1 border border-rose-200">
+            <span>Nướng BBQ</span>
+            <span>🥩</span>
+          </button>
+          <button type="button" onclick="selectQuickHomeReply('Thèm một tô bún bò / phở nóng hổi xì xụp! 🍜', 'Bún bò / Phở')" class="shrink-0 px-2.5 py-1 rounded-full bg-orange-100 hover:bg-orange-200 text-orange-900 font-bold active:scale-95 transition-all flex items-center gap-1 border border-orange-200">
+            <span>Bún bò / Phở</span>
+            <span>🍜</span>
+          </button>
+          <button type="button" onclick="selectQuickHomeReply('Em đang dỗi nhẹ đó, xíu phải mua đồ ngon dỗ em nha! 🥺💖')" class="shrink-0 px-2.5 py-1 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold active:scale-95 transition-all flex items-center gap-1 border border-purple-200">
+            <span>Dỗi nhẹ</span>
+            <span>🥺</span>
+          </button>
+          <button type="button" onclick="insertRandomFavDishToHomeInput()" class="shrink-0 px-2.5 py-1 rounded-full bg-primary-fixed hover:bg-primary-fixed-dim text-on-primary-fixed-variant font-bold active:scale-95 transition-all flex items-center gap-1 border border-primary/20" title="Gợi ý quán trong Sổ tay của bé">
+            <span>Món ruột sổ tay</span>
+            <span>📖</span>
+          </button>
+        </div>
+
+        <!-- Custom Reply Input with Send Button -->
+        <form onsubmit="submitHomeCustomReply(event)" class="flex items-center gap-1.5">
+          <div class="relative flex-1">
+            <input type="text" id="home-partner-reply-input" placeholder="Gõ ý bé hoặc gợi ý món bé thích hôm nay..." class="w-full pl-3 pr-8 py-1.5 text-xs rounded-xl bg-white/95 border border-primary/25 text-on-surface placeholder:text-outline focus:outline-none focus:border-primary shadow-2xs font-medium" />
+            <button type="button" onclick="insertRandomFavDishToHomeInput()" class="absolute right-2 top-1/2 -translate-y-1/2 text-primary hover:scale-110 active:scale-95 transition-transform" title="Chọn ngẫu nhiên món từ Sổ tay ruột của bé">
+              <span class="text-xs">✨</span>
+            </button>
+          </div>
+          <button type="submit" class="px-3.5 py-1.5 rounded-xl bg-primary text-on-primary font-bold text-xs shadow-xs hover:brightness-105 active:scale-95 transition-all flex items-center gap-1 shrink-0">
+            <span>Gửi anh</span>
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+        </form>
       </div>
     </div>
 
@@ -3214,19 +3252,68 @@
       <p id="partner-msg-text">Tối nay 7h anh qua đón công chúa đi ăn nhé! 🛵💨</p>
     </div>
 
-    <!-- Response Buttons -->
-    <div class="w-full space-y-2 pt-1">
-      <button type="button" onclick="replyPartnerMessage('Dạ em nghe òi, yêu anh nhiều! ❤️')" class="w-full py-3 rounded-full bg-primary text-on-primary font-bold text-xs shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-1.5">
-        <span>Dạ em nghe òi, thương anh!</span>
-        <span>🥰</span>
-      </button>
-      <button type="button" onclick="replyPartnerMessage('Em đang thèm trà sữa nè anh! 🧋')" class="w-full py-2.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5">
-        <span>Gợi ý: Mua trà sữa cho em nha!</span>
-        <span>🧋</span>
-      </button>
-      <button type="button" onclick="closePartnerMessageModal()" class="w-full py-1.5 text-on-surface-variant text-xs font-semibold hover:text-on-surface">
-        Đóng thông báo
-      </button>
+    <!-- Phản hồi của Bé: Tự gõ hoặc gợi ý món thích -->
+    <div class="w-full space-y-2.5 pt-1 text-left">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-on-surface flex items-center gap-1">
+          <span>🐰 Bé muốn nhắn lại gì nè:</span>
+        </span>
+        <span class="text-[10px] text-primary font-medium italic">Gợi ý món nàng thèm ✨</span>
+      </div>
+
+      <!-- Craving Quick Chips -->
+      <div class="flex items-center gap-1 overflow-x-auto pb-1 text-[11px] select-none" style="scrollbar-width: none;">
+        <button type="button" onclick="setPartnerModalDishSuggestion('Trà sữa full topping', '🥤')" class="shrink-0 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold active:scale-95 transition-all flex items-center gap-0.5">
+          <span>🥤 Trà sữa</span>
+        </button>
+        <button type="button" onclick="setPartnerModalDishSuggestion('Lẩu Thái chua cay', '🍲')" class="shrink-0 px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold active:scale-95 transition-all flex items-center gap-0.5 border border-amber-200">
+          <span>🍲 Lẩu Thái</span>
+        </button>
+        <button type="button" onclick="setPartnerModalDishSuggestion('Nướng BBQ xèo xèo', '🥩')" class="shrink-0 px-2 py-0.5 rounded-full bg-rose-100 text-rose-900 font-bold active:scale-95 transition-all flex items-center gap-0.5 border border-rose-200">
+          <span>🥩 Nướng BBQ</span>
+        </button>
+        <button type="button" onclick="setPartnerModalDishSuggestion('Bún bò / Phở nóng', '🍜')" class="shrink-0 px-2 py-0.5 rounded-full bg-orange-100 text-orange-900 font-bold active:scale-95 transition-all flex items-center gap-0.5 border border-orange-200">
+          <span>🍜 Bún bò / Phở</span>
+        </button>
+        <button type="button" onclick="setPartnerModalDishSuggestion('Sushi đồ Nhật', '🍣')" class="shrink-0 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-bold active:scale-95 transition-all flex items-center gap-0.5 border border-emerald-200">
+          <span>🍣 Sushi</span>
+        </button>
+        <button type="button" onclick="insertRandomFavDishToModalInput()" class="shrink-0 px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-bold active:scale-95 transition-all flex items-center gap-0.5 border border-primary/20" title="Chọn từ Sổ tay ruột của bé">
+          <span>📖 Món ruột sổ tay</span>
+        </button>
+      </div>
+
+      <!-- Custom text input -->
+      <div class="relative">
+        <textarea id="partner-modal-custom-input" rows="2" placeholder="Gõ lời nhắn gửi anh hoặc ghi chú món bé muốn ăn... (vd: Tối nay ăn lẩu nha anh iu)" class="w-full p-2.5 text-xs rounded-xl bg-white border border-primary/25 text-on-surface placeholder:text-outline focus:outline-none focus:border-primary shadow-xs leading-relaxed resize-none font-medium"></textarea>
+      </div>
+
+      <!-- Quick Mood Buttons -->
+      <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+        <button type="button" onclick="setPartnerModalQuickText('Dạ em nghe òi, thương anh nhất trần đời! 🥰')" class="py-1.5 px-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold active:scale-95 transition-all text-center truncate">
+          🥰 Thương anh nhiều!
+        </button>
+        <button type="button" onclick="setPartnerModalQuickText('Bụng em đói meo rồi nè, rước em sớm nha! 🤤')" class="py-1.5 px-2 rounded-xl bg-secondary-fixed/50 hover:bg-secondary-fixed text-on-secondary-fixed font-bold active:scale-95 transition-all text-center truncate">
+          🤤 Bụng đói meo rồi!
+        </button>
+        <button type="button" onclick="setPartnerModalQuickText('Em đang dỗi nhẹ đó, xíu phải mua đồ ngon dỗ em nha! 🥺💖')" class="py-1.5 px-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold active:scale-95 transition-all text-center truncate">
+          🥺 Đang dỗi nhẹ đó nha!
+        </button>
+        <button type="button" onclick="setPartnerModalQuickText('Tối nay 7h qua đón công chúa đi ăn nha anh iu! 🛵💨')" class="py-1.5 px-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold active:scale-95 transition-all text-center truncate">
+          🛵 7h qua đón em nha!
+        </button>
+      </div>
+
+      <!-- Send Button -->
+      <div class="pt-1 space-y-1.5">
+        <button type="button" onclick="submitPartnerModalReply()" class="w-full py-3 rounded-full bg-primary text-on-primary font-bold text-xs shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+          <span>Gửi Lời Nhắn & Gợi Ý Món Tới Anh 💌</span>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+        <button type="button" onclick="closePartnerMessageModal()" class="w-full py-1 text-on-surface-variant text-xs font-semibold hover:text-on-surface text-center block">
+          Đóng thông báo
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -3678,13 +3765,14 @@ function handleRemoteCloudEvent(data) {
   } else if (data.type === 'PARTNER_REPLY') {
     if (currentAuthUser.role === 'admin') {
       playChimeSound(true);
-      showToast(`🐰 Bé vừa nhắn lại: "${data.reply}" 💕`);
+      const dishInfo = data.suggestedDish ? ` (Món thèm: ${data.suggestedDish})` : '';
+      showToast(`🐰 Bé vừa nhắn lại: "${data.reply}"${dishInfo} 💕`);
       
       const replyAct = {
         id: 'reply_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
         type: 'partner_reply',
-        title: '🐰 Bé vừa nhắn lại:',
-        detail: data.reply,
+        title: data.suggestedDish ? `🐰 Bé gợi ý món: ${data.suggestedDish}` : '🐰 Bé vừa nhắn lại:',
+        detail: data.reply + (data.suggestedDish ? ` (Gợi ý món bé thích: ${data.suggestedDish})` : ''),
         icon: 'mark_email_read',
         actor: 'user',
         actorName: '🐰 Bé Yêu',
@@ -4483,30 +4571,122 @@ function closePartnerMessageModal() {
   }
 }
 
-function replyPartnerMessage(replyText) {
+let selectedPartnerSuggestedDish = '';
+
+function setPartnerModalDishSuggestion(dishName, emoji = '🍲') {
+  selectedPartnerSuggestedDish = dishName;
+  const input = document.getElementById('partner-modal-custom-input');
+  if (input) {
+    const current = input.value.trim();
+    if (current) {
+      input.value = current + ` (Bé thèm ${dishName} ${emoji})`;
+    } else {
+      input.value = `Hôm nay em thèm ${dishName} nè anh! ${emoji}`;
+    }
+    input.focus();
+  }
+  showToast(`Đã thêm gợi ý món "${dishName}"! 🌸`);
+}
+
+function setPartnerModalQuickText(text) {
+  const input = document.getElementById('partner-modal-custom-input');
+  if (input) {
+    input.value = text;
+    input.focus();
+  }
+}
+
+function insertRandomFavDishToModalInput() {
+  const input = document.getElementById('partner-modal-custom-input');
+  if (!input) return;
+  if (favDishes && favDishes.length > 0) {
+    const randomDish = favDishes[Math.floor(Math.random() * favDishes.length)];
+    selectedPartnerSuggestedDish = randomDish.title;
+    input.value = `Hôm nay em thèm quán ruột: ${randomDish.title} á anh! ❤️`;
+    showToast(`Đã chọn "${randomDish.title}" từ Sổ tay ruột của Bé! 📖`);
+  } else {
+    const defaultCraving = ['Trà sữa nướng trân châu 🧋', 'Lẩu Thái tomyum chua cay 🍲', 'Bò nướng tảng xèo xèo 🥩', 'Bún bò Huế ngập thịt 🍜'];
+    const pick = defaultCraving[Math.floor(Math.random() * defaultCraving.length)];
+    selectedPartnerSuggestedDish = pick;
+    input.value = `Hôm nay em thèm: ${pick} nè anh! 💕`;
+    showToast(`Đã gợi ý món: ${pick}! 🌸`);
+  }
+  input.focus();
+}
+
+function submitPartnerModalReply() {
+  const input = document.getElementById('partner-modal-custom-input');
+  const customText = input ? input.value.trim() : '';
+  const finalReply = customText || 'Dạ em nghe òi, thương anh! 🥰';
+  replyPartnerMessage(finalReply, selectedPartnerSuggestedDish);
+  if (input) input.value = '';
+  selectedPartnerSuggestedDish = '';
+}
+
+function selectQuickHomeReply(replyText, dishName = '') {
+  replyPartnerMessage(replyText, dishName);
+}
+
+function submitHomeCustomReply(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('home-partner-reply-input');
+  const text = input ? input.value.trim() : '';
+  if (!text) {
+    showToast('Bé hãy nhập lời nhắn hoặc món thèm nha! 💕');
+    return;
+  }
+  replyPartnerMessage(text);
+  if (input) input.value = '';
+}
+
+function insertRandomFavDishToHomeInput() {
+  const input = document.getElementById('home-partner-reply-input');
+  if (!input) return;
+  if (favDishes && favDishes.length > 0) {
+    const randomDish = favDishes[Math.floor(Math.random() * favDishes.length)];
+    input.value = `Hôm nay em thèm quán ruột: ${randomDish.title} á anh! ❤️`;
+    showToast(`Đã chọn "${randomDish.title}" từ Sổ tay ruột của Bé! 📖`);
+  } else {
+    const defaultCraving = ['Trà sữa nướng trân châu 🧋', 'Lẩu Thái tomyum chua cay 🍲', 'Bò nướng tảng xèo xèo 🥩', 'Bún bò Huế ngập thịt 🍜'];
+    const pick = defaultCraving[Math.floor(Math.random() * defaultCraving.length)];
+    input.value = `Hôm nay em thèm: ${pick} nè anh! 💕`;
+    showToast(`Đã gợi ý món: ${pick}! 🌸`);
+  }
+  input.focus();
+}
+
+function replyPartnerMessage(replyText, suggestedDish = '') {
   closePartnerMessageModal();
+  const cleanReply = replyText || 'Dạ em nghe òi, thương anh! 🥰';
+  const dish = suggestedDish || '';
+
   broadcastCloudEvent({
     type: 'PARTNER_REPLY',
     coupleCode: currentCoupleCode,
-    reply: replyText
+    reply: cleanReply,
+    suggestedDish: dish
   });
+
   pushDataToFirestore({
     latestReply: {
-      reply: replyText,
+      reply: cleanReply,
+      suggestedDish: dish,
       timestamp: Date.now()
     }
   });
-  cloudLogActivity('partner_reply', '🐰 Bé nhắn lại:', replyText, 'mark_email_read');
+
+  cloudLogActivity('partner_reply', dish ? `🐰 Bé thèm món: ${dish}` : '🐰 Bé nhắn lại:', cleanReply, 'mark_email_read');
   
   // Show instant romantic confirmation badge on the home banner!
   const bannerTime = document.getElementById('partner-home-msg-time');
   if (bannerTime) {
-    bannerTime.innerHTML = `<span class="text-primary font-bold">✓ Đã nhắn lại: "${replyText}" lúc ${new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} 💕</span>`;
+    const displayDish = dish ? ` (${dish})` : '';
+    bannerTime.innerHTML = `<span class="text-primary font-bold">✓ Đã nhắn lại: "${cleanReply}"${displayDish} lúc ${new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} 💕</span>`;
   }
 
   if (typeof fireConfetti === 'function') fireConfetti();
   playChimeSound(true);
-  showToast(`Đã gửi phản hồi: "${replyText}" tới Bạn Trai! 💕`);
+  showToast(`Đã gửi phản hồi: "${cleanReply}" tới Bạn Trai! 💕`);
 }
 
 function copyCoupleShareLink() {
