@@ -3072,7 +3072,7 @@
 
 <!-- ══ MODAL: ĐĂNG NHẬP & PHÂN QUYỀN CẶP ĐÔI (AUTH MODAL) ══ -->
 <div id="auth-modal" onclick="if(event.target === this) closeAuthModal()" class="fixed inset-0 z-[99999] bg-inverse-surface/75 backdrop-blur-md hidden items-center justify-center p-space-md" style="z-index: 99999;">
-  <div class="bg-surface rounded-3xl p-space-lg w-full max-w-sm flex flex-col shadow-2xl space-y-4 border border-outline-variant/20 animate-pop-in relative" onclick="event.stopPropagation()">
+  <div class="bg-surface rounded-3xl p-5 w-full max-w-sm max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl space-y-3.5 border border-outline-variant/20 animate-pop-in relative" onclick="event.stopPropagation()">
     <!-- Header -->
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-high">
       <div class="flex items-center gap-2.5">
@@ -3080,7 +3080,7 @@
           🔐
         </div>
         <div>
-          <h3 class="font-headline-sm text-base text-on-surface font-bold">Đăng Nhập Cặp Đôi</h3>
+          <h3 id="auth-modal-title" class="font-headline-sm text-base text-on-surface font-bold">Tài Khoản Cặp Đôi</h3>
           <span class="font-label-sm text-[11px] text-on-surface-variant">Đồng bộ dữ liệu hai máy qua Cloud</span>
         </div>
       </div>
@@ -3089,78 +3089,149 @@
       </button>
     </div>
 
-    <!-- Role Switcher -->
-    <div class="space-y-1.5">
-      <span class="text-xs font-bold text-on-surface block">Chọn vai trò của bạn:</span>
-      <div class="grid grid-cols-2 gap-2">
-        <button type="button" onclick="selectAuthRole('admin')" id="auth-role-btn-admin" class="py-2 px-3 rounded-2xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
-          <span class="text-base">👑</span>
-          <span>Bạn Trai (Admin)</span>
-        </button>
-        <button type="button" onclick="selectAuthRole('user')" id="auth-role-btn-user" class="py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
-          <span class="text-base">🐰</span>
-          <span>Bé Yêu (Nàng)</span>
-        </button>
-      </div>
-      <p id="auth-role-desc" class="text-[11px] text-on-surface-variant italic px-1 pt-0.5 leading-relaxed">
-        👑 <b>Bạn Trai</b>: Quản trị viên tối cao, nhận thông báo chuông khi bé quay món, sửa quán ruột &amp; bắn tin dỗ dành.
-      </p>
+    <!-- Segmented Tabs: Đăng Nhập vs Đăng Ký -->
+    <div class="flex p-1 bg-surface-container-high rounded-2xl">
+      <button type="button" id="auth-tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 py-1.5 text-xs font-bold rounded-xl bg-white text-primary shadow-xs transition-all flex items-center justify-center gap-1">
+        <span>🔑 Đăng Nhập</span>
+      </button>
+      <button type="button" id="auth-tab-btn-register" onclick="switchAuthTab('register')" class="flex-1 py-1.5 text-xs font-bold rounded-xl text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1">
+        <span>📝 Đăng Ký</span>
+      </button>
     </div>
 
-    <!-- Quick 1-Click Login Box -->
-    <div class="p-3 rounded-2xl bg-surface-container-lowest border border-primary/20 space-y-2">
-      <span class="text-[11px] font-bold text-primary flex items-center gap-1">
-        <span class="material-symbols-outlined text-[14px]">bolt</span>
-        Đăng nhập nhanh 1 chạm (Khuyên dùng):
-      </span>
-      <div class="grid grid-cols-2 gap-2">
-        <button type="button" onclick="quickLoginAs('admin')" class="py-2 px-2.5 rounded-xl bg-primary text-on-primary font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1 shadow-xs hover:brightness-105">
-          <span>👑 Là Bạn Trai (Admin)</span>
-        </button>
-        <button type="button" onclick="quickLoginAs('user')" class="py-2 px-2.5 rounded-xl bg-secondary-fixed text-on-secondary-fixed font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1 shadow-xs hover:brightness-105">
-          <span>🐰 Là Bé Yêu</span>
-        </button>
+    <!-- ══ TAB 1: ĐĂNG NHẬP ══ -->
+    <div id="auth-pane-login" class="space-y-3">
+      <!-- Role Switcher -->
+      <div class="space-y-1.5">
+        <span class="text-xs font-bold text-on-surface block">Chọn vai trò đăng nhập:</span>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="selectAuthRole('admin')" id="auth-role-btn-admin" class="py-2 px-3 rounded-2xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span class="text-base">👑</span>
+            <span>Bạn Trai (Admin)</span>
+          </button>
+          <button type="button" onclick="selectAuthRole('user')" id="auth-role-btn-user" class="py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span class="text-base">🐰</span>
+            <span>Bé Yêu (Nàng)</span>
+          </button>
+        </div>
+        <p id="auth-role-desc" class="text-[11px] text-on-surface-variant italic px-1 pt-0.5 leading-relaxed">
+          👑 <b>Bạn Trai</b>: Quản trị viên tối cao, nhận thông báo chuông khi bé quay món, sửa quán ruột &amp; bắn tin dỗ dành.
+        </p>
       </div>
-    </div>
 
-    <!-- Account Details Form (Email / Password / Couple Code) -->
-    <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-2.5 text-xs">
-      <div>
-        <label class="font-bold text-on-surface block mb-1">Mã cặp đôi (Couple Code):</label>
-        <div class="relative">
+      <!-- Quick 1-Click Login Box (Convenient shortcut) -->
+      <div class="p-2.5 rounded-2xl bg-surface-container-lowest border border-primary/20 space-y-1.5">
+        <span class="text-[11px] font-bold text-primary flex items-center gap-1">
+          <span class="material-symbols-outlined text-[13px]">bolt</span>
+          Đăng nhập nhanh 1 chạm (Khuyên dùng):
+        </span>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="quickLoginAs('admin')" class="py-1.5 px-2 rounded-xl bg-primary text-on-primary font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1 shadow-xs hover:brightness-105">
+            <span>👑 Là Bạn Trai</span>
+          </button>
+          <button type="button" onclick="quickLoginAs('user')" class="py-1.5 px-2 rounded-xl bg-secondary-fixed text-on-secondary-fixed font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1 shadow-xs hover:brightness-105">
+            <span>🐰 Là Bé Yêu</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 text-on-surface-variant/50 my-1">
+        <div class="flex-1 h-px bg-outline-variant/30"></div>
+        <span class="text-[10px] uppercase font-bold tracking-wider">Hoặc nhập mật khẩu</span>
+        <div class="flex-1 h-px bg-outline-variant/30"></div>
+      </div>
+
+      <!-- Login Form with strict validation -->
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-2.5 text-xs">
+        <div>
+          <label class="font-bold text-on-surface block mb-1">Mã cặp đôi (Couple Code):</label>
           <input type="text" id="auth-couple-code" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-mono font-bold uppercase tracking-wider text-center focus:outline-none focus:border-primary" value="LOVE-2026" placeholder="LOVE-2026" />
         </div>
-        <span class="text-[10px] text-on-surface-variant block mt-0.5">Cả 2 bạn cùng nhập mã này để kết nối đồng bộ 2 máy.</span>
+
+        <div>
+          <label class="font-bold text-on-surface block mb-1">Email / Tài khoản:</label>
+          <input type="text" id="auth-email" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="vd: sang.khanhhn@gmail.com" />
+        </div>
+
+        <div>
+          <label class="font-bold text-on-surface block mb-1">Mật khẩu:</label>
+          <input type="password" id="auth-password" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="Nhập mật khẩu..." />
+        </div>
+
+        <div class="pt-1 space-y-1.5">
+          <button type="submit" id="auth-submit-btn" class="w-full py-2.5 rounded-xl bg-primary text-on-primary font-bold shadow-md hover:brightness-105 active:scale-95 transition-all text-xs">
+            Đăng Nhập Quản Trị (Bạn Trai) 👑
+          </button>
+          <button type="button" onclick="switchAuthTab('register')" class="w-full py-1 text-center text-[11px] text-primary hover:underline font-semibold block">
+            Chưa có tài khoản? Bấm để Đăng ký ngay ✨
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ══ TAB 2: ĐĂNG KÝ MỚI ══ -->
+    <div id="auth-pane-register" class="hidden space-y-3">
+      <div class="space-y-1.5">
+        <span class="text-xs font-bold text-on-surface block">Đăng ký tài khoản mới cho:</span>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="selectRegRole('admin')" id="reg-role-btn-admin" class="py-2 px-3 rounded-2xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span class="text-base">👑</span>
+            <span>Bạn Trai (Admin)</span>
+          </button>
+          <button type="button" onclick="selectRegRole('user')" id="reg-role-btn-user" class="py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+            <span class="text-base">🐰</span>
+            <span>Bé Yêu (Nàng)</span>
+          </button>
+        </div>
+        <p id="reg-role-desc" class="text-[11px] text-on-surface-variant italic px-1 pt-0.5 leading-relaxed">
+          👑 <b>Tài khoản Quản trị</b>: Có toàn quyền mở trang quản trị, nhận chuông Ting-ting và đồng bộ với Bé Yêu.
+        </p>
       </div>
 
-      <div>
-        <label class="font-bold text-on-surface block mb-1">Email / Tài khoản:</label>
-        <input type="text" id="auth-email" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="bantrai@love.app" />
-      </div>
+      <form id="reg-form" onsubmit="handleAuthRegister(event)" class="space-y-2.5 text-xs">
+        <div>
+          <label class="font-bold text-on-surface block mb-1">Họ tên / Biệt danh:</label>
+          <input type="text" id="reg-name" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="vd: Anh Bạn Trai Chu Đáo" />
+        </div>
 
-      <div>
-        <label class="font-bold text-on-surface block mb-1">Mật khẩu:</label>
-        <input type="password" id="auth-password" class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="••••••••" />
-        <span class="text-[10px] text-on-surface-variant block mt-0.5">Nhập mật khẩu bất kỳ (hoặc bấm nút Đăng nhập nhanh 1 chạm ở trên).</span>
-      </div>
+        <div>
+          <label class="font-bold text-on-surface block mb-1">Mã cặp đôi (Couple Code):</label>
+          <input type="text" id="reg-couple-code" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-mono font-bold uppercase tracking-wider text-center focus:outline-none focus:border-primary" value="LOVE-2026" placeholder="LOVE-2026" />
+        </div>
 
-      <div class="flex gap-2 pt-1">
-        <button type="submit" id="auth-submit-btn" class="flex-1 py-2.5 rounded-xl bg-primary text-on-primary font-bold shadow-md hover:brightness-105 active:scale-95 transition-all">
-          Đăng Nhập Quản Trị (Bạn Trai) 👑
-        </button>
-        <button type="button" onclick="handleAuthRegister()" class="px-3 py-2.5 rounded-xl bg-surface-container-high text-on-surface-variant hover:text-on-surface font-bold active:scale-95 transition-all">
-          Đăng Ký
-        </button>
-      </div>
-    </form>
+        <div>
+          <label class="font-bold text-on-surface block mb-1">Email / Tên đăng nhập: <span class="text-error font-bold">*</span></label>
+          <input type="text" id="reg-email" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="vd: sang.khanhhn@gmail.com" />
+        </div>
+
+        <div>
+          <label class="font-bold text-on-surface block mb-1">Mật khẩu mới: <span class="text-error font-bold">*</span></label>
+          <input type="password" id="reg-password" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="Tối thiểu 4 ký tự..." />
+        </div>
+
+        <div>
+          <label class="font-bold text-on-surface block mb-1">Xác nhận mật khẩu: <span class="text-error font-bold">*</span></label>
+          <input type="password" id="reg-password-confirm" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary" placeholder="Nhập lại mật khẩu..." />
+        </div>
+
+        <div class="pt-1 space-y-1.5">
+          <button type="submit" id="reg-submit-btn" class="w-full py-2.5 rounded-xl bg-primary text-on-primary font-bold shadow-md hover:brightness-105 active:scale-95 transition-all text-xs">
+            Hoàn Tất Đăng Ký Tài Khoản 🎉
+          </button>
+          <button type="button" onclick="switchAuthTab('login')" class="w-full py-1 text-center text-[11px] text-primary hover:underline font-semibold block">
+            Đã có tài khoản? Bấm để Đăng nhập 🔑
+          </button>
+        </div>
+      </form>
+    </div>
 
     <!-- Current User Info if logged in -->
     <div id="auth-logged-in-box" class="hidden pt-2 border-t border-surface-container-high flex items-center justify-between text-xs">
       <div>
-        <span class="text-on-surface-variant block">Đang đăng nhập:</span>
+        <span class="text-on-surface-variant block text-[11px]">Đang đăng nhập:</span>
         <span id="auth-current-user-email" class="font-bold text-on-surface truncate max-w-[170px] inline-block">admin@an-gi-be-oi</span>
       </div>
-      <button type="button" onclick="handleAuthLogout()" class="px-3 py-1.5 rounded-full bg-error-container text-on-error-container font-bold text-xs active:scale-95 transition-all">
+      <button type="button" onclick="handleAuthLogout()" class="px-3 py-1.5 rounded-full bg-error-container text-on-error-container font-bold text-xs active:scale-95 transition-all hover:brightness-105">
         Đăng xuất
       </button>
     </div>
@@ -4018,9 +4089,13 @@ function updateAuthUI() {
 
   const userEmail = document.getElementById('auth-current-user-email');
   const loggedInBox = document.getElementById('auth-logged-in-box');
-  if (userEmail && currentAuthUser) {
-    userEmail.textContent = `${currentAuthUser.email} (${isAdmin ? '👑 Bạn Trai' : '🐰 Bé Yêu'})`;
-    if (loggedInBox) loggedInBox.classList.remove('hidden');
+  if (userEmail && loggedInBox) {
+    if (currentAuthUser && currentAuthUser.email && !['khach@love.app', 'guest'].includes(currentAuthUser.email)) {
+      userEmail.textContent = `${currentAuthUser.email} (${isAdmin ? '👑 Bạn Trai' : '🐰 Bé Yêu'})`;
+      loggedInBox.classList.remove('hidden');
+    } else {
+      loggedInBox.classList.add('hidden');
+    }
   }
 
   const nbRoleDesc = document.getElementById('nb-current-role-desc');
@@ -4095,8 +4170,115 @@ function switchToUserView() {
   navigate('home');
 }
 
+let pendingAuthRole = 'admin';
+let pendingRegRole = 'admin';
+
+function switchAuthTab(tab) {
+  const btnLogin = document.getElementById('auth-tab-btn-login');
+  const btnReg = document.getElementById('auth-tab-btn-register');
+  const paneLogin = document.getElementById('auth-pane-login');
+  const paneReg = document.getElementById('auth-pane-register');
+  const modalTitle = document.getElementById('auth-modal-title');
+
+  if (tab === 'register') {
+    if (btnLogin) {
+      btnLogin.className = 'flex-1 py-1.5 text-xs font-bold rounded-xl text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1';
+    }
+    if (btnReg) {
+      btnReg.className = 'flex-1 py-1.5 text-xs font-bold rounded-xl bg-white text-primary shadow-xs transition-all flex items-center justify-center gap-1';
+    }
+    if (paneLogin) paneLogin.classList.add('hidden');
+    if (paneReg) paneReg.classList.remove('hidden');
+    if (modalTitle) modalTitle.textContent = 'Đăng Ký Tài Khoản';
+    // If user previously typed email in login, carry it over to register
+    const loginEmail = document.getElementById('auth-email');
+    const regEmail = document.getElementById('reg-email');
+    if (loginEmail && regEmail && loginEmail.value.trim() && !regEmail.value.trim()) {
+      regEmail.value = loginEmail.value.trim();
+    }
+  } else {
+    if (btnLogin) {
+      btnLogin.className = 'flex-1 py-1.5 text-xs font-bold rounded-xl bg-white text-primary shadow-xs transition-all flex items-center justify-center gap-1';
+    }
+    if (btnReg) {
+      btnReg.className = 'flex-1 py-1.5 text-xs font-bold rounded-xl text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1';
+    }
+    if (paneLogin) paneLogin.classList.remove('hidden');
+    if (paneReg) paneReg.classList.add('hidden');
+    if (modalTitle) modalTitle.textContent = 'Tài Khoản Cặp Đôi';
+  }
+}
+
+function selectRegRole(role) {
+  pendingRegRole = role;
+  const btnAdmin = document.getElementById('reg-role-btn-admin');
+  const btnUser = document.getElementById('reg-role-btn-user');
+  const desc = document.getElementById('reg-role-desc');
+  const submitBtn = document.getElementById('reg-submit-btn');
+
+  if (role === 'admin') {
+    if (btnAdmin) btnAdmin.className = 'py-2 px-3 rounded-2xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
+    if (btnUser) btnUser.className = 'py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
+    if (desc) desc.innerHTML = '👑 <b>Tài khoản Quản trị</b>: Có toàn quyền mở trang quản trị, nhận chuông Ting-ting và đồng bộ với Bé Yêu.';
+    if (submitBtn) submitBtn.textContent = 'Hoàn Tất Đăng Ký (Bạn Trai) 👑';
+  } else {
+    if (btnAdmin) btnAdmin.className = 'py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
+    if (btnUser) btnUser.className = 'py-2 px-3 rounded-2xl border-2 border-secondary bg-secondary-fixed text-on-secondary-fixed font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
+    if (desc) desc.innerHTML = '🐰 <b>Tài khoản Bé Yêu</b>: Dành cho công chúa quay món, chọn mood tâm trạng và gửi gợi ý món thèm cho Bạn Trai.';
+    if (submitBtn) submitBtn.textContent = 'Hoàn Tất Đăng Ký (Bé Yêu) 🐰';
+  }
+}
+
+function getStoredAccounts() {
+  try {
+    const raw = localStorage.getItem('an_gi_accounts');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  const defaults = {
+    'sang.khanhhn@gmail.com': {
+      email: 'sang.khanhhn@gmail.com',
+      password: 'admin',
+      role: 'admin',
+      name: 'Anh Bạn Trai',
+      coupleCode: 'LOVE-2026'
+    },
+    'admin@love.app': {
+      email: 'admin@love.app',
+      password: 'admin',
+      role: 'admin',
+      name: 'Bạn Trai Quản Trị',
+      coupleCode: 'LOVE-2026'
+    },
+    'bantrai@love.app': {
+      email: 'bantrai@love.app',
+      password: 'admin',
+      role: 'admin',
+      name: 'Anh Bạn Trai Chu Đáo',
+      coupleCode: 'LOVE-2026'
+    },
+    'beyeu@love.app': {
+      email: 'beyeu@love.app',
+      password: 'admin',
+      role: 'user',
+      name: 'Bé Yêu (Công Chúa)',
+      coupleCode: 'LOVE-2026'
+    }
+  };
+  saveStoredAccounts(defaults);
+  return defaults;
+}
+
+function saveStoredAccounts(accounts) {
+  try {
+    localStorage.setItem('an_gi_accounts', JSON.stringify(accounts));
+  } catch(e) {}
+}
+
 function openAdminLogin() {
+  switchAuthTab('login');
   selectAuthRole('admin');
+  const passInp = document.getElementById('auth-password');
+  if (passInp) passInp.value = '';
   const modal = document.getElementById('auth-modal');
   if (modal) {
     modal.classList.remove('hidden');
@@ -4109,7 +4291,10 @@ function openAdminLogin() {
 const openAdminPinModal = openAdminLogin;
 
 function openAuthModal() {
+  switchAuthTab('login');
   selectAuthRole((currentAuthUser && currentAuthUser.role) ? currentAuthUser.role : 'admin');
+  const passInp = document.getElementById('auth-password');
+  if (passInp) passInp.value = '';
   const modal = document.getElementById('auth-modal');
   if (modal) {
     modal.classList.remove('hidden');
@@ -4128,7 +4313,6 @@ function closeAuthModal() {
   }
 }
 
-let pendingAuthRole = 'admin';
 function selectAuthRole(role) {
   pendingAuthRole = role;
   const btnAdmin = document.getElementById('auth-role-btn-admin');
@@ -4179,10 +4363,10 @@ function quickLoginAs(role) {
 
   if (role === 'admin') {
     playChimeSound(true);
-    showToast('Đã đăng nhập vai trò: 👑 Bạn Trai (Admin)!');
+    showToast('Đã đăng nhập nhanh: 👑 Bạn Trai (Admin)!');
     navigate('admin');
   } else {
-    showToast('Đã đăng nhập vai trò: 🐰 Bé Yêu! 💕');
+    showToast('Đã đăng nhập nhanh: 🐰 Bé Yêu! 💕');
     navigate('home');
   }
 }
@@ -4190,22 +4374,60 @@ function quickLoginAs(role) {
 function handleAuthSubmit(e) {
   if (e) e.preventDefault();
   const emailInp = document.getElementById('auth-email');
-  const email = (emailInp && emailInp.value) ? emailInp.value.trim() : (pendingAuthRole === 'admin' ? 'bantrai@love.app' : 'beyeu@love.app');
+  const passInp = document.getElementById('auth-password');
   const codeInp = document.getElementById('auth-couple-code');
+
+  const email = emailInp ? emailInp.value.trim() : '';
+  const password = passInp ? passInp.value.trim() : '';
   const code = (codeInp && codeInp.value ? codeInp.value : (currentCoupleCode || 'LOVE-2026')).toUpperCase().trim();
 
-  currentCoupleCode = code;
-  localStorage.setItem('an_gi_couple_code', currentCoupleCode);
-
-  let targetRole = pendingAuthRole;
-  if (email.toLowerCase().includes('admin') || email.toLowerCase().includes('bantrai')) {
-    targetRole = 'admin';
+  // BẮT BUỘC: Không được để trống Email hoặc Mật khẩu!
+  if (!email) {
+    showToast('⚠️ Vui lòng nhập Email hoặc Tài khoản!');
+    if (emailInp) emailInp.focus();
+    return false;
+  }
+  if (!password) {
+    showToast('⚠️ Vui lòng nhập Mật khẩu để đăng nhập!');
+    if (passInp) passInp.focus();
+    return false;
   }
 
+  const accounts = getStoredAccounts();
+  const accountKey = email.toLowerCase();
+  const existingAcc = accounts[accountKey];
+
+  if (!existingAcc) {
+    showToast('⚠️ Tài khoản này chưa được đăng ký! Đang chuyển sang mục Đăng ký để tạo mới...');
+    switchAuthTab('register');
+    const regEmail = document.getElementById('reg-email');
+    if (regEmail) {
+      regEmail.value = email;
+      const regPass = document.getElementById('reg-password');
+      if (regPass) regPass.focus();
+    }
+    return false;
+  }
+
+  // Kiểm tra mật khẩu
+  if (existingAcc.password && existingAcc.password !== password) {
+    showToast('❌ Mật khẩu không chính xác! Vui lòng thử lại.');
+    if (passInp) {
+      passInp.value = '';
+      passInp.focus();
+    }
+    return false;
+  }
+
+  // Đăng nhập hợp lệ
+  currentCoupleCode = code || existingAcc.coupleCode || 'LOVE-2026';
+  localStorage.setItem('an_gi_couple_code', currentCoupleCode);
+
+  const targetRole = existingAcc.role || pendingAuthRole;
   currentAuthUser = {
     role: targetRole,
-    email: email,
-    name: targetRole === 'admin' ? 'Anh Bạn Trai Chu Đáo' : 'Bé Yêu (Công Chúa)',
+    email: existingAcc.email || email,
+    name: existingAcc.name || (targetRole === 'admin' ? 'Anh Bạn Trai' : 'Bé Yêu'),
     coupleCode: currentCoupleCode
   };
 
@@ -4224,17 +4446,89 @@ function handleAuthSubmit(e) {
     }
   } catch(e) {}
 
-  showToast(`Đăng nhập thành công với vai trò: ${targetRole === 'admin' ? '👑 Bạn Trai' : '🐰 Bé Yêu'}!`);
+  showToast(`🎉 Đăng nhập thành công: ${targetRole === 'admin' ? '👑 Bạn Trai (Admin)' : '🐰 Bé Yêu'}!`);
   if (targetRole === 'admin') {
     playChimeSound(true);
     navigate('admin');
   } else {
     navigate('home');
   }
+  return true;
 }
 
-function handleAuthRegister() {
-  handleAuthSubmit();
+function handleAuthRegister(e) {
+  if (e) e.preventDefault();
+  const nameInp = document.getElementById('reg-name');
+  const emailInp = document.getElementById('reg-email');
+  const passInp = document.getElementById('reg-password');
+  const passConfirmInp = document.getElementById('reg-password-confirm');
+  const codeInp = document.getElementById('reg-couple-code');
+
+  const email = emailInp ? emailInp.value.trim() : '';
+  const password = passInp ? passInp.value.trim() : '';
+  const passConfirm = passConfirmInp ? passConfirmInp.value.trim() : '';
+  const name = (nameInp && nameInp.value.trim()) ? nameInp.value.trim() : (pendingRegRole === 'admin' ? 'Anh Bạn Trai' : 'Bé Yêu (Công Chúa)');
+  const code = (codeInp && codeInp.value ? codeInp.value : (currentCoupleCode || 'LOVE-2026')).toUpperCase().trim();
+
+  // BẮT BUỘC: Kiểm tra hợp lệ các trường đăng ký
+  if (!email) {
+    showToast('⚠️ Vui lòng nhập Email / Tên đăng nhập!');
+    if (emailInp) emailInp.focus();
+    return false;
+  }
+  if (!password || password.length < 4) {
+    showToast('⚠️ Mật khẩu phải có tối thiểu 4 ký tự!');
+    if (passInp) passInp.focus();
+    return false;
+  }
+  if (password !== passConfirm) {
+    showToast('⚠️ Mật khẩu xác nhận không khớp! Vui lòng kiểm tra lại.');
+    if (passConfirmInp) {
+      passConfirmInp.value = '';
+      passConfirmInp.focus();
+    }
+    return false;
+  }
+
+  const accounts = getStoredAccounts();
+  const accountKey = email.toLowerCase();
+
+  // Lưu tài khoản mới
+  accounts[accountKey] = {
+    email: email,
+    password: password,
+    role: pendingRegRole,
+    name: name,
+    coupleCode: code,
+    registeredAt: Date.now()
+  };
+  saveStoredAccounts(accounts);
+
+  // Đăng nhập luôn vào tài khoản vừa tạo
+  currentCoupleCode = code;
+  localStorage.setItem('an_gi_couple_code', currentCoupleCode);
+
+  currentAuthUser = {
+    role: pendingRegRole,
+    email: email,
+    name: name,
+    coupleCode: currentCoupleCode
+  };
+  localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+
+  updateAuthUI();
+  closeAuthModal();
+  initBroadcastSync();
+  initCloudRealtimeSync();
+
+  showToast(`🎉 Đăng ký thành công! Chào mừng ${name} (${pendingRegRole === 'admin' ? '👑 Bạn Trai' : '🐰 Bé Yêu'}) 💕`);
+  if (pendingRegRole === 'admin') {
+    playChimeSound(true);
+    navigate('admin');
+  } else {
+    navigate('home');
+  }
+  return true;
 }
 
 function handleAuthLogout() {
@@ -4242,12 +4536,12 @@ function handleAuthLogout() {
   currentAuthUser = {
     role: 'user',
     email: 'khach@love.app',
-    name: 'Bé Yêu',
+    name: 'Bé Yêu (Công Chúa)',
     coupleCode: currentCoupleCode
   };
   updateAuthUI();
   closeAuthModal();
-  showToast('Đã đăng xuất tài khoản!');
+  showToast('Đã đăng xuất tài khoản! Đang ở giao diện Bé Yêu 💕');
   navigate('home');
 }
 
