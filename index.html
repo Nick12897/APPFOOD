@@ -1239,7 +1239,7 @@
       
       <div class="flex items-center justify-between relative z-10">
         <div class="flex items-center gap-2.5">
-          <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/30">
+          <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/30 overflow-hidden cursor-pointer active:scale-95 transition-all group relative" id="admin-header-avatar" onclick="openAuthModal()" title="Chạm để xem tài khoản & đổi ảnh Bạn Trai">
             👑
           </div>
           <div>
@@ -1522,6 +1522,66 @@
 
     <!-- ══ ADMIN TAB 4: FIREBASE CLOUD SETTINGS & PAIRING ══ -->
     <div id="adm-tab-settings" class="admin-tab-content hidden space-y-3.5">
+      <!-- ══ BOYFRIEND PROFILE & AVATAR SETTINGS CARD ══ -->
+      <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-primary/20 space-y-3.5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-base">
+              📸
+            </div>
+            <div>
+              <h3 class="font-headline-sm text-sm font-bold text-on-surface">Ảnh Đại Diện &amp; Hồ Sơ Bạn Trai</h3>
+              <p class="text-[11px] text-on-surface-variant">Ảnh sẽ xuất hiện ở trang quản trị, thông báo và tài khoản</p>
+            </div>
+          </div>
+          <span class="text-[10px] bg-primary-fixed text-primary px-2 py-0.5 rounded-full font-bold">Admin Profile</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-3.5 p-3 rounded-2xl bg-primary-fixed/15 border border-primary/15">
+          <div class="relative group cursor-pointer shrink-0" onclick="triggerProfileAvatarPicker()">
+            <div id="admin-settings-avatar-preview" class="w-16 h-16 rounded-full bg-primary text-white text-3xl flex items-center justify-center shadow-md overflow-hidden border-2 border-white">
+              👑
+            </div>
+            <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shadow border-2 border-white text-[12px]">
+              📷
+            </div>
+          </div>
+
+          <div class="flex-1 space-y-1.5 text-center sm:text-left min-w-0 w-full">
+            <h4 class="font-bold text-xs text-on-surface" id="admin-settings-name-display">Anh Bạn Trai</h4>
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-0.5">
+              <button type="button" onclick="triggerProfileAvatarPicker()" class="py-1.5 px-3 rounded-xl bg-primary text-on-primary font-bold text-xs shadow-xs active:scale-95 flex items-center gap-1 hover:brightness-105 transition-all">
+                <span class="material-symbols-outlined text-[15px]">photo_camera</span>
+                <span>Tải ảnh Bạn Trai 📸</span>
+              </button>
+              <button type="button" id="admin-remove-avatar-btn" onclick="removeAuthCustomAvatar()" class="hidden py-1.5 px-2.5 rounded-xl bg-surface-container-high hover:bg-error-container/30 text-on-surface-variant hover:text-error text-xs font-semibold items-center gap-1 transition-all border border-outline-variant/30 active:scale-95">
+                <span class="material-symbols-outlined text-[13px]">delete</span>
+                <span>Xóa ảnh</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Emoji Presets for Boyfriend -->
+        <div class="space-y-1.5 text-xs">
+          <label class="font-bold text-on-surface block">Hoặc chọn biểu tượng đại diện nhanh:</label>
+          <div class="flex items-center gap-2 overflow-x-auto py-1" id="admin-emoji-avatar-list">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Boyfriend Display Name -->
+        <div class="space-y-1 text-xs">
+          <label class="font-bold text-on-surface block">Tên / Biệt danh của Bạn Trai:</label>
+          <div class="flex gap-2">
+            <input type="text" id="admin-input-boyfriend-name" class="flex-1 px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface text-xs focus:outline-none focus:border-primary font-bold" placeholder="vd: Anh Bạn Trai Chu Đáo" />
+            <button onclick="saveBoyfriendNameFromAdmin()" class="px-3.5 py-2 rounded-xl bg-primary text-on-primary font-bold shadow-xs active:scale-95 transition-all shrink-0">
+              Lưu tên
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Device Pairing Card -->
       <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/20 space-y-3">
         <div class="flex items-center gap-2">
@@ -3105,9 +3165,35 @@
     <!-- ══ PANE 0: THÔNG TIN TÀI KHOẢN ĐÃ ĐĂNG NHẬP (PROFILE CARD) ══ -->
     <div id="auth-pane-profile" class="hidden space-y-4">
       <div class="p-4 rounded-2xl bg-surface-container-lowest border border-primary/20 space-y-3 text-center shadow-xs">
-        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-primary-container text-white text-3xl flex items-center justify-center mx-auto shadow-sm" id="auth-profile-avatar">
-          👑
+        <!-- Interactive Avatar with Camera Upload Button -->
+        <div class="relative w-20 h-20 mx-auto group">
+          <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-primary to-primary-container text-white text-3xl flex items-center justify-center overflow-hidden shadow-md border-2 border-white/80 cursor-pointer" id="auth-profile-avatar" onclick="triggerProfileAvatarPicker()" title="Chạm để đổi ảnh đại diện">
+            👑
+          </div>
+          <button type="button" onclick="triggerProfileAvatarPicker()" class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-primary text-white shadow-md border-2 border-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all" title="Tải ảnh mới lên">
+            <span class="material-symbols-outlined text-[15px]">photo_camera</span>
+          </button>
         </div>
+
+        <!-- Avatar Controls (File Input, Upload Button, Remove Button, Presets) -->
+        <div class="space-y-1.5 pt-0.5" id="auth-avatar-tools">
+          <input type="file" id="auth-avatar-file-input" accept="image/*" class="hidden" onchange="handleAuthAvatarUpload(event)" />
+          <div class="flex items-center justify-center gap-2">
+            <button type="button" onclick="triggerProfileAvatarPicker()" id="auth-avatar-upload-btn" class="py-1.5 px-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold text-xs flex items-center gap-1.5 transition-all border border-primary/20 active:scale-95 shadow-2xs">
+              <span class="material-symbols-outlined text-[16px]">add_a_photo</span>
+              <span id="auth-avatar-upload-btn-text">Thêm / Đổi ảnh Bạn Trai 📸</span>
+            </button>
+            <button type="button" id="auth-avatar-remove-btn" onclick="removeAuthCustomAvatar()" class="hidden py-1.5 px-2.5 rounded-xl bg-surface-container-high hover:bg-error-container/30 text-on-surface-variant hover:text-error text-xs font-semibold items-center gap-1 transition-all border border-outline-variant/30 active:scale-95" title="Quay về biểu tượng">
+              <span class="material-symbols-outlined text-[14px]">delete</span>
+              <span>Xóa ảnh</span>
+            </button>
+          </div>
+          <!-- Quick Emoji Presets -->
+          <div class="flex items-center justify-center gap-1.5 pt-1 overflow-x-auto max-w-full px-1" id="auth-avatar-preset-chips">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
         <div>
           <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs mb-1" id="auth-profile-badge">
             <span>👑 Bạn Trai (Admin)</span>
@@ -3904,6 +3990,14 @@ function applyRemoteDataSync(payload) {
       localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile));
       renderProfile();
     }
+    if (payload.boyfriendProfile) {
+      boyfriendProfile = { ...boyfriendProfile, ...payload.boyfriendProfile };
+      try {
+        localStorage.setItem('an_gi_boyfriend_profile', JSON.stringify(boyfriendProfile));
+      } catch(e){}
+      renderBoyfriendProfile();
+      updateAuthUI();
+    }
     if (payload.favDishes) {
       favDishes = payload.favDishes;
       localStorage.setItem('an_gi_fav_dishes', JSON.stringify(favDishes));
@@ -3934,6 +4028,7 @@ function applyRemoteDataSync(payload) {
 function syncDataToCloud() {
   const payload = {
     profile: beProfile,
+    boyfriendProfile: (typeof boyfriendProfile !== 'undefined' ? boyfriendProfile : null),
     favDishes: favDishes,
     wheelItems: wheelItems,
     blackDishes: blackDishes,
@@ -4091,16 +4186,30 @@ function updateAuthUI() {
   const isAdmin = (currentAuthUser && currentAuthUser.role === 'admin');
 
   if (isAdmin) {
-    if (roleIcon) roleIcon.textContent = '👑';
-    if (roleText) roleText.textContent = 'Bạn Trai';
+    const bfAv = (typeof boyfriendProfile !== 'undefined' && boyfriendProfile.avatar) || (currentAuthUser && currentAuthUser.avatar) || '👑';
+    if (roleIcon) {
+      if (isImageAvatar(bfAv)) {
+        roleIcon.innerHTML = `<img src="${bfAv}" alt="Bạn Trai" class="w-4 h-4 rounded-full object-cover inline-block" />`;
+      } else {
+        roleIcon.textContent = bfAv;
+      }
+    }
+    if (roleText) roleText.textContent = (typeof boyfriendProfile !== 'undefined' && boyfriendProfile.name) ? boyfriendProfile.name.split(' ')[0] : 'Bạn Trai';
     if (roleArrow) roleArrow.classList.remove('hidden');
     if (rolePill) {
       rolePill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary text-xs font-bold active:scale-95 transition-all cursor-pointer';
-      rolePill.title = '👑 Bạn Trai (Admin) - Chạm để chuyển vai trò hoặc vào Quản trị';
+      rolePill.title = '👑 Bạn Trai (Admin) - Chạm để xem tài khoản, đổi ảnh hoặc vào Quản trị';
     }
   } else {
-    if (roleIcon) roleIcon.textContent = '🐰';
-    if (roleText) roleText.textContent = 'Bé Yêu';
+    const beAv = (typeof beProfile !== 'undefined' && beProfile.avatar) || (currentAuthUser && currentAuthUser.avatar) || '🐰';
+    if (roleIcon) {
+      if (isImageAvatar(beAv)) {
+        roleIcon.innerHTML = `<img src="${beAv}" alt="Bé Yêu" class="w-4 h-4 rounded-full object-cover inline-block" />`;
+      } else {
+        roleIcon.textContent = beAv;
+      }
+    }
+    if (roleText) roleText.textContent = (typeof beProfile !== 'undefined' && beProfile.name) ? beProfile.name.split(' ')[0] : 'Bé Yêu';
     if (roleArrow) roleArrow.classList.add('hidden');
     if (rolePill) {
       rolePill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed border border-secondary/40 text-on-secondary-fixed text-xs font-bold transition-all';
@@ -4218,22 +4327,55 @@ function showAuthProfile() {
   if (paneProfile) paneProfile.classList.remove('hidden');
 
   const isAdmin = currentAuthUser && currentAuthUser.role === 'admin';
-  const avatar = document.getElementById('auth-profile-avatar');
+  const avatarEl = document.getElementById('auth-profile-avatar');
   const badge = document.getElementById('auth-profile-badge');
   const nameEl = document.getElementById('auth-profile-name');
   const emailEl = document.getElementById('auth-profile-email');
   const codeEl = document.getElementById('auth-profile-code');
   const adminBtn = document.getElementById('auth-profile-admin-btn');
   const userSwitchBtn = document.getElementById('auth-profile-user-switch-btn');
+  const uploadBtnText = document.getElementById('auth-avatar-upload-btn-text');
+  const removeBtn = document.getElementById('auth-avatar-remove-btn');
+  const presetsEl = document.getElementById('auth-avatar-preset-chips');
 
-  if (avatar) avatar.textContent = isAdmin ? '👑' : '🐰';
+  const activeAvatar = isAdmin 
+    ? ((typeof boyfriendProfile !== 'undefined' && boyfriendProfile.avatar) || (currentAuthUser && currentAuthUser.avatar) || '👑')
+    : ((typeof beProfile !== 'undefined' && beProfile.avatar) || (currentAuthUser && currentAuthUser.avatar) || '🐰');
+  const isImg = isImageAvatar(activeAvatar);
+
+  if (avatarEl) {
+    if (isImg) {
+      avatarEl.innerHTML = `<img src="${activeAvatar}" alt="Avatar" class="w-full h-full object-cover rounded-full" />`;
+    } else {
+      avatarEl.textContent = activeAvatar;
+    }
+  }
+
+  if (uploadBtnText) {
+    uploadBtnText.textContent = isAdmin ? (isImg ? 'Đổi ảnh Bạn Trai 📸' : 'Thêm ảnh Bạn Trai 📸') : (isImg ? 'Đổi ảnh Bé Yêu 📸' : 'Thêm ảnh Bé Yêu 📸');
+  }
+
+  if (removeBtn) {
+    removeBtn.classList.toggle('hidden', !isImg);
+    removeBtn.classList.toggle('inline-flex', isImg);
+  }
+
+  if (presetsEl) {
+    const list = isAdmin ? (typeof boyfriendAvatarList !== 'undefined' ? boyfriendAvatarList : ['👑', '🦁', '🐯', '🐼']) : (typeof avatarList !== 'undefined' ? avatarList : ['🐰', '🐱']);
+    presetsEl.innerHTML = list.slice(0, 7).map(em => `
+      <button type="button" onclick="${isAdmin ? `setBoyfriendAvatarEmoji('${em}')` : `selectProfileAvatar('${em}')`}" class="w-7 h-7 rounded-full border ${activeAvatar === em ? 'border-primary ring-2 ring-primary/40 bg-primary/10' : 'border-outline-variant/30 bg-surface-container-high'} text-sm flex items-center justify-center shrink-0 active:scale-95 transition-all">
+        ${em}
+      </button>
+    `).join('');
+  }
+
   if (badge) {
     badge.className = isAdmin
       ? 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs mb-1'
       : 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold text-xs mb-1';
     badge.innerHTML = isAdmin ? '<span>👑 Bạn Trai (Admin)</span>' : '<span>🐰 Bé Yêu (Nàng)</span>';
   }
-  if (nameEl) nameEl.textContent = (currentAuthUser && currentAuthUser.name) ? currentAuthUser.name : (isAdmin ? 'Anh Bạn Trai' : 'Bé Yêu');
+  if (nameEl) nameEl.textContent = isAdmin ? ((typeof boyfriendProfile !== 'undefined' && boyfriendProfile.name) || (currentAuthUser && currentAuthUser.name) || 'Anh Bạn Trai') : ((typeof beProfile !== 'undefined' && beProfile.name) || (currentAuthUser && currentAuthUser.name) || 'Bé Yêu');
   if (emailEl) emailEl.textContent = (currentAuthUser && currentAuthUser.email) ? currentAuthUser.email : 'Chưa có email';
   if (codeEl) codeEl.textContent = currentCoupleCode;
 
@@ -4666,6 +4808,7 @@ function switchAdminDataSubtab(subtab) {
 
 function renderAdminDashboard() {
   updateAuthUI();
+  renderBoyfriendProfile();
   renderAdminActivities();
   loadAdminBeData();
 }
@@ -10222,6 +10365,26 @@ try {
   }
 } catch(e) { beProfile = { ...defaultProfile }; }
 
+// ── Boyfriend Profile Management ──
+const defaultBoyfriendProfile = {
+  name: 'Anh Bạn Trai',
+  avatar: '👑',
+  status: 'Sẵn sàng phục vụ & chiều chuộng nàng 24/7 ❤️',
+  coupleCode: 'LOVE-2026'
+};
+
+let boyfriendProfile = { ...defaultBoyfriendProfile };
+try {
+  const savedBf = localStorage.getItem('an_gi_boyfriend_profile');
+  if (savedBf) {
+    boyfriendProfile = { ...defaultBoyfriendProfile, ...JSON.parse(savedBf) };
+  }
+} catch(e) {
+  boyfriendProfile = { ...defaultBoyfriendProfile };
+}
+
+const boyfriendAvatarList = ['👑', '🦁', '🐯', '🐼', '🦊', '🤴', '🤵', '🦸‍♂️', '🚀', '⭐', '🐻', '🐶'];
+
 const avatarList = ['🐰', '🐱', '🐻', '🐶', '🦊', '🐼', '🐹', '🦄', '👸', '🌸', '🍓', '🥑', '🍧', '🧋', '👑', '🐣', '🦋'];
 let selectedAvatar = beProfile.avatar || '🐰';
 let editingSpicyLevel = beProfile.spicyLevel || 2;
@@ -10341,6 +10504,242 @@ function renderProfile() {
 
   // Update understanding score banner
   updateUnderstandingBanner();
+}
+
+// ═══════════════════════════════════════════════════════════
+// HỒ SƠ & ẢNH ĐẠI DIỆN BẠN TRAI (BOYFRIEND PROFILE & AVATAR)
+// ═══════════════════════════════════════════════════════════
+function renderBoyfriendProfile() {
+  const bfAv = (boyfriendProfile && boyfriendProfile.avatar) ? boyfriendProfile.avatar : '👑';
+  const isImg = isImageAvatar(bfAv);
+
+  // 1. Admin Header Avatar
+  const admHdrAv = document.getElementById('admin-header-avatar');
+  if (admHdrAv) {
+    if (isImg) {
+      admHdrAv.innerHTML = `<img src="${bfAv}" alt="Bạn Trai" class="w-full h-full object-cover rounded-xl" />`;
+    } else {
+      admHdrAv.textContent = bfAv;
+    }
+  }
+
+  // 2. Admin Settings Avatar Preview
+  const admSetAv = document.getElementById('admin-settings-avatar-preview');
+  if (admSetAv) {
+    if (isImg) {
+      admSetAv.innerHTML = `<img src="${bfAv}" alt="Bạn Trai" class="w-full h-full object-cover rounded-full" />`;
+    } else {
+      admSetAv.textContent = bfAv;
+    }
+  }
+
+  const admRemoveBtn = document.getElementById('admin-remove-avatar-btn');
+  if (admRemoveBtn) {
+    admRemoveBtn.classList.toggle('hidden', !isImg);
+    admRemoveBtn.classList.toggle('inline-flex', isImg);
+  }
+
+  const admNameDisp = document.getElementById('admin-settings-name-display');
+  if (admNameDisp) {
+    admNameDisp.textContent = (boyfriendProfile && boyfriendProfile.name) ? boyfriendProfile.name : 'Anh Bạn Trai';
+  }
+
+  const admNameInp = document.getElementById('admin-input-boyfriend-name');
+  if (admNameInp && !admNameInp.matches(':focus')) {
+    admNameInp.value = (boyfriendProfile && boyfriendProfile.name) ? boyfriendProfile.name : 'Anh Bạn Trai';
+  }
+
+  // Render preset chips in Admin Settings
+  const emojiListEl = document.getElementById('admin-emoji-avatar-list');
+  if (emojiListEl) {
+    emojiListEl.innerHTML = boyfriendAvatarList.map(em => `
+      <button type="button" onclick="setBoyfriendAvatarEmoji('${em}')" class="w-8 h-8 rounded-full border ${bfAv === em ? 'border-primary ring-2 ring-primary/40 bg-primary/10' : 'border-outline-variant/30 bg-surface-container-high hover:border-primary/50'} text-base flex items-center justify-center shrink-0 active:scale-95 transition-all">
+        ${em}
+      </button>
+    `).join('');
+  }
+}
+
+function triggerProfileAvatarPicker() {
+  const fileInput = document.getElementById('auth-avatar-file-input');
+  if (fileInput) fileInput.click();
+}
+
+function handleAuthAvatarUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    showToast('⚠️ Vui lòng chọn tệp hình ảnh hợp lệ (PNG, JPG, WebP)! 🖼️');
+    return;
+  }
+
+  if (file.size > 15 * 1024 * 1024) {
+    showToast('⚠️ Dung lượng ảnh vượt quá 15MB! Vui lòng chọn ảnh khác nhỏ hơn.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const maxDim = 256;
+      let width = img.width;
+      let height = img.height;
+      if (width > height) {
+        if (width > maxDim) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        }
+      } else {
+        if (height > maxDim) {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      try {
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.86);
+        const isAdmin = (currentAuthUser && currentAuthUser.role === 'admin');
+
+        if (isAdmin) {
+          boyfriendProfile.avatar = compressedDataUrl;
+          try {
+            localStorage.setItem('an_gi_boyfriend_profile', JSON.stringify(boyfriendProfile));
+          } catch(err){}
+
+          if (currentAuthUser) {
+            currentAuthUser.avatar = compressedDataUrl;
+            try {
+              localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+            } catch(err){}
+          }
+
+          // Cập nhật tài khoản trong an_gi_accounts
+          const accounts = getStoredAccounts();
+          const accKey = (currentAuthUser && currentAuthUser.email) ? currentAuthUser.email.toLowerCase() : 'sang.khanhhn@gmail.com';
+          if (accounts[accKey]) {
+            accounts[accKey].avatar = compressedDataUrl;
+            saveStoredAccounts(accounts);
+          }
+
+          renderBoyfriendProfile();
+          showToast('📸 Đã tải & cập nhật ảnh đại diện Bạn Trai thành công! ❤️');
+        } else {
+          // Logged in as Bé Yêu
+          beProfile.avatar = compressedDataUrl;
+          selectedAvatar = compressedDataUrl;
+          try {
+            localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile));
+          } catch(err){}
+
+          if (currentAuthUser) {
+            currentAuthUser.avatar = compressedDataUrl;
+            try {
+              localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+            } catch(err){}
+          }
+          renderProfile();
+          showToast('📸 Đã tải & cập nhật ảnh đại diện Bé Yêu thành công! 🌸');
+        }
+
+        showAuthProfile();
+        updateAuthUI();
+        syncDataToCloud();
+      } catch (err) {
+        console.error('Error compressing image:', err);
+        showToast('⚠️ Không thể xử lý ảnh này, thử lại ảnh khác nhé!');
+      }
+    };
+    img.onerror = function() {
+      showToast('⚠️ Không thể đọc tệp ảnh này!');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function removeAuthCustomAvatar() {
+  const isAdmin = (currentAuthUser && currentAuthUser.role === 'admin');
+  if (isAdmin) {
+    boyfriendProfile.avatar = '👑';
+    try {
+      localStorage.setItem('an_gi_boyfriend_profile', JSON.stringify(boyfriendProfile));
+    } catch(e){}
+    if (currentAuthUser) {
+      currentAuthUser.avatar = '👑';
+      try {
+        localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+      } catch(e){}
+    }
+    renderBoyfriendProfile();
+    showToast('👑 Đã quay về biểu tượng hoàng gia 👑');
+  } else {
+    beProfile.avatar = '🐰';
+    selectedAvatar = '🐰';
+    try {
+      localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile));
+    } catch(e){}
+    if (currentAuthUser) {
+      currentAuthUser.avatar = '🐰';
+      try {
+        localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+      } catch(e){}
+    }
+    renderProfile();
+    showToast('🐰 Đã quay về avatar Bé Thỏ 🐰');
+  }
+  showAuthProfile();
+  updateAuthUI();
+  syncDataToCloud();
+}
+
+function setBoyfriendAvatarEmoji(emoji) {
+  boyfriendProfile.avatar = emoji;
+  try {
+    localStorage.setItem('an_gi_boyfriend_profile', JSON.stringify(boyfriendProfile));
+  } catch(e){}
+  if (currentAuthUser && currentAuthUser.role === 'admin') {
+    currentAuthUser.avatar = emoji;
+    try {
+      localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+    } catch(e){}
+  }
+  renderBoyfriendProfile();
+  showAuthProfile();
+  updateAuthUI();
+  syncDataToCloud();
+  showToast(`✨ Đã đổi biểu tượng Bạn Trai sang: ${emoji}`);
+}
+
+function saveBoyfriendNameFromAdmin() {
+  const inp = document.getElementById('admin-input-boyfriend-name');
+  const name = inp ? inp.value.trim() : '';
+  if (!name) {
+    showToast('⚠️ Vui lòng nhập tên hoặc biệt danh của bạn!');
+    return;
+  }
+  boyfriendProfile.name = name;
+  try {
+    localStorage.setItem('an_gi_boyfriend_profile', JSON.stringify(boyfriendProfile));
+  } catch(e){}
+  if (currentAuthUser && currentAuthUser.role === 'admin') {
+    currentAuthUser.name = name;
+    try {
+      localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+    } catch(e){}
+  }
+  renderBoyfriendProfile();
+  showAuthProfile();
+  syncDataToCloud();
+  showToast(`🎉 Đã lưu tên Bạn Trai: ${name}`);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -13832,6 +14231,7 @@ initQuickEmojiBars();
 initDraggablePopup();
 initFloatingWheelWidget();
 renderProfile();
+renderBoyfriendProfile();
 autoFixFavAndMapCoordinates();
 syncFavDishesToMapRestaurants();
 renderFavList();
