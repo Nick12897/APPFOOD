@@ -1191,23 +1191,23 @@
             <span class="text-primary text-sm">🔗</span>
             <span>Liên kết Quản Trị Bạn Trai:</span>
           </span>
-          <span id="nb-couple-status-badge" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Đã kết nối trực tiếp</span>
+          <span id="nb-couple-status-badge" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+            <span>Chưa kết nối Bạn Trai (Độc lập)</span>
           </span>
         </div>
         <div class="flex items-center justify-between pt-0.5">
           <div class="flex items-center gap-1.5">
-            <span class="text-[11px] text-on-surface-variant font-medium">Mã cặp đôi:</span>
-            <span class="font-mono font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-lg text-xs tracking-wider" id="nb-couple-code-display">LOVE-2026</span>
+            <span class="text-[11px] text-on-surface-variant font-medium">Mã kết nối:</span>
+            <span class="font-mono text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-lg text-xs italic" id="nb-couple-code-display">(Chưa có mã)</span>
           </div>
-          <button type="button" onclick="promptChangeCoupleCode()" class="px-2.5 py-1 rounded-xl bg-primary text-on-primary font-bold text-[11px] shadow-2xs hover:brightness-105 active:scale-95 transition-all flex items-center gap-1" title="Nhập mã khác để liên kết">
-            <span class="material-symbols-outlined text-[13px]">sync_alt</span>
-            <span>Đổi mã</span>
+          <button type="button" id="nb-couple-btn" onclick="promptChangeCoupleCode()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-[11px] shadow-xs hover:brightness-105 active:scale-95 transition-all flex items-center gap-1" title="Nhập mã do Bạn Trai cấp để liên kết">
+            <span class="material-symbols-outlined text-[13px]">link</span>
+            <span>Nhập mã Bạn Trai cấp</span>
           </button>
         </div>
-        <p class="text-[10px] text-on-surface-variant italic leading-tight">
-          💡 Hai bạn cùng dùng mã này để nhận thông báo và đồng bộ món ăn qua Cloud.
+        <p class="text-[10px] text-on-surface-variant italic leading-tight" id="nb-couple-card-hint">
+          💡 Mã kết nối do Bạn Trai cấp. Nhập mã để nhận thông báo và đồng bộ món ăn trực tiếp với Bạn Trai.
         </p>
       </div>
 
@@ -1225,7 +1225,7 @@
 
       <!-- Visible only for User: Romantic status info & admin PIN entry for boyfriend -->
       <div id="nb-user-status-info" class="pt-1 space-y-2.5">
-        <div class="p-2.5 rounded-xl bg-secondary-fixed/30 border border-secondary/20 flex items-center gap-2 text-xs text-on-secondary-fixed">
+        <div id="nb-user-status-text" class="p-2.5 rounded-xl bg-secondary-fixed/30 border border-secondary/20 flex items-center gap-2 text-xs text-on-secondary-fixed">
           <span class="text-base shrink-0">🌸</span>
           <span class="leading-relaxed">Hai bạn đang kết nối chung phòng! Mọi món quay và tâm trạng sẽ đồng bộ tức thì sang Bạn Trai.</span>
         </div>
@@ -3246,15 +3246,15 @@
           <span>Mã cặp đôi kết nối:</span>
           <div class="flex items-center gap-1.5">
             <span class="font-mono font-bold text-primary text-sm tracking-wider" id="auth-profile-code">LOVE-2026</span>
-            <button type="button" onclick="promptChangeCoupleCode()" class="px-2 py-0.5 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-[11px] font-bold transition-all active:scale-95 flex items-center gap-0.5" title="Đổi mã cặp đôi">
+            <button type="button" id="auth-profile-code-btn" onclick="promptChangeCoupleCode()" class="px-2 py-0.5 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-[11px] font-bold transition-all active:scale-95 flex items-center gap-0.5" title="Đổi hoặc nhập mã cặp đôi">
               <span class="material-symbols-outlined text-[12px]">edit</span>
               <span>Đổi</span>
             </button>
           </div>
         </div>
         <div class="flex items-center justify-between text-xs text-on-surface-variant">
-          <span>Trạng thái Cloud:</span>
-          <span class="font-semibold text-emerald-600 flex items-center gap-1">
+          <span>Trạng thái kết nối:</span>
+          <span id="auth-profile-cloud-status" class="font-semibold text-emerald-600 flex items-center gap-1">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Đang trực tuyến 2 máy
           </span>
         </div>
@@ -3318,11 +3318,11 @@
         <div class="p-2.5 rounded-2xl bg-primary/5 border border-primary/20 space-y-1">
           <label class="font-bold text-on-surface flex items-center gap-1 text-[11px]">
             <span class="text-primary text-sm">🔗</span>
-            <span>Mã cặp đôi kết nối (Couple Code):</span>
-            <span class="text-error font-bold">*</span>
+            <span id="auth-couple-label">Mã kết nối Bạn Trai cấp (nếu có):</span>
+            <span class="text-error font-bold hidden" id="auth-couple-star">*</span>
           </label>
-          <input type="text" id="auth-couple-code" required class="w-full px-3 py-1.5 rounded-xl bg-surface border border-outline-variant/30 text-primary font-mono font-bold uppercase tracking-wider text-center focus:outline-none focus:border-primary text-xs" value="LOVE-2026" placeholder="LOVE-2026" />
-          <span class="text-[10px] text-on-surface-variant block text-center">Để đồng bộ dữ liệu trực tiếp với Bạn Trai</span>
+          <input type="text" id="auth-couple-code" class="w-full px-3 py-1.5 rounded-xl bg-surface border border-outline-variant/30 text-primary font-mono font-bold uppercase tracking-wider text-center focus:outline-none focus:border-primary text-xs" placeholder="Nhập mã kết nối (nếu có)..." />
+          <span class="text-[10px] text-on-surface-variant block text-center" id="auth-couple-hint">Mã do Bạn Trai cấp để liên kết trực tiếp với Admin</span>
         </div>
 
         <div>
@@ -3371,21 +3371,21 @@
           <input type="text" id="reg-name" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary text-xs" placeholder="vd: Bé Heo, Thỏ Bông, Công Chúa 💕" />
         </div>
 
-        <!-- Couple Code pairing field (HIGHLIGHTED & REQUIRED) -->
+        <!-- Couple Code pairing field (HIGHLIGHTED & OPTIONAL FOR USER) -->
         <div class="p-2.5 rounded-2xl bg-primary/5 border border-primary/25 space-y-1">
           <div class="flex items-center justify-between">
             <label class="font-bold text-on-surface flex items-center gap-1 text-[11px]">
               <span class="text-primary text-sm">🔗</span>
-              <span>Mã cặp đôi kết nối với Bạn Trai:</span>
-              <span class="text-error font-bold">*</span>
+              <span id="reg-couple-label">Mã kết nối do Bạn Trai cấp (nếu có):</span>
+              <span id="reg-couple-star" class="text-error font-bold hidden">*</span>
             </label>
             <span id="reg-couple-badge" class="hidden text-[10px] font-bold text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
               ✓ Đã có mã từ link
             </span>
           </div>
-          <input type="text" id="reg-couple-code" required class="w-full px-3 py-2 rounded-xl bg-surface border border-outline-variant/30 text-primary font-mono font-bold uppercase tracking-wider text-center focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs shadow-inner" placeholder="vd: LOVE-2026" />
+          <input type="text" id="reg-couple-code" oninput="updateRegSubmitBtnText()" class="w-full px-3 py-2 rounded-xl bg-surface border border-outline-variant/30 text-primary font-mono font-bold uppercase tracking-wider text-center focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-xs shadow-inner" placeholder="Nhập mã Bạn Trai cấp (nếu có)..." />
           <p class="text-[10px] text-on-surface-variant italic leading-tight pt-0.5" id="reg-couple-hint">
-            🔑 <b>Bắt buộc:</b> Nhập mã cặp đôi mà Bạn Trai cung cấp (vd: LOVE-2026) để liên kết trực tiếp hai máy với nhau!
+            💡 Mã này do Bạn Trai cấp để liên kết 2 máy. Nếu Bạn Trai chưa gửi mã, nàng cứ để trống để sử dụng bình thường, sau này có mã thì kết nối sau nhé 💕
           </p>
         </div>
 
@@ -3406,7 +3406,7 @@
 
         <div class="pt-1 space-y-1.5">
           <button type="submit" id="reg-submit-btn" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold shadow-md hover:brightness-105 active:scale-95 transition-all text-xs flex items-center justify-center gap-1.5">
-            <span>Tạo Tài Khoản &amp; Kết Nối Với Bạn Trai 💕</span>
+            <span>Tạo Tài Khoản Bé Yêu ✨ (Chế độ độc lập)</span>
           </button>
           <button type="button" onclick="switchAuthTab('login')" class="w-full py-1 text-center text-[11px] text-primary hover:underline font-semibold block">
             Đã có tài khoản? Bấm để Đăng nhập 🔑
@@ -3812,8 +3812,8 @@ function toggleAdminSound(enabled) {
 }
 
 function broadcastCloudEvent(eventData) {
-  if (!eventData) return;
-  const cleanCode = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+  if (!eventData || !currentCoupleCode) return;
+  const cleanCode = currentCoupleCode.trim().toUpperCase();
   eventData.senderId = currentClientId;
   eventData.coupleCode = cleanCode;
   eventData.timestamp = eventData.timestamp || Date.now();
@@ -3843,6 +3843,7 @@ function initBroadcastSync() {
   try {
     if (window.BroadcastChannel) {
       if (cloudBroadcastChannel) cloudBroadcastChannel.close();
+      if (!currentCoupleCode) return;
       cloudBroadcastChannel = new BroadcastChannel('an_gi_channel_' + currentCoupleCode);
       cloudBroadcastChannel.onmessage = (e) => {
         handleRemoteCloudEvent(e.data);
@@ -3859,7 +3860,12 @@ function initCloudRealtimeSync() {
     cloudEventSource = null;
   }
 
-  const cleanCode = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+  if (!currentCoupleCode) {
+    updateCloudSyncStatus('disconnected');
+    return;
+  }
+
+  const cleanCode = currentCoupleCode.trim().toUpperCase();
   const topic = 'an_gi_food_' + encodeURIComponent(cleanCode);
   updateCloudSyncStatus('connecting');
 
@@ -3908,6 +3914,10 @@ function updateCloudSyncStatus(status) {
     if (dotEl) dotEl.className = 'relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-300';
   } else if (status === 'reconnecting') {
     if (statusEl) statusEl.textContent = 'Đang tự kết nối lại Cloud... 🟠';
+  } else if (status === 'disconnected') {
+    if (statusEl) statusEl.textContent = 'Chưa liên kết Bạn Trai (Chế độ độc lập) 🟡';
+    if (pingEl) pingEl.className = 'hidden';
+    if (dotEl) dotEl.className = 'relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400';
   } else {
     if (statusEl) statusEl.textContent = 'Chưa kết nối Cloud (Chế độ offline) ⚪';
   }
@@ -4091,6 +4101,7 @@ function applyRemoteDataSync(payload) {
 }
 
 function syncDataToCloud() {
+  if (!currentCoupleCode) return;
   const payload = {
     profile: beProfile,
     boyfriendProfile: (typeof boyfriendProfile !== 'undefined' ? boyfriendProfile : null),
@@ -4111,7 +4122,7 @@ function syncDataToCloud() {
 
 function initFirestoreSync() {
   const savedCfg = localStorage.getItem('an_gi_firebase_config');
-  if (!savedCfg || !window.firebase) return;
+  if (!savedCfg || !window.firebase || !currentCoupleCode) return;
   try {
     const config = JSON.parse(savedCfg);
     if (!config.apiKey || !config.projectId) return;
@@ -4144,7 +4155,7 @@ function initFirestoreSync() {
 }
 
 function pushDataToFirestore(data) {
-  if (!firestoreDb) return;
+  if (!firestoreDb || !currentCoupleCode) return;
   try {
     firestoreDb.collection('couples').doc(currentCoupleCode).set(data, { merge: true })
       .catch(err => console.log('Firestore write err:', err));
@@ -4160,7 +4171,7 @@ function initAuthAndSync() {
     currentCoupleCode = paramCouple.toUpperCase().trim();
     localStorage.setItem('an_gi_couple_code', currentCoupleCode);
   } else {
-    currentCoupleCode = localStorage.getItem('an_gi_couple_code') || 'LOVE-2026';
+    currentCoupleCode = localStorage.getItem('an_gi_couple_code') || '';
   }
 
   const savedUser = localStorage.getItem('an_gi_auth_user');
@@ -4180,9 +4191,24 @@ function initAuthAndSync() {
       try {
         localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
       } catch(e) {}
+    } else if (currentAuthUser.coupleCode) {
+      currentCoupleCode = currentAuthUser.coupleCode;
+    } else if (currentAuthUser.role === 'admin') {
+      currentCoupleCode = currentCoupleCode || 'LOVE-2026';
+      currentAuthUser.coupleCode = currentCoupleCode;
+      try {
+        localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
+      } catch(e) {}
+    } else {
+      currentCoupleCode = '';
     }
   } else {
     currentAuthUser = null;
+    if (paramRole === 'admin') {
+      currentCoupleCode = currentCoupleCode || 'LOVE-2026';
+    } else if (!paramCouple) {
+      currentCoupleCode = '';
+    }
   }
 
   // Clean URL ?role=... and ?couple=... after capturing
@@ -4196,7 +4222,8 @@ function initAuthAndSync() {
   } catch(e) {}
 
   try {
-    const savedActs = localStorage.getItem('an_gi_activities_' + currentCoupleCode);
+    const actKey = currentCoupleCode ? ('an_gi_activities_' + currentCoupleCode) : 'an_gi_activities_local';
+    const savedActs = localStorage.getItem(actKey);
     if (savedActs) {
       cloudActivities = JSON.parse(savedActs);
     } else {
@@ -4204,8 +4231,8 @@ function initAuthAndSync() {
         {
           id: 'init_1',
           type: 'info',
-          title: 'Chào mừng hai bạn đến với Ăn Gì Bé Ơi!',
-          detail: `Mã cặp đôi ${currentCoupleCode} đã sẵn sàng đồng bộ 2 máy.`,
+          title: 'Chào mừng bạn đến với Ăn Gì Bé Ơi!',
+          detail: currentCoupleCode ? `Mã cặp đôi ${currentCoupleCode} đã sẵn sàng đồng bộ 2 máy.` : 'Nàng đang ở chế độ độc lập. Nhập mã Bạn Trai cấp để liên kết trực tiếp nhé 💕',
           icon: 'favorite',
           actor: 'admin',
           actorName: 'Hệ thống 💕',
@@ -4233,7 +4260,7 @@ function initAuthAndSync() {
 
   // BẢO MẬT & BẮT BUỘC TẠO TÀI KHOẢN:
   // Nếu thiết bị nhận link user hoặc chưa có tài khoản đăng nhập trên máy:
-  // Buộc người dùng phải tạo tài khoản & nhập mã cặp đôi để liên kết trực tiếp với Bạn Trai!
+  // Yêu cầu người dùng tạo tài khoản Bé Yêu (Mã kết nối do Bạn Trai cấp là tùy chọn, chưa có vẫn dùng bình thường)!
   if (!isAuthenticated) {
     if (paramRole === 'user' || !paramRole) {
       setTimeout(() => {
@@ -4298,19 +4325,19 @@ function updateAuthUI() {
     if (roleArrow) roleArrow.classList.add('hidden');
     if (rolePill) {
       rolePill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed border border-secondary/40 text-on-secondary-fixed text-xs font-bold transition-all';
-      rolePill.title = '🐰 Bé Yêu (Công Chúa) 💕';
+      rolePill.title = currentCoupleCode ? '🐰 Bé Yêu (Đã kết nối Bạn Trai) 💕' : '🐰 Bé Yêu (Chế độ độc lập) 💕';
       rolePill.onclick = handleRoleHeaderClick;
     }
   }
 
   const codePill = document.getElementById('admin-couple-code-pill');
-  if (codePill) codePill.textContent = currentCoupleCode;
+  if (codePill) codePill.textContent = currentCoupleCode || 'LOVE-2026';
   const inputCode = document.getElementById('adm-input-couple-code');
-  if (inputCode) inputCode.value = currentCoupleCode;
+  if (inputCode) inputCode.value = currentCoupleCode || 'LOVE-2026';
   const authCodeInput = document.getElementById('auth-couple-code');
-  if (authCodeInput) authCodeInput.value = currentCoupleCode;
+  if (authCodeInput && !authCodeInput.value && currentCoupleCode) authCodeInput.value = currentCoupleCode;
   const regCodeInput = document.getElementById('reg-couple-code');
-  if (regCodeInput && !regCodeInput.value) regCodeInput.value = currentCoupleCode;
+  if (regCodeInput && !regCodeInput.value && currentCoupleCode) regCodeInput.value = currentCoupleCode;
 
   const userEmail = document.getElementById('auth-current-user-email');
   const loggedInBox = document.getElementById('auth-logged-in-box');
@@ -4333,16 +4360,45 @@ function updateAuthUI() {
   }
   const nbCoupleDisplay = document.getElementById('nb-couple-code-display');
   if (nbCoupleDisplay) {
-    nbCoupleDisplay.textContent = currentCoupleCode;
+    if (currentCoupleCode) {
+      nbCoupleDisplay.textContent = currentCoupleCode;
+      nbCoupleDisplay.className = 'font-mono font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-lg text-xs tracking-wider';
+    } else {
+      nbCoupleDisplay.textContent = '(Chưa có mã)';
+      nbCoupleDisplay.className = 'font-mono text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-lg text-xs italic';
+    }
   }
   const nbCoupleBadge = document.getElementById('nb-couple-status-badge');
   if (nbCoupleBadge) {
-    if (isAuth) {
+    if (currentCoupleCode) {
       nbCoupleBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20';
       nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span>Đã kết nối trực tiếp</span>';
-    } else {
+    } else if (isAuth) {
       nbCoupleBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20';
-      nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span>Chưa đăng nhập</span>';
+      nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span>Chưa kết nối Bạn Trai (Độc lập)</span>';
+    } else {
+      nbCoupleBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-outline-variant/20 text-on-surface-variant border border-outline-variant/30';
+      nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-outline"></span><span>Chưa đăng nhập</span>';
+    }
+  }
+  const nbCoupleBtn = document.getElementById('nb-couple-btn');
+  if (nbCoupleBtn) {
+    if (currentCoupleCode) {
+      nbCoupleBtn.innerHTML = '<span class="material-symbols-outlined text-[13px]">sync_alt</span><span>Đổi mã</span>';
+      nbCoupleBtn.className = 'px-2.5 py-1 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-bold text-[11px] shadow-2xs active:scale-95 transition-all flex items-center gap-1';
+      nbCoupleBtn.title = 'Đổi mã cặp đôi khác';
+    } else {
+      nbCoupleBtn.innerHTML = '<span class="material-symbols-outlined text-[13px]">link</span><span>Nhập mã Bạn Trai cấp</span>';
+      nbCoupleBtn.className = 'px-3 py-1.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-[11px] shadow-xs hover:brightness-105 active:scale-95 transition-all flex items-center gap-1';
+      nbCoupleBtn.title = 'Nhập mã cặp đôi Bạn Trai cấp để liên kết';
+    }
+  }
+  const nbUserStatusText = document.getElementById('nb-user-status-text');
+  if (nbUserStatusText) {
+    if (currentCoupleCode) {
+      nbUserStatusText.innerHTML = '<span class="text-base shrink-0">🌸</span><span class="leading-relaxed">Hai bạn đang kết nối chung phòng! Mọi món quay và tâm trạng sẽ đồng bộ tức thì sang Bạn Trai.</span>';
+    } else {
+      nbUserStatusText.innerHTML = '<span class="text-base shrink-0">🟡</span><span class="leading-relaxed">Bé đang dùng ở <b>Chế độ độc lập</b> (chưa liên kết với ADMIN). Khi nào Bạn Trai gửi mã kết nối, bé bấm nút <b>"Nhập mã Bạn Trai cấp"</b> ở trên để liên kết nhé 💕</span>';
     }
   }
 
@@ -4407,10 +4463,10 @@ function requireUserRegistration(prefilledCoupleCode, initialRole = 'user') {
     const bannerDesc = document.getElementById('auth-onboarding-banner-desc');
     if (prefilledCoupleCode) {
       if (bannerTitle) bannerTitle.textContent = 'Bạn nhận được lời mời kết nối từ Bạn Trai! 💕';
-      if (bannerDesc) bannerDesc.textContent = `Tạo tài khoản riêng và kết nối trực tiếp với Bạn Trai qua mã cặp đôi ${prefilledCoupleCode} nhé ✨`;
+      if (bannerDesc) bannerDesc.textContent = `Tạo tài khoản riêng và kết nối trực tiếp với Bạn Trai qua mã ${prefilledCoupleCode} nhé ✨`;
     } else {
       if (bannerTitle) bannerTitle.textContent = 'Chào Mừng Bé Yêu Đến Với Ăn Gì Bé Ơi! 💕';
-      if (bannerDesc) bannerDesc.textContent = 'Nàng hãy tạo tài khoản và nhập mã cặp đôi để liên kết trực tiếp với Bạn Trai nhé ✨';
+      if (bannerDesc) bannerDesc.textContent = 'Nàng hãy tạo tài khoản để quay món ngon và lưu quán ruột nhé. Mã kết nối Bạn Trai cấp có thể nhập sau ✨';
     }
   }
 
@@ -4418,15 +4474,16 @@ function requireUserRegistration(prefilledCoupleCode, initialRole = 'user') {
   const closeBtn = document.getElementById('auth-modal-close-btn');
   if (closeBtn) closeBtn.classList.add('hidden');
 
-  // Điền sẵn mã cặp đôi nếu có trong link
-  const codeToFill = prefilledCoupleCode ? prefilledCoupleCode.toUpperCase().trim() : (currentCoupleCode || '');
+  // Điền sẵn mã cặp đôi CHỈ KHI có mã hợp lệ truyền vào từ link
+  const codeToFill = prefilledCoupleCode ? prefilledCoupleCode.toUpperCase().trim() : '';
   const regCodeInp = document.getElementById('reg-couple-code');
   const regBadge = document.getElementById('reg-couple-badge');
   if (regCodeInp) {
     regCodeInp.value = codeToFill;
   }
   if (regBadge) {
-    regBadge.classList.toggle('hidden', !prefilledCoupleCode);
+    regBadge.classList.toggle('hidden', !codeToFill);
+    if (codeToFill) regBadge.textContent = '✓ Đã nhận mã từ Bạn Trai';
   }
   const authCodeInp = document.getElementById('auth-couple-code');
   if (authCodeInp) {
@@ -4446,12 +4503,16 @@ function requireUserRegistration(prefilledCoupleCode, initialRole = 'user') {
 }
 
 function promptChangeCoupleCode() {
-  const current = currentCoupleCode || 'LOVE-2026';
-  const newCode = prompt(`Nhập mã cặp đôi kết nối do Bạn Trai cung cấp để liên kết trực tiếp hai máy:\n(Mã hiện tại: ${current})`, current);
+  const current = currentCoupleCode || '';
+  const isConnected = !!current;
+  const promptMsg = isConnected 
+    ? `Mã kết nối hiện tại: ${current}\n\nNhập mã cặp đôi mới do Bạn Trai cấp để thay đổi kết nối:` 
+    : `Mã kết nối này do Bạn Trai cấp để liên kết 2 máy.\n\nVui lòng nhập mã cặp đôi Bạn Trai gửi cho bạn (vd: LOVE-2026):`;
+  const newCode = prompt(promptMsg, current);
   if (newCode === null) return;
   const cleanCode = newCode.trim().toUpperCase();
   if (!cleanCode || cleanCode.length < 3) {
-    showToast('⚠️ Mã cặp đôi phải có tối thiểu 3 ký tự!');
+    showToast('⚠️ Mã kết nối phải có tối thiểu 3 ký tự!');
     return;
   }
 
@@ -4474,14 +4535,15 @@ function promptChangeCoupleCode() {
   initCloudRealtimeSync();
   initFirestoreSync();
 
-  sendPartnerPingNotification(`🎉 Bé Yêu (${(currentAuthUser && currentAuthUser.name) || 'Bé Yêu'}) đã kết nối sang mã cặp đôi mới: ${currentCoupleCode}!`);
-  cloudLogActivity('pairing', `🔗 Đã cập nhật mã cặp đôi: ${currentCoupleCode}`, `Đồng bộ Cloud đã kích hoạt`, 'sync');
+  sendPartnerPingNotification(`🎉 Bé Yêu (${(currentAuthUser && currentAuthUser.name) || 'Bé Yêu'}) đã kết nối thành công với Bạn Trai qua mã ${currentCoupleCode}!`);
+  cloudLogActivity('pairing', `🔗 Đã kết nối với Bạn Trai qua mã: ${currentCoupleCode}`, `Đồng bộ Cloud đã kích hoạt`, 'sync');
 
   playChimeSound(true);
   showToast(`🎉 Đã liên kết trực tiếp với Bạn Trai qua mã: ${currentCoupleCode} 💕`);
 }
 
 function sendPartnerPingNotification(msg) {
+  if (!currentCoupleCode) return;
   if (typeof syncDataToCloud === 'function') {
     syncDataToCloud();
   }
@@ -4496,7 +4558,7 @@ function sendPartnerPingNotification(msg) {
     } catch(e) {}
   }
   try {
-    const cleanCode = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+    const cleanCode = currentCoupleCode.trim().toUpperCase();
     const topic = 'an_gi_food_' + encodeURIComponent(cleanCode);
     const payload = {
       event: 'message',
@@ -4617,8 +4679,23 @@ function showAuthProfile() {
     badge.innerHTML = isAdmin ? '<span>👑 Bạn Trai (Admin)</span>' : '<span>🐰 Bé Yêu (Nàng)</span>';
   }
   if (nameEl) nameEl.textContent = isAdmin ? ((typeof boyfriendProfile !== 'undefined' && boyfriendProfile.name) || (currentAuthUser && currentAuthUser.name) || 'Anh Bạn Trai') : ((typeof beProfile !== 'undefined' && beProfile.name) || (currentAuthUser && currentAuthUser.name) || 'Bé Yêu');
-  if (emailEl) emailEl.textContent = (currentAuthUser && currentAuthUser.email) ? currentAuthUser.email : 'Chưa có email';
-  if (codeEl) codeEl.textContent = currentCoupleCode;
+  if (codeEl) codeEl.textContent = currentCoupleCode || '(Chưa có mã)';
+  const codeBtn = document.getElementById('auth-profile-code-btn');
+  if (codeBtn) {
+    codeBtn.innerHTML = currentCoupleCode 
+      ? '<span class="material-symbols-outlined text-[12px]">edit</span><span>Đổi</span>' 
+      : '<span class="material-symbols-outlined text-[12px]">link</span><span>Nhập mã</span>';
+  }
+  const cloudStatusEl = document.getElementById('auth-profile-cloud-status');
+  if (cloudStatusEl) {
+    if (currentCoupleCode) {
+      cloudStatusEl.className = 'font-semibold text-emerald-600 flex items-center gap-1';
+      cloudStatusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Đang trực tuyến 2 máy';
+    } else {
+      cloudStatusEl.className = 'font-semibold text-amber-600 flex items-center gap-1';
+      cloudStatusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500"></span> Chế độ độc lập (Chưa kết nối Bạn Trai)';
+    }
+  }
 
   if (adminBtn) {
     if (isAdmin) {
@@ -4694,30 +4771,63 @@ function switchAuthTab(tab) {
   }
 }
 
+function updateRegSubmitBtnText() {
+  const submitBtn = document.getElementById('reg-submit-btn');
+  const coupleInput = document.getElementById('reg-couple-code');
+  if (!submitBtn) return;
+  if (pendingRegRole === 'admin') {
+    submitBtn.innerHTML = '<span>Hoàn Tất Đăng Ký Quản Trị (Bạn Trai) 👑</span>';
+    return;
+  }
+  const hasCode = coupleInput && coupleInput.value.trim().length >= 3;
+  if (hasCode) {
+    submitBtn.innerHTML = '<span>Tạo Tài Khoản &amp; Kết Nối Với Bạn Trai 💕</span>';
+  } else {
+    submitBtn.innerHTML = '<span>Tạo Tài Khoản Bé Yêu ✨ (Chế độ độc lập)</span>';
+  }
+}
+
 function selectRegRole(role) {
   pendingRegRole = role;
   const btnAdmin = document.getElementById('reg-role-btn-admin');
   const btnUser = document.getElementById('reg-role-btn-user');
   const desc = document.getElementById('reg-role-desc');
-  const submitBtn = document.getElementById('reg-submit-btn');
   const nameInp = document.getElementById('reg-name');
   const coupleHint = document.getElementById('reg-couple-hint');
+  const coupleLabel = document.getElementById('reg-couple-label');
+  const coupleStar = document.getElementById('reg-couple-star');
+  const coupleInp = document.getElementById('reg-couple-code');
 
   if (role === 'admin') {
     if (btnAdmin) btnAdmin.className = 'py-2 px-3 rounded-2xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
     if (btnUser) btnUser.className = 'py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
-    if (desc) desc.innerHTML = '👑 <b>Tài khoản Quản trị</b>: Toàn quyền mở trang quản trị Bạn Trai, nhận chuông Ting-ting và cài đặt món.';
-    if (submitBtn) submitBtn.textContent = 'Hoàn Tất Đăng Ký Quản Trị (Bạn Trai) 👑';
+    if (desc) desc.innerHTML = '👑 <b>Tài khoản Quản trị</b>: Toàn quyền mở trang quản trị Bạn Trai, nhận chuông Ting-ting, cài đặt món &amp; cấp mã kết nối cho Bé.';
     if (nameInp) nameInp.placeholder = 'vd: Anh Bạn Trai Chu Đáo';
-    if (coupleHint) coupleHint.innerHTML = '💡 <b>Mã cặp đôi:</b> Đặt mã riêng của bạn (vd: LOVE-2026) để gửi link cho Bé kết nối.';
+    if (coupleLabel) coupleLabel.textContent = 'Mã cặp đôi quản trị (cấp cho Bé):';
+    if (coupleStar) coupleStar.classList.remove('hidden');
+    if (coupleInp) {
+      coupleInp.required = true;
+      coupleInp.placeholder = 'vd: LOVE-2026';
+      if (!coupleInp.value) coupleInp.value = currentCoupleCode || 'LOVE-2026';
+    }
+    if (coupleHint) coupleHint.innerHTML = '💡 <b>Mã quản trị Bạn Trai:</b> Đặt mã riêng của bạn để gửi link cho Bé Yêu kết nối trực tiếp.';
   } else {
     if (btnAdmin) btnAdmin.className = 'py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
     if (btnUser) btnUser.className = 'py-2 px-3 rounded-2xl border-2 border-secondary bg-secondary-fixed text-on-secondary-fixed font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
-    if (desc) desc.innerHTML = '🐰 <b>Tài khoản Bé Yêu</b>: Dành cho công chúa quay món, chọn mood tâm trạng và liên kết trực tiếp với Bạn Trai.';
-    if (submitBtn) submitBtn.textContent = 'Tạo Tài Khoản & Kết Nối Với Bạn Trai 💕';
+    if (desc) desc.innerHTML = '🐰 <b>Tài khoản Bé Yêu</b>: Dành cho công chúa quay món, chọn mood tâm trạng. Nàng không bắt buộc phải có mã mới được tạo tài khoản 💕';
     if (nameInp) nameInp.placeholder = 'vd: Bé Heo, Thỏ Bông, Công Chúa 💕';
-    if (coupleHint) coupleHint.innerHTML = '🔑 <b>Bắt buộc:</b> Nhập mã cặp đôi mà Bạn Trai cung cấp (vd: LOVE-2026) để liên kết trực tiếp hai máy với nhau!';
+    if (coupleLabel) coupleLabel.textContent = 'Mã kết nối do Bạn Trai cấp (nếu có):';
+    if (coupleStar) coupleStar.classList.add('hidden');
+    if (coupleInp) {
+      coupleInp.required = false;
+      coupleInp.placeholder = 'Nhập mã Bạn Trai cấp (nếu có)...';
+      if (coupleInp.value === 'LOVE-2026' && !currentCoupleCode) {
+        coupleInp.value = '';
+      }
+    }
+    if (coupleHint) coupleHint.innerHTML = '💡 Mã này do Bạn Trai cấp để liên kết 2 máy. Nếu Bạn Trai chưa gửi mã, nàng cứ để trống để sử dụng bình thường, sau này có mã thì kết nối sau nhé 💕';
   }
+  updateRegSubmitBtnText();
 }
 
 function getStoredAccounts() {
@@ -4817,17 +4927,37 @@ function selectAuthRole(role) {
   const btnUser = document.getElementById('auth-role-btn-user');
   const desc = document.getElementById('auth-role-desc');
   const submitBtn = document.getElementById('auth-submit-btn');
+  const coupleLabel = document.getElementById('auth-couple-label');
+  const coupleStar = document.getElementById('auth-couple-star');
+  const coupleInput = document.getElementById('auth-couple-code');
+  const coupleHint = document.getElementById('auth-couple-hint');
 
   if (role === 'admin') {
     if (btnAdmin) btnAdmin.className = 'py-2 px-3 rounded-2xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
     if (btnUser) btnUser.className = 'py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
     if (desc) desc.innerHTML = '👑 <b>Bạn Trai</b>: Quản trị viên tối cao, nhận chuông Ting-ting khi bé quay món, sửa quán ruột &amp; bắn tin dỗ dành.';
     if (submitBtn) submitBtn.textContent = 'Đăng Nhập Quản Trị (Bạn Trai) 👑';
+    if (coupleLabel) coupleLabel.textContent = 'Mã cặp đôi quản trị:';
+    if (coupleStar) coupleStar.classList.remove('hidden');
+    if (coupleInput) {
+      coupleInput.placeholder = 'vd: LOVE-2026';
+      if (!coupleInput.value) coupleInput.value = currentCoupleCode || 'LOVE-2026';
+    }
+    if (coupleHint) coupleHint.textContent = 'Mã do Bạn Trai quản lý để liên kết phòng';
   } else {
     if (btnAdmin) btnAdmin.className = 'py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
     if (btnUser) btnUser.className = 'py-2 px-3 rounded-2xl border-2 border-secondary bg-secondary-fixed text-on-secondary-fixed font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
-    if (desc) desc.innerHTML = '🐰 <b>Bé Yêu</b>: Thỏa thích quay bánh xe, chọn mood tâm trạng, lưu món ngon và nhận popup cưng chiều từ Bạn Trai.';
-    if (submitBtn) submitBtn.textContent = 'Đăng Nhập Bé Yêu & Kết Nối 🐰';
+    if (desc) desc.innerHTML = '🐰 <b>Bé Yêu</b>: Thỏa thích quay bánh xe, chọn mood tâm trạng, lưu món ngon. Nhập mã nếu được Bạn Trai cấp để kết nối trực tiếp 💕';
+    if (submitBtn) submitBtn.textContent = 'Đăng Nhập Bé Yêu 🐰';
+    if (coupleLabel) coupleLabel.textContent = 'Mã kết nối Bạn Trai cấp (nếu có):';
+    if (coupleStar) coupleStar.classList.add('hidden');
+    if (coupleInput) {
+      coupleInput.placeholder = 'Nhập mã kết nối (nếu có)...';
+      if (coupleInput.value === 'LOVE-2026' && !currentCoupleCode) {
+        coupleInput.value = '';
+      }
+    }
+    if (coupleHint) coupleHint.textContent = 'Nếu Bạn Trai chưa cấp mã, nàng có thể để trống và sử dụng bình thường';
   }
 }
 
@@ -4853,7 +4983,7 @@ function handleAuthSubmit(e) {
 
   const email = emailInp ? emailInp.value.trim() : '';
   const password = passInp ? passInp.value.trim() : '';
-  const code = (codeInp && codeInp.value ? codeInp.value : (currentCoupleCode || 'LOVE-2026')).toUpperCase().trim();
+  const code = codeInp ? codeInp.value.trim().toUpperCase() : '';
 
   // BẮT BUỘC: Không được để trống Email hoặc Mật khẩu!
   if (!email) {
@@ -4894,10 +5024,14 @@ function handleAuthSubmit(e) {
   }
 
   // Đăng nhập hợp lệ
-  currentCoupleCode = code || existingAcc.coupleCode || 'LOVE-2026';
+  const targetRole = existingAcc.role || pendingAuthRole;
+  if (targetRole === 'admin') {
+    currentCoupleCode = code || existingAcc.coupleCode || 'LOVE-2026';
+  } else {
+    currentCoupleCode = code || existingAcc.coupleCode || '';
+  }
   localStorage.setItem('an_gi_couple_code', currentCoupleCode);
 
-  const targetRole = existingAcc.role || pendingAuthRole;
   currentAuthUser = {
     role: targetRole,
     email: existingAcc.email || email,
@@ -4916,9 +5050,12 @@ function handleAuthSubmit(e) {
 
   updateAuthUI();
   closeAuthModal();
-  initBroadcastSync();
-  initCloudRealtimeSync();
-  initFirestoreSync();
+
+  if (currentCoupleCode) {
+    initBroadcastSync();
+    initCloudRealtimeSync();
+    initFirestoreSync();
+  }
 
   // Clear role param from URL so refresh doesn't override
   try {
@@ -4951,7 +5088,7 @@ function handleAuthRegister(e) {
   const password = passInp ? passInp.value.trim() : '';
   const passConfirm = passConfirmInp ? passConfirmInp.value.trim() : '';
   const name = (nameInp && nameInp.value.trim()) ? nameInp.value.trim() : (pendingRegRole === 'admin' ? 'Anh Bạn Trai' : 'Bé Yêu');
-  const code = codeInp ? codeInp.value.trim().toUpperCase() : '';
+  const rawCode = codeInp ? codeInp.value.trim().toUpperCase() : '';
 
   // BẮT BUỘC: Kiểm tra hợp lệ các trường đăng ký
   if (!email) {
@@ -4973,16 +5110,20 @@ function handleAuthRegister(e) {
     return false;
   }
 
-  // BẮT BUỘC MÃ CẶP ĐÔI (COUPLE CODE):
-  // Nếu muốn liên kết trực tiếp với Admin thì người đó bắt buộc phải nhập mã cặp đôi kết nối!
-  if (!code || code.length < 3) {
-    showToast('⚠️ Vui lòng nhập Mã cặp đôi (do Bạn Trai cung cấp) để liên kết trực tiếp hai máy!');
-    if (codeInp) {
-      codeInp.focus();
-      codeInp.classList.add('ring-2', 'ring-primary');
-      setTimeout(() => codeInp.classList.remove('ring-2', 'ring-primary'), 3000);
+  // XỬ LÝ MÃ KẾT NỐI (COUPLE CODE):
+  // - Nếu là Bạn Trai (Admin): Bạn Trai sở hữu & quản lý mã kết nối (mặc định 'LOVE-2026' nếu để trống).
+  // - Nếu là Bé Yêu (User): Nàng không có mã cho đến khi Bạn Trai cấp.
+  //   + Nếu nàng nhập mã (hoặc mở link có mã) >= 3 ký tự -> Kết nối trực tiếp với Bạn Trai (Admin).
+  //   + Nếu nàng để trống mã -> Tạo tài khoản thành công ở Chế độ độc lập (chưa liên kết với ADMIN).
+  let finalCoupleCode = '';
+  if (pendingRegRole === 'admin') {
+    finalCoupleCode = rawCode || 'LOVE-2026';
+  } else {
+    if (rawCode && rawCode.length >= 3) {
+      finalCoupleCode = rawCode;
+    } else {
+      finalCoupleCode = '';
     }
-    return false;
   }
 
   const accounts = getStoredAccounts();
@@ -5000,13 +5141,13 @@ function handleAuthRegister(e) {
     password: password,
     role: pendingRegRole,
     name: name,
-    coupleCode: code,
+    coupleCode: finalCoupleCode,
     registeredAt: Date.now()
   };
   saveStoredAccounts(accounts);
 
   // Cập nhật mã cặp đôi & người dùng hiện tại
-  currentCoupleCode = code;
+  currentCoupleCode = finalCoupleCode;
   localStorage.setItem('an_gi_couple_code', currentCoupleCode);
 
   currentAuthUser = {
@@ -5035,25 +5176,31 @@ function handleAuthRegister(e) {
 
   updateAuthUI();
   closeAuthModal();
-  initBroadcastSync();
-  initCloudRealtimeSync();
-  initFirestoreSync();
 
-  // Bắn thông báo kết nối trực tiếp tức thì sang máy Bạn Trai
-  if (pendingRegRole === 'user') {
-    sendPartnerPingNotification(`🎉 Bé Yêu (${name}) đã tạo tài khoản và liên kết thành công với Bạn Trai qua mã ${currentCoupleCode}!`);
-    cloudLogActivity('pairing', `🎉 Bé Yêu (${name}) đã tạo tài khoản & liên kết thành công!`, `Mã cặp đôi: ${currentCoupleCode}`, 'favorite');
+  if (currentCoupleCode) {
+    initBroadcastSync();
+    initCloudRealtimeSync();
+    initFirestoreSync();
+
+    // Bắn thông báo kết nối trực tiếp tức thì sang máy Bạn Trai
+    if (pendingRegRole === 'user') {
+      sendPartnerPingNotification(`🎉 Bé Yêu (${name}) đã tạo tài khoản và liên kết thành công với Bạn Trai qua mã ${currentCoupleCode}!`);
+      cloudLogActivity('pairing', `🎉 Bé Yêu (${name}) đã tạo tài khoản & liên kết thành công!`, `Mã cặp đôi: ${currentCoupleCode}`, 'favorite');
+    }
+
+    playChimeSound(true);
+    showToast(`🎉 Tạo tài khoản thành công! Thiết bị của bạn đã liên kết trực tiếp với Bạn Trai qua mã ${currentCoupleCode} 💕`);
+  } else {
+    // Chế độ độc lập
+    playChimeSound(true);
+    showToast(`🎉 Tạo tài khoản Bé Yêu thành công! Nàng có thể sử dụng bình thường. Nhập mã Bạn Trai cấp bất kỳ lúc nào để liên kết nhé 💕`);
   }
-
-  playChimeSound(true);
-  showToast(`🎉 Tạo tài khoản thành công! Thiết bị của bạn đã liên kết trực tiếp với Bạn Trai qua mã ${code} 💕`);
 
   if (pendingRegRole === 'admin') {
     navigate('admin');
   } else {
     navigate('home');
   }
-  return true;
 }
 
 function handleAuthLogout() {
