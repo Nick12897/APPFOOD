@@ -1302,7 +1302,7 @@
         <div class="flex items-center gap-2">
           <span class="bg-black/20 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold flex items-center gap-1.5 border border-white/10">
             <span class="opacity-70">Mã cặp đôi:</span>
-            <span id="admin-couple-code-pill" class="text-yellow-200">LOVE-2026</span>
+            <span id="admin-couple-code-pill" class="text-yellow-200">(Chưa có mã)</span>
           </span>
           <button onclick="copyCoupleShareLink()" class="px-2 py-1 rounded-full bg-white text-primary hover:bg-white/90 font-bold text-[11px] shadow-xs active:scale-95 transition-all flex items-center gap-1" title="Sao chép link gửi cho Bé">
             <span class="material-symbols-outlined text-[13px]">share</span>
@@ -1636,7 +1636,7 @@
           <div>
             <label class="font-bold text-on-surface block mb-1">Mã cặp đôi hiện tại:</label>
             <div class="flex gap-2">
-              <input type="text" id="adm-input-couple-code" class="flex-1 px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-mono font-bold text-center text-sm uppercase" value="LOVE-2026" />
+              <input type="text" id="adm-input-couple-code" class="flex-1 px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-mono font-bold text-center text-sm uppercase" placeholder="Nhập mã cặp đôi..." value="" />
               <button onclick="updateCoupleCodeFromAdmin()" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-bold shadow-xs active:scale-95 transition-all">
                 Đổi mã
               </button>
@@ -3257,7 +3257,7 @@
         <div class="pt-2 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant">
           <span>Mã cặp đôi kết nối:</span>
           <div class="flex items-center gap-1.5">
-            <span class="font-mono font-bold text-primary text-sm tracking-wider" id="auth-profile-code">LOVE-2026</span>
+            <span class="font-mono font-bold text-primary text-sm tracking-wider" id="auth-profile-code">(Chưa có mã)</span>
             <button type="button" id="auth-profile-code-btn" onclick="promptChangeCoupleCode()" class="px-2 py-0.5 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-[11px] font-bold transition-all active:scale-95 flex items-center gap-0.5" title="Đổi hoặc nhập mã cặp đôi">
               <span class="material-symbols-outlined text-[12px]">edit</span>
               <span>Đổi</span>
@@ -3651,13 +3651,8 @@
 // ── AUTHENTICATION, ADMIN MANAGEMENT & MULTI-DEVICE CLOUD SYNC ──
 // ══════════════════════════════════════════════════════════════════
 
-let currentAuthUser = {
-  role: 'admin', // 'admin' (Bạn Trai) | 'user' (Bé Yêu)
-  email: 'bantrai@an-gi-be-oi.app',
-  name: 'Anh Bạn Trai Chu Đáo',
-  coupleCode: 'LOVE-2026'
-};
-let currentCoupleCode = 'LOVE-2026';
+let currentAuthUser = null;
+let currentCoupleCode = '';
 let cloudActivities = [];
 let unreadNotifCount = 0;
 let adminSoundEnabled = true;
@@ -4050,8 +4045,8 @@ function previewPartnerMessageOnThisDevice() {
 }
 
 function handleRemoteCloudEvent(data) {
-  if (!data) return;
-  const currentCode = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+  if (!data || !currentCoupleCode) return;
+  const currentCode = currentCoupleCode.trim().toUpperCase();
   const eventCode = (data.coupleCode || '').trim().toUpperCase();
   if (eventCode && eventCode !== currentCode) return;
   
@@ -4446,6 +4441,10 @@ function initAuthAndSync() {
     localStorage.setItem('an_gi_couple_code', currentCoupleCode);
   } else {
     currentCoupleCode = localStorage.getItem('an_gi_couple_code') || '';
+    if (currentCoupleCode === 'LOVE-2026') {
+      currentCoupleCode = '';
+      try { localStorage.removeItem('an_gi_couple_code'); } catch(e) {}
+    }
   }
 
   const savedUser = localStorage.getItem('an_gi_auth_user');
@@ -4453,6 +4452,9 @@ function initAuthAndSync() {
   if (savedUser) {
     try {
       loadedUser = JSON.parse(savedUser);
+      if (loadedUser && loadedUser.coupleCode === 'LOVE-2026') {
+        loadedUser.coupleCode = '';
+      }
     } catch(e) {}
   }
 
@@ -4468,7 +4470,7 @@ function initAuthAndSync() {
     } else if (currentAuthUser.coupleCode) {
       currentCoupleCode = currentAuthUser.coupleCode;
     } else if (currentAuthUser.role === 'admin') {
-      currentCoupleCode = currentCoupleCode || 'LOVE-2026';
+      currentCoupleCode = currentCoupleCode || '';
       currentAuthUser.coupleCode = currentCoupleCode;
       try {
         localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser));
@@ -4479,7 +4481,7 @@ function initAuthAndSync() {
   } else {
     currentAuthUser = null;
     if (paramRole === 'admin') {
-      currentCoupleCode = currentCoupleCode || 'LOVE-2026';
+      currentCoupleCode = currentCoupleCode || '';
     } else if (!paramCouple) {
       currentCoupleCode = '';
     }
@@ -4609,9 +4611,9 @@ function updateAuthUI() {
   }
 
   const codePill = document.getElementById('admin-couple-code-pill');
-  if (codePill) codePill.textContent = currentCoupleCode || 'LOVE-2026';
+  if (codePill) codePill.textContent = currentCoupleCode || '(Chưa có mã)';
   const inputCode = document.getElementById('adm-input-couple-code');
-  if (inputCode) inputCode.value = currentCoupleCode || 'LOVE-2026';
+  if (inputCode) inputCode.value = currentCoupleCode || '';
   const authCodeInput = document.getElementById('auth-couple-code');
   if (authCodeInput && !authCodeInput.value && currentCoupleCode) authCodeInput.value = currentCoupleCode;
   const regCodeInput = document.getElementById('reg-couple-code');
@@ -4753,7 +4755,7 @@ function requireUserRegistration(prefilledCoupleCode, initialRole = 'user') {
   if (closeBtn) closeBtn.classList.add('hidden');
 
   // Điền sẵn mã cặp đôi CHỈ KHI có mã hợp lệ truyền vào từ link
-  const codeToFill = prefilledCoupleCode ? prefilledCoupleCode.toUpperCase().trim() : '';
+  const codeToFill = (prefilledCoupleCode && prefilledCoupleCode !== 'LOVE-2026') ? prefilledCoupleCode.toUpperCase().trim() : '';
   const regCodeInp = document.getElementById('reg-couple-code');
   const regBadge = document.getElementById('reg-couple-badge');
   if (regCodeInp) {
@@ -4785,7 +4787,7 @@ function promptChangeCoupleCode() {
   const isConnected = !!current;
   const promptMsg = isConnected 
     ? `Mã kết nối hiện tại: ${current}\n\nNhập mã cặp đôi mới do Bạn Trai cấp để thay đổi kết nối:` 
-    : `Mã kết nối này do Bạn Trai cấp để liên kết 2 máy.\n\nVui lòng nhập mã cặp đôi Bạn Trai gửi cho bạn (vd: LOVE-2026):`;
+    : `Mã kết nối này do Bạn Trai cấp để liên kết 2 máy.\n\nVui lòng nhập mã cặp đôi Bạn Trai gửi cho bạn (vd: YEUNHAT-2026):`;
   const newCode = prompt(promptMsg, current);
   if (newCode === null) return;
   const cleanCode = newCode.trim().toUpperCase();
@@ -5086,10 +5088,12 @@ function selectRegRole(role) {
     if (coupleStar) coupleStar.classList.remove('hidden');
     if (coupleInp) {
       coupleInp.required = true;
-      coupleInp.placeholder = 'vd: LOVE-2026';
-      if (!coupleInp.value) coupleInp.value = currentCoupleCode || 'LOVE-2026';
+      coupleInp.placeholder = 'Nhập mã quản trị của bạn (vd: YEUNHAT-2026)...';
+      if (coupleInp.value === 'LOVE-2026' || !currentCoupleCode || currentCoupleCode === 'LOVE-2026') {
+        coupleInp.value = '';
+      }
     }
-    if (coupleHint) coupleHint.innerHTML = '💡 <b>Mã quản trị Bạn Trai:</b> Đặt mã riêng của bạn để gửi link cho Bé Yêu kết nối trực tiếp.';
+    if (coupleHint) coupleHint.innerHTML = '💡 <b>Mã quản trị Bạn Trai:</b> Tự đặt mã riêng của bạn để gửi link cho Bé Yêu kết nối trực tiếp.';
   } else {
     if (btnAdmin) btnAdmin.className = 'py-2 px-3 rounded-2xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
     if (btnUser) btnUser.className = 'py-2 px-3 rounded-2xl border-2 border-secondary bg-secondary-fixed text-on-secondary-fixed font-bold text-xs flex items-center justify-center gap-1.5 transition-all';
@@ -5100,7 +5104,7 @@ function selectRegRole(role) {
     if (coupleInp) {
       coupleInp.required = false;
       coupleInp.placeholder = 'Nhập mã Bạn Trai cấp (nếu có)...';
-      if (coupleInp.value === 'LOVE-2026' && !currentCoupleCode) {
+      if (coupleInp.value === 'LOVE-2026' || !currentCoupleCode || currentCoupleCode === 'LOVE-2026') {
         coupleInp.value = '';
       }
     }
@@ -5120,21 +5124,21 @@ function getStoredAccounts() {
       password: 'admin',
       role: 'admin',
       name: 'Anh Bạn Trai',
-      coupleCode: 'LOVE-2026'
+      coupleCode: ''
     },
     'admin@love.app': {
       email: 'admin@love.app',
       password: 'admin',
       role: 'admin',
       name: 'Bạn Trai Quản Trị',
-      coupleCode: 'LOVE-2026'
+      coupleCode: ''
     },
     'bantrai@love.app': {
       email: 'bantrai@love.app',
       password: 'admin',
       role: 'admin',
       name: 'Anh Bạn Trai Chu Đáo',
-      coupleCode: 'LOVE-2026'
+      coupleCode: ''
     }
   };
   saveStoredAccounts(defaults);
@@ -5219,8 +5223,10 @@ function selectAuthRole(role) {
     if (coupleLabel) coupleLabel.textContent = 'Mã cặp đôi quản trị:';
     if (coupleStar) coupleStar.classList.remove('hidden');
     if (coupleInput) {
-      coupleInput.placeholder = 'vd: LOVE-2026';
-      if (!coupleInput.value) coupleInput.value = currentCoupleCode || 'LOVE-2026';
+      coupleInput.placeholder = 'Nhập mã quản trị của bạn...';
+      if (coupleInput.value === 'LOVE-2026' || !currentCoupleCode || currentCoupleCode === 'LOVE-2026') {
+        coupleInput.value = '';
+      }
     }
     if (coupleHint) coupleHint.textContent = 'Mã do Bạn Trai quản lý để liên kết phòng';
   } else {
@@ -5232,7 +5238,7 @@ function selectAuthRole(role) {
     if (coupleStar) coupleStar.classList.add('hidden');
     if (coupleInput) {
       coupleInput.placeholder = 'Nhập mã kết nối (nếu có)...';
-      if (coupleInput.value === 'LOVE-2026' && !currentCoupleCode) {
+      if (coupleInput.value === 'LOVE-2026' || !currentCoupleCode || currentCoupleCode === 'LOVE-2026') {
         coupleInput.value = '';
       }
     }
@@ -5484,7 +5490,7 @@ async function handleAuthSubmit(e) {
   clearAuthFormErrors();
   const targetRole = existingAcc.role || pendingAuthRole;
   if (targetRole === 'admin') {
-    currentCoupleCode = code || existingAcc.coupleCode || 'LOVE-2026';
+    currentCoupleCode = code || existingAcc.coupleCode || '';
   } else {
     currentCoupleCode = code || existingAcc.coupleCode || '';
   }
@@ -5597,13 +5603,24 @@ function handleAuthRegister(e) {
   }
 
   // XỬ LÝ MÃ KẾT NỐI (COUPLE CODE):
-  // - Nếu là Bạn Trai (Admin): Bạn Trai sở hữu & quản lý mã kết nối (mặc định 'LOVE-2026' nếu để trống).
+  // - Nếu là Bạn Trai (Admin): Bạn Trai tự đặt mã kết nối riêng của mình (không ép cứng mặc định).
   // - Nếu là Bé Yêu (User): Nàng không có mã cho đến khi Bạn Trai cấp.
-  //   + Nếu nàng nhập mã (hoặc mở link có mã) >= 3 ký tự -> Kết nối trực tiếp với Bạn Trai (Admin).
-  //   + Nếu nàng để trống mã -> Tạo tài khoản thành công ở Chế độ độc lập (chưa liên kết với ADMIN).
   let finalCoupleCode = '';
   if (pendingRegRole === 'admin') {
-    finalCoupleCode = rawCode || 'LOVE-2026';
+    if (rawCode && rawCode.length >= 3) {
+      finalCoupleCode = rawCode;
+    } else {
+      showAuthFormError('register', 'Vui lòng nhập mã cặp đôi riêng của bạn (tối thiểu 3 ký tự) để cấp cho Bé!', codeInp);
+      showAuthAlert({
+        title: 'Chưa Nhập Mã Cặp Đôi',
+        message: 'Bạn chưa nhập mã quản trị riêng của mình. Vui lòng nhập mã (vd: <b>YEUNHAT-2026</b>) để làm mã kết nối với Bé Yêu nhé 💕',
+        icon: '🔗',
+        type: 'warning',
+        primaryText: 'Nhập mã ngay',
+        onPrimary: () => codeInp && codeInp.focus()
+      });
+      return false;
+    }
   } else {
     if (rawCode && rawCode.length >= 3) {
       finalCoupleCode = rawCode;
@@ -6168,7 +6185,12 @@ function replyPartnerMessage(replyText, suggestedDish = '') {
 }
 
 function copyCoupleShareLink() {
-  const code = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+  const code = (currentCoupleCode || '').trim().toUpperCase();
+  if (!code) {
+    showToast('⚠️ Bạn chưa đặt mã cặp đôi! Hãy đặt mã trước nhé.');
+    promptChangeCoupleCode();
+    return;
+  }
   const url = new URL(window.location.origin + window.location.pathname);
   url.searchParams.set('couple', code);
   url.searchParams.set('role', 'user');
@@ -6186,7 +6208,12 @@ function copyCoupleShareLink() {
 }
 
 function copyCoupleFullSyncLink() {
-  const code = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+  const code = (currentCoupleCode || '').trim().toUpperCase();
+  if (!code) {
+    showToast('⚠️ Bạn chưa đặt mã cặp đôi! Hãy đặt mã trước nhé.');
+    promptChangeCoupleCode();
+    return;
+  }
   const payload = {
     profile: beProfile,
     boyfriendProfile: (typeof boyfriendProfile !== 'undefined' ? boyfriendProfile : null),
@@ -11375,7 +11402,7 @@ const defaultBoyfriendProfile = {
   name: 'Anh Bạn Trai',
   avatar: '👑',
   status: 'Sẵn sàng phục vụ & chiều chuộng nàng 24/7 ❤️',
-  coupleCode: 'LOVE-2026'
+  coupleCode: ''
 };
 
 let boyfriendProfile = { ...defaultBoyfriendProfile };
