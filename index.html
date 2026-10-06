@@ -84,6 +84,8 @@
     .animate-pop-in{animation:popIn 0.35s cubic-bezier(0.17,0.89,0.32,1.28) forwards;}
     @keyframes spinSlow{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
     .animate-spin-slow{animation:spinSlow 12s linear infinite;}
+    @keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-6px);}40%,80%{transform:translateX(6px);}}
+    .animate-shake{animation:shake 0.35s ease-in-out;}
 
     /* Leaflet Real-world Map Enhancements */
     .leaflet-pane img, .leaflet-tile, .leaflet-marker-icon { max-width: none !important; }
@@ -2286,7 +2288,7 @@
 </div>
 
 <!-- TOAST -->
-<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-space-md py-space-sm rounded-full font-label-md text-label-md shadow-lg hidden z-50 flex items-center gap-space-xs">
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-space-md py-space-sm rounded-full font-label-md text-label-md shadow-2xl hidden z-[100020] flex items-center gap-space-xs pointer-events-none" style="z-index: 100020;">
   <span class="material-symbols-outlined text-secondary-fixed text-[18px]">check_circle</span>
   <span id="toast-txt">Đã lưu! 🥰</span>
 </div>
@@ -3345,6 +3347,12 @@
           <input type="password" id="auth-password" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary text-xs" placeholder="Nhập mật khẩu..." />
         </div>
 
+        <!-- Error Alert Banner inside Login -->
+        <div id="auth-login-error" class="hidden p-2.5 rounded-2xl bg-error-container/30 border border-error/30 text-error text-[11px] font-semibold flex items-center gap-1.5 animate-shake">
+          <span class="material-symbols-outlined text-[16px] text-error shrink-0">error</span>
+          <span id="auth-login-error-text">Lỗi đăng nhập</span>
+        </div>
+
         <div class="pt-1 space-y-1.5">
           <button type="submit" id="auth-submit-btn" class="w-full py-2.5 rounded-xl bg-primary text-on-primary font-bold shadow-md hover:brightness-105 active:scale-95 transition-all text-xs">
             Đăng Nhập Quản Trị (Bạn Trai) 👑
@@ -3414,6 +3422,12 @@
           <input type="password" id="reg-password-confirm" required class="w-full px-3 py-2 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary text-xs" placeholder="Nhập lại mật khẩu..." />
         </div>
 
+        <!-- Error Alert Banner inside Register -->
+        <div id="auth-reg-error" class="hidden p-2.5 rounded-2xl bg-error-container/30 border border-error/30 text-error text-[11px] font-semibold flex items-center gap-1.5 animate-shake">
+          <span class="material-symbols-outlined text-[16px] text-error shrink-0">error</span>
+          <span id="auth-reg-error-text">Lỗi đăng ký</span>
+        </div>
+
         <div class="pt-1 space-y-1.5">
           <button type="submit" id="reg-submit-btn" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold shadow-md hover:brightness-105 active:scale-95 transition-all text-xs flex items-center justify-center gap-1.5">
             <span>Tạo Tài Khoản Bé Yêu ✨ (Chế độ độc lập)</span>
@@ -3423,6 +3437,32 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: THÔNG BÁO XÁC THỰC & CẢNH BÁO (AUTH ALERT POPUP MODAL) ══ -->
+<div id="auth-alert-modal" onclick="if(event.target === this) closeAuthAlertModal()" class="fixed inset-0 z-[100010] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-space-md" style="z-index: 100010;">
+  <div class="bg-surface rounded-3xl p-5 w-full max-w-sm flex flex-col shadow-2xl space-y-3.5 border border-outline-variant/20 animate-pop-in relative text-center" onclick="event.stopPropagation()">
+    <!-- Icon Container -->
+    <div id="auth-alert-icon-wrap" class="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-sm bg-amber-500/15 text-amber-600 border border-amber-500/30">
+      <span id="auth-alert-icon">⚠️</span>
+    </div>
+
+    <!-- Title & Message -->
+    <div class="space-y-1">
+      <h3 id="auth-alert-title" class="font-headline-sm text-base text-on-surface font-bold">Thông Báo</h3>
+      <p id="auth-alert-message" class="text-xs text-on-surface-variant leading-relaxed px-1">Nội dung thông báo...</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div id="auth-alert-actions" class="space-y-2 pt-1">
+      <button type="button" id="auth-alert-primary-btn" onclick="closeAuthAlertModal()" class="w-full py-2.5 rounded-xl bg-primary text-on-primary font-bold text-xs shadow-md active:scale-95 transition-all">
+        Đã hiểu
+      </button>
+      <button type="button" id="auth-alert-secondary-btn" onclick="closeAuthAlertModal()" class="hidden w-full py-2 rounded-xl bg-surface-container-high text-on-surface font-semibold text-xs hover:bg-surface-variant active:scale-95 transition-all">
+        Đóng
+      </button>
     </div>
   </div>
 </div>
@@ -4968,6 +5008,7 @@ function showAuthLoginForm() {
 }
 
 function switchAuthTab(tab) {
+  clearAuthFormErrors();
   const paneProfile = document.getElementById('auth-pane-profile');
   if (paneProfile) paneProfile.classList.add('hidden');
 
@@ -5213,8 +5254,126 @@ function quickLoginAs(role) {
   showToast('🔐 Vui lòng nhập mật khẩu tài khoản để đăng nhập an toàn!');
 }
 
+let authAlertPrimaryCallback = null;
+let authAlertSecondaryCallback = null;
+
+function showAuthAlert(options = {}) {
+  const {
+    title = 'Thông Báo',
+    message = '',
+    icon = '⚠️',
+    type = 'warning',
+    primaryText = 'Đã hiểu',
+    onPrimary = null,
+    secondaryText = '',
+    onSecondary = null
+  } = options;
+
+  authAlertPrimaryCallback = onPrimary;
+  authAlertSecondaryCallback = onSecondary;
+
+  const modal = document.getElementById('auth-alert-modal');
+  const iconWrap = document.getElementById('auth-alert-icon-wrap');
+  const iconEl = document.getElementById('auth-alert-icon');
+  const titleEl = document.getElementById('auth-alert-title');
+  const msgEl = document.getElementById('auth-alert-message');
+  const pBtn = document.getElementById('auth-alert-primary-btn');
+  const sBtn = document.getElementById('auth-alert-secondary-btn');
+
+  if (iconEl) iconEl.textContent = icon;
+  if (titleEl) titleEl.textContent = title;
+  if (msgEl) msgEl.innerHTML = message;
+
+  if (iconWrap) {
+    if (type === 'error') {
+      iconWrap.className = 'w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-sm bg-error-container/40 text-error border border-error/30';
+    } else if (type === 'warning') {
+      iconWrap.className = 'w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-sm bg-amber-500/15 text-amber-600 border border-amber-500/30';
+    } else if (type === 'success') {
+      iconWrap.className = 'w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-sm bg-emerald-500/15 text-emerald-600 border border-emerald-500/30';
+    } else {
+      iconWrap.className = 'w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-sm bg-primary/10 text-primary border border-primary/20';
+    }
+  }
+
+  if (pBtn) {
+    pBtn.textContent = primaryText;
+    pBtn.onclick = () => {
+      closeAuthAlertModal();
+      if (typeof authAlertPrimaryCallback === 'function') {
+        authAlertPrimaryCallback();
+      }
+    };
+  }
+
+  if (sBtn) {
+    if (secondaryText) {
+      sBtn.classList.remove('hidden');
+      sBtn.textContent = secondaryText;
+      sBtn.onclick = () => {
+        closeAuthAlertModal();
+        if (typeof authAlertSecondaryCallback === 'function') {
+          authAlertSecondaryCallback();
+        }
+      };
+    } else {
+      sBtn.classList.add('hidden');
+    }
+  }
+
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.style.display = 'flex';
+  }
+
+  playChimeSound(type === 'success');
+}
+
+function closeAuthAlertModal() {
+  const modal = document.getElementById('auth-alert-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    modal.style.display = 'none';
+  }
+}
+
+function showAuthFormError(pane, message, fieldToFocus) {
+  const errBox = document.getElementById(pane === 'login' ? 'auth-login-error' : 'auth-reg-error');
+  const errTxt = document.getElementById(pane === 'login' ? 'auth-login-error-text' : 'auth-reg-error-text');
+  if (errBox) {
+    if (errTxt) errTxt.textContent = message;
+    errBox.classList.remove('hidden');
+    errBox.classList.remove('animate-shake');
+    void errBox.offsetWidth; // trigger reflow
+    errBox.classList.add('animate-shake');
+  }
+  if (fieldToFocus) {
+    fieldToFocus.classList.add('border-error', 'ring-2', 'ring-error/30', 'animate-shake');
+    fieldToFocus.focus();
+    const onInputClear = () => {
+      fieldToFocus.classList.remove('border-error', 'ring-2', 'ring-error/30', 'animate-shake');
+      if (errBox) errBox.classList.add('hidden');
+      fieldToFocus.removeEventListener('input', onInputClear);
+    };
+    fieldToFocus.addEventListener('input', onInputClear);
+  }
+}
+
+function clearAuthFormErrors() {
+  const loginErr = document.getElementById('auth-login-error');
+  const regErr = document.getElementById('auth-reg-error');
+  if (loginErr) loginErr.classList.add('hidden');
+  if (regErr) regErr.classList.add('hidden');
+  document.querySelectorAll('#auth-modal input').forEach(inp => {
+    inp.classList.remove('border-error', 'ring-2', 'ring-error/30', 'animate-shake');
+  });
+}
+
 async function handleAuthSubmit(e) {
   if (e) e.preventDefault();
+  clearAuthFormErrors();
   const emailInp = document.getElementById('auth-email');
   const passInp = document.getElementById('auth-password');
   const codeInp = document.getElementById('auth-couple-code');
@@ -5225,13 +5384,29 @@ async function handleAuthSubmit(e) {
 
   // BẮT BUỘC: Không được để trống Email hoặc Mật khẩu!
   if (!email) {
+    showAuthFormError('login', 'Vui lòng nhập Email hoặc Tài khoản!', emailInp);
+    showAuthAlert({
+      title: 'Thiếu Tên Đăng Nhập',
+      message: 'Vui lòng nhập Email hoặc Tài khoản để đăng nhập nhé 💕',
+      icon: '📝',
+      type: 'warning',
+      primaryText: 'Nhập ngay',
+      onPrimary: () => emailInp && emailInp.focus()
+    });
     showToast('⚠️ Vui lòng nhập Email hoặc Tài khoản!');
-    if (emailInp) emailInp.focus();
     return false;
   }
   if (!password) {
+    showAuthFormError('login', 'Vui lòng nhập Mật khẩu!', passInp);
+    showAuthAlert({
+      title: 'Thiếu Mật Khẩu',
+      message: 'Vui lòng nhập mật khẩu tài khoản để đăng nhập an toàn!',
+      icon: '🔒',
+      type: 'warning',
+      primaryText: 'Nhập mật khẩu',
+      onPrimary: () => passInp && passInp.focus()
+    });
     showToast('⚠️ Vui lòng nhập Mật khẩu để đăng nhập!');
-    if (passInp) passInp.focus();
     return false;
   }
 
@@ -5262,28 +5437,51 @@ async function handleAuthSubmit(e) {
   }
 
   if (!existingAcc) {
-    showToast('⚠️ Tài khoản này chưa được đăng ký! Đang chuyển sang mục Đăng ký để tạo mới...');
-    switchAuthTab('register');
-    const regEmail = document.getElementById('reg-email');
-    if (regEmail) {
-      regEmail.value = email;
-      const regPass = document.getElementById('reg-password');
-      if (regPass) regPass.focus();
-    }
+    showAuthFormError('login', `Tài khoản "${email}" chưa được đăng ký!`, emailInp);
+    showAuthAlert({
+      title: 'Tài Khoản Chưa Đăng Ký!',
+      message: `Tài khoản <b>${email}</b> chưa tồn tại trên hệ thống.<br><br>Nàng/bạn có muốn chuyển sang mục <b>Đăng Ký</b> để tạo tài khoản mới không?`,
+      icon: '❓',
+      type: 'warning',
+      primaryText: '👉 Đăng Ký Tài Khoản Mới',
+      onPrimary: () => {
+        switchAuthTab('register');
+        const regEmail = document.getElementById('reg-email');
+        if (regEmail) regEmail.value = email;
+        const regPass = document.getElementById('reg-password');
+        if (regPass) regPass.focus();
+      },
+      secondaryText: 'Đóng',
+      onSecondary: () => {
+        if (emailInp) emailInp.focus();
+      }
+    });
+    showToast('⚠️ Tài khoản này chưa được đăng ký! Đang chuyển sang mục Đăng ký...');
     return false;
   }
 
   // Kiểm tra mật khẩu
   if (existingAcc.password && existingAcc.password !== password) {
+    showAuthFormError('login', 'Mật khẩu không chính xác! Vui lòng thử lại.', passInp);
+    showAuthAlert({
+      title: 'Sai Mật Khẩu!',
+      message: `Mật khẩu bạn vừa nhập cho tài khoản <b>${email}</b> không chính xác! ❌<br><br>Vui lòng kiểm tra lại phím CapsLock hoặc gõ lại mật khẩu nha.`,
+      icon: '🔐',
+      type: 'error',
+      primaryText: 'Nhập lại Mật khẩu',
+      onPrimary: () => {
+        if (passInp) {
+          passInp.value = '';
+          passInp.focus();
+        }
+      }
+    });
     showToast('❌ Mật khẩu không chính xác! Vui lòng thử lại.');
-    if (passInp) {
-      passInp.value = '';
-      passInp.focus();
-    }
     return false;
   }
 
   // Đăng nhập hợp lệ
+  clearAuthFormErrors();
   const targetRole = existingAcc.role || pendingAuthRole;
   if (targetRole === 'admin') {
     currentCoupleCode = code || existingAcc.coupleCode || 'LOVE-2026';
@@ -5339,6 +5537,7 @@ async function handleAuthSubmit(e) {
 
 function handleAuthRegister(e) {
   if (e) e.preventDefault();
+  clearAuthFormErrors();
   const nameInp = document.getElementById('reg-name');
   const emailInp = document.getElementById('reg-email');
   const passInp = document.getElementById('reg-password');
@@ -5353,21 +5552,47 @@ function handleAuthRegister(e) {
 
   // BẮT BUỘC: Kiểm tra hợp lệ các trường đăng ký
   if (!email) {
+    showAuthFormError('register', 'Vui lòng nhập Email / Tên đăng nhập!', emailInp);
+    showAuthAlert({
+      title: 'Thiếu Tên Đăng Nhập',
+      message: 'Vui lòng nhập Email hoặc Tên đăng nhập để tiếp tục tạo tài khoản nhé 💕',
+      icon: '📝',
+      type: 'warning',
+      primaryText: 'Nhập ngay',
+      onPrimary: () => emailInp && emailInp.focus()
+    });
     showToast('⚠️ Vui lòng nhập Email / Tên đăng nhập!');
-    if (emailInp) emailInp.focus();
     return false;
   }
   if (!password || password.length < 4) {
+    showAuthFormError('register', 'Mật khẩu phải có tối thiểu 4 ký tự!', passInp);
+    showAuthAlert({
+      title: 'Mật Khẩu Quá Ngắn',
+      message: 'Để bảo vệ an toàn cho tài khoản, mật khẩu cần có tối thiểu <b>4 ký tự</b> trở lên nha.',
+      icon: '🔒',
+      type: 'warning',
+      primaryText: 'Nhập lại',
+      onPrimary: () => passInp && passInp.focus()
+    });
     showToast('⚠️ Mật khẩu phải có tối thiểu 4 ký tự!');
-    if (passInp) passInp.focus();
     return false;
   }
   if (password !== passConfirm) {
+    showAuthFormError('register', 'Mật khẩu xác nhận không trùng khớp!', passConfirmInp);
+    showAuthAlert({
+      title: 'Mật Khẩu Không Trùng Khớp!',
+      message: 'Mật khẩu xác nhận bạn vừa gõ không trùng khớp với mật khẩu mới! ❌<br><br>Vui lòng kiểm tra lại cả hai ô mật khẩu nha.',
+      icon: '❌',
+      type: 'error',
+      primaryText: 'Kiểm tra lại',
+      onPrimary: () => {
+        if (passConfirmInp) {
+          passConfirmInp.value = '';
+          passConfirmInp.focus();
+        }
+      }
+    });
     showToast('⚠️ Mật khẩu xác nhận không khớp! Vui lòng kiểm tra lại.');
-    if (passConfirmInp) {
-      passConfirmInp.value = '';
-      passConfirmInp.focus();
-    }
     return false;
   }
 
@@ -5390,13 +5615,39 @@ function handleAuthRegister(e) {
   const accounts = getStoredAccounts();
   const accountKey = email.toLowerCase();
 
+  // KIỂM TRA TRÙNG TÀI KHOẢN (ĐÃ TỒN TẠI):
   if (accounts[accountKey]) {
+    showAuthFormError('register', `Tên đăng nhập "${email}" đã tồn tại! Vui lòng chọn tên khác hoặc chuyển sang Đăng Nhập.`, emailInp);
+    showAuthAlert({
+      title: 'Tài Khoản Đã Tồn Tại!',
+      message: `Tài khoản <b>${email}</b> đã được đăng ký trên hệ thống rồi nè 💕<br><br>Nàng/bạn có muốn chuyển sang màn hình <b>Đăng Nhập</b> không?`,
+      icon: '⚠️',
+      type: 'warning',
+      primaryText: '👉 Chuyển Sang Đăng Nhập',
+      onPrimary: () => {
+        switchAuthTab('login');
+        const loginEmail = document.getElementById('auth-email');
+        if (loginEmail) loginEmail.value = email;
+        const loginPass = document.getElementById('auth-password');
+        if (loginPass) {
+          loginPass.value = '';
+          loginPass.focus();
+        }
+      },
+      secondaryText: 'Đổi tên khác',
+      onSecondary: () => {
+        if (emailInp) {
+          emailInp.select();
+          emailInp.focus();
+        }
+      }
+    });
     showToast('⚠️ Tên đăng nhập này đã tồn tại! Vui lòng chọn tên khác hoặc chuyển sang Đăng Nhập.');
-    if (emailInp) emailInp.focus();
     return false;
   }
 
   // Lưu tài khoản mới
+  clearAuthFormErrors();
   accounts[accountKey] = {
     email: email,
     password: password,
