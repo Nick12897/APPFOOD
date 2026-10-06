@@ -1306,6 +1306,10 @@
             <span class="material-symbols-outlined text-[13px]">share</span>
             <span>Gửi link cho Bé</span>
           </button>
+          <button onclick="copyCoupleFullSyncLink()" class="px-2 py-1 rounded-full bg-amber-300 text-amber-950 hover:bg-amber-200 font-bold text-[11px] shadow-xs active:scale-95 transition-all flex items-center gap-1" title="Sao chép link kèm dữ liệu tùy chỉnh">
+            <span class="material-symbols-outlined text-[13px]">cloud_sync</span>
+            <span>Link đồng bộ data</span>
+          </button>
         </div>
       </div>
     </div>
@@ -1642,10 +1646,16 @@
             <p class="text-on-surface-variant text-[11px] leading-relaxed">
               Bạn chỉ cần bấm nút bên dưới để sao chép đường link, sau đó gửi qua Messenger hoặc Zalo cho Bé. Khi Bé mở link, máy của Bé sẽ tự động nhận vai trò Bé Yêu và kết nối vào hệ thống của bạn!
             </p>
-            <button onclick="copyCoupleShareLink()" class="w-full py-2 rounded-lg bg-primary text-on-primary font-bold text-xs shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 mt-1">
-              <span class="material-symbols-outlined text-[16px]">content_copy</span>
-              <span>Sao chép link gửi cho Bé</span>
-            </button>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+              <button onclick="copyCoupleShareLink()" class="w-full py-2 rounded-lg bg-primary text-on-primary font-bold text-xs shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                <span>Sao chép link kết nối</span>
+              </button>
+              <button onclick="copyCoupleFullSyncLink()" class="w-full py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-amber-950 font-bold text-xs shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1.5" title="Kèm toàn bộ tùy chỉnh Bé Yêu">
+                <span class="material-symbols-outlined text-[16px]">cloud_sync</span>
+                <span>Link Siêu Đồng Bộ (kèm data)</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -3825,15 +3835,16 @@ function broadcastCloudEvent(eventData) {
     } catch(e) {}
   }
 
-  // 2. Real-time Cloud over Internet (ntfy.sh pub-sub)
-  const topic = 'an_gi_food_' + encodeURIComponent(cleanCode);
+  // 2. Real-time Cloud over Internet (ntfy.sh pub-sub with persistent cache)
+  const topic = 'an_gi_food_' + encodeURIComponent(cleanCode.replace(/[^a-zA-Z0-9_-]/g, '_'));
   try {
     fetch(`https://ntfy.sh/${topic}`, {
       method: 'POST',
       body: JSON.stringify(eventData),
       headers: {
         'Title': 'Ăn Gì Bé Ơi Realtime Sync',
-        'Priority': 'default'
+        'Priority': 'default',
+        'X-Cache': 'yes'
       }
     }).catch(err => console.log('Cloud publish error:', err));
   } catch(e) {}
@@ -3866,7 +3877,7 @@ function initCloudRealtimeSync() {
   }
 
   const cleanCode = currentCoupleCode.trim().toUpperCase();
-  const topic = 'an_gi_food_' + encodeURIComponent(cleanCode);
+  const topic = 'an_gi_food_' + encodeURIComponent(cleanCode.replace(/[^a-zA-Z0-9_-]/g, '_'));
   updateCloudSyncStatus('connecting');
 
   try {
@@ -3874,6 +3885,8 @@ function initCloudRealtimeSync() {
 
     cloudEventSource.onopen = () => {
       updateCloudSyncStatus('connected');
+      // Khi vừa kết nối, tự động kéo snapshot mới nhất từ Cloud & yêu cầu peer gửi snapshot
+      pullCloudDataSnapshot();
     };
 
     cloudEventSource.onmessage = (event) => {
@@ -3897,6 +3910,51 @@ function initCloudRealtimeSync() {
     console.log('EventSource init error:', e);
     updateCloudSyncStatus('error');
   }
+
+  // Luôn thử kéo dữ liệu snapshot trên Cloud về ngay cả khi SSE đang chờ
+  pullCloudDataSnapshot();
+}
+
+async function pullCloudDataSnapshot() {
+  if (!currentCoupleCode) return;
+  const cleanCode = currentCoupleCode.trim().toUpperCase();
+  const topic = 'an_gi_food_' + encodeURIComponent(cleanCode.replace(/[^a-zA-Z0-9_-]/g, '_'));
+
+  try {
+    const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1`);
+    if (res.ok) {
+      const text = await res.text();
+      const lines = text.trim().split('\n');
+      let latestSyncPayload = null;
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        try {
+          const item = JSON.parse(line);
+          if (item.event === 'message' && item.message) {
+            const data = JSON.parse(item.message);
+            if (data.type === 'DATA_SYNC' && data.payload) {
+              latestSyncPayload = data.payload;
+              break;
+            }
+          }
+        } catch(e) {}
+      }
+
+      if (latestSyncPayload) {
+        applyRemoteDataSync(latestSyncPayload);
+        console.log('Đã tự động tải dữ liệu snapshot tùy chỉnh từ Cloud về máy mới thành công! 🟢');
+      }
+    }
+  } catch(e) {
+    console.log('Không thể poll cloud snapshot:', e);
+  }
+
+  // Luôn phát lệnh hỏi peer online nếu có thiết bị khác đang hoạt động
+  broadcastCloudEvent({
+    type: 'REQUEST_DATA_SNAPSHOT',
+    senderId: currentClientId
+  });
 }
 
 function updateCloudSyncStatus(status) {
@@ -4053,6 +4111,30 @@ function handleRemoteCloudEvent(data) {
     }
   } else if (data.type === 'DATA_SYNC') {
     applyRemoteDataSync(data.payload);
+  } else if (data.type === 'ACCOUNT_SYNC' && data.account) {
+    const acc = data.account;
+    if (acc.email) {
+      const localAccs = getStoredAccounts();
+      localAccs[acc.email.toLowerCase()] = acc;
+      saveStoredAccounts(localAccs);
+    }
+  } else if (data.type === 'REQUEST_DATA_SNAPSHOT') {
+    // Phản hồi snapshot cho thiết bị mới vừa kết nối
+    if (data.senderId && data.senderId === currentClientId) return;
+    broadcastCloudEvent({
+      type: 'DATA_SYNC',
+      coupleCode: currentCoupleCode,
+      payload: {
+        profile: beProfile,
+        boyfriendProfile: typeof boyfriendProfile !== 'undefined' ? boyfriendProfile : null,
+        favDishes: favDishes,
+        wheelItems: wheelItems,
+        blackDishes: blackDishes,
+        accounts: getStoredAccounts(),
+        firebaseConfig: localStorage.getItem('an_gi_firebase_config'),
+        updatedAt: Date.now()
+      }
+    });
   }
 }
 
@@ -4090,6 +4172,17 @@ function applyRemoteDataSync(payload) {
       localStorage.setItem('an_gi_black_dishes', JSON.stringify(blackDishes));
       renderBlackList();
     }
+    if (payload.accounts && typeof payload.accounts === 'object') {
+      const localAccs = getStoredAccounts();
+      const merged = { ...localAccs, ...payload.accounts };
+      saveStoredAccounts(merged);
+    }
+    if (payload.firebaseConfig && !localStorage.getItem('an_gi_firebase_config')) {
+      try {
+        localStorage.setItem('an_gi_firebase_config', payload.firebaseConfig);
+        initFirestoreSync();
+      } catch(e) {}
+    }
     if (document.getElementById('sc-admin') && document.getElementById('sc-admin').classList.contains('active')) {
       loadAdminBeData();
     }
@@ -4108,6 +4201,8 @@ function syncDataToCloud() {
     favDishes: favDishes,
     wheelItems: wheelItems,
     blackDishes: blackDishes,
+    accounts: getStoredAccounts(),
+    firebaseConfig: localStorage.getItem('an_gi_firebase_config'),
     updatedAt: Date.now()
   };
 
@@ -4118,6 +4213,131 @@ function syncDataToCloud() {
   });
 
   pushDataToFirestore(payload);
+}
+
+function pushAccountToCloud(acc) {
+  if (!acc || !acc.email) return;
+  const cleanEmail = acc.email.trim().toLowerCase();
+  const safeTopicPart = cleanEmail.replace(/[^a-zA-Z0-9_-]/g, '_');
+  
+  // 1. Lưu vào kênh account riêng trên Cloud Relay
+  const accTopic = 'an_gi_acc_' + safeTopicPart;
+  try {
+    fetch(`https://ntfy.sh/${accTopic}`, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'ACCOUNT_SYNC', account: acc }),
+      headers: {
+        'Title': 'Ăn Gì Bé Ơi Account Sync',
+        'X-Cache': 'yes'
+      }
+    }).catch(() => {});
+  } catch(e) {}
+
+  // 2. Nếu có mã cặp đôi, lưu vào kênh couple
+  if (acc.coupleCode) {
+    broadcastCloudEvent({
+      type: 'ACCOUNT_SYNC',
+      account: acc
+    });
+  }
+
+  // 3. Nếu Firestore đã cấu hình, lưu trực tiếp lên Firestore
+  if (firestoreDb) {
+    try {
+      firestoreDb.collection('accounts').doc(cleanEmail).set(acc, { merge: true }).catch(() => {});
+      if (acc.coupleCode) {
+        firestoreDb.collection('couples').doc(acc.coupleCode).set({
+          accounts: { [cleanEmail]: acc }
+        }, { merge: true }).catch(() => {});
+      }
+    } catch(e) {}
+  }
+}
+
+async function fetchAccountFromCloud(email, coupleCode) {
+  if (!email) return null;
+  const cleanEmail = email.trim().toLowerCase();
+  const safeTopicPart = cleanEmail.replace(/[^a-zA-Z0-9_-]/g, '_');
+  
+  // 1. Kiểm tra Firestore nếu có
+  if (firestoreDb) {
+    try {
+      const doc = await firestoreDb.collection('accounts').doc(cleanEmail).get();
+      if (doc.exists) {
+        const acc = doc.data();
+        const accs = getStoredAccounts();
+        accs[cleanEmail] = acc;
+        saveStoredAccounts(accs);
+        return acc;
+      }
+    } catch(e) {}
+  }
+
+  // 2. Kiểm tra ntfy topic tài khoản: an_gi_acc_${safeTopicPart}
+  try {
+    const accTopic = 'an_gi_acc_' + safeTopicPart;
+    const res = await fetch(`https://ntfy.sh/${accTopic}/json?poll=1`);
+    if (res.ok) {
+      const text = await res.text();
+      const lines = text.trim().split('\n');
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        try {
+          const item = JSON.parse(line);
+          if (item.event === 'message' && item.message) {
+            const data = JSON.parse(item.message);
+            if (data.type === 'ACCOUNT_SYNC' && data.account) {
+              const acc = data.account;
+              const accs = getStoredAccounts();
+              accs[cleanEmail] = acc;
+              saveStoredAccounts(accs);
+              return acc;
+            }
+          }
+        } catch(e) {}
+      }
+    }
+  } catch(e) {}
+
+  // 3. Nếu có coupleCode, kiểm tra topic phòng couple
+  if (coupleCode) {
+    const cleanCode = coupleCode.trim().toUpperCase();
+    const topic = 'an_gi_food_' + encodeURIComponent(cleanCode.replace(/[^a-zA-Z0-9_-]/g, '_'));
+    try {
+      const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1`);
+      if (res.ok) {
+        const text = await res.text();
+        const lines = text.trim().split('\n');
+        for (let i = lines.length - 1; i >= 0; i--) {
+          const line = lines[i].trim();
+          if (!line) continue;
+          try {
+            const item = JSON.parse(line);
+            if (item.event === 'message' && item.message) {
+              const data = JSON.parse(item.message);
+              if (data.type === 'ACCOUNT_SYNC' && data.account && data.account.email && data.account.email.toLowerCase() === cleanEmail) {
+                const acc = data.account;
+                const accs = getStoredAccounts();
+                accs[cleanEmail] = acc;
+                saveStoredAccounts(accs);
+                return acc;
+              }
+              if (data.type === 'DATA_SYNC' && data.payload && data.payload.accounts && data.payload.accounts[cleanEmail]) {
+                const acc = data.payload.accounts[cleanEmail];
+                const accs = getStoredAccounts();
+                accs[cleanEmail] = acc;
+                saveStoredAccounts(accs);
+                return acc;
+              }
+            }
+          } catch(e) {}
+        }
+      }
+    } catch(e) {}
+  }
+
+  return null;
 }
 
 function initFirestoreSync() {
@@ -4166,6 +4386,20 @@ function initAuthAndSync() {
   const urlParams = new URLSearchParams(window.location.search);
   const paramCouple = urlParams.get('couple');
   const paramRole = urlParams.get('role');
+  const paramSyncData = urlParams.get('syncData');
+
+  if (paramSyncData) {
+    try {
+      const decoded = decodeURIComponent(escape(atob(paramSyncData)));
+      const parsed = JSON.parse(decoded);
+      if (parsed) {
+        applyRemoteDataSync(parsed);
+        showToast('🟢 Đã đồng bộ toàn bộ dữ liệu & tùy chỉnh từ liên kết!');
+      }
+    } catch(e) {
+      console.log('Error parsing syncData:', e);
+    }
+  }
 
   if (paramCouple) {
     currentCoupleCode = paramCouple.toUpperCase().trim();
@@ -4211,12 +4445,13 @@ function initAuthAndSync() {
     }
   }
 
-  // Clean URL ?role=... and ?couple=... after capturing
+  // Clean URL ?role=... , ?couple=... and ?syncData=... after capturing
   try {
-    if (paramRole || paramCouple) {
+    if (paramRole || paramCouple || paramSyncData) {
       const cleanUrl = new URL(window.location.href);
       cleanUrl.searchParams.delete('role');
       cleanUrl.searchParams.delete('couple');
+      cleanUrl.searchParams.delete('syncData');
       window.history.replaceState({}, document.title, cleanUrl.toString());
     }
   } catch(e) {}
@@ -4257,6 +4492,9 @@ function initAuthAndSync() {
   initBroadcastSync();
   initCloudRealtimeSync();
   initFirestoreSync();
+  if (currentCoupleCode) {
+    pullCloudDataSnapshot();
+  }
 
   // BẢO MẬT & BẮT BUỘC TẠO TÀI KHOẢN:
   // Nếu thiết bị nhận link user hoặc chưa có tài khoản đăng nhập trên máy:
@@ -4975,7 +5213,7 @@ function quickLoginAs(role) {
   showToast('🔐 Vui lòng nhập mật khẩu tài khoản để đăng nhập an toàn!');
 }
 
-function handleAuthSubmit(e) {
+async function handleAuthSubmit(e) {
   if (e) e.preventDefault();
   const emailInp = document.getElementById('auth-email');
   const passInp = document.getElementById('auth-password');
@@ -4997,9 +5235,31 @@ function handleAuthSubmit(e) {
     return false;
   }
 
-  const accounts = getStoredAccounts();
+  let accounts = getStoredAccounts();
   const accountKey = email.toLowerCase();
-  const existingAcc = accounts[accountKey];
+  let existingAcc = accounts[accountKey];
+
+  // Nếu tài khoản chưa có trên máy này (ví dụ đổi điện thoại / mở trình duyệt mới):
+  if (!existingAcc) {
+    showToast('⏳ Đang tìm tài khoản trên Cloud...');
+    const submitBtn = document.getElementById('auth-submit-btn');
+    const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>⏳ Đang tìm kiếm trên Cloud...</span>';
+    }
+    try {
+      existingAcc = await fetchAccountFromCloud(email, code);
+      accounts = getStoredAccounts();
+    } catch(err) {
+      console.log('Error fetching account from cloud:', err);
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = origBtnText;
+      }
+    }
+  }
 
   if (!existingAcc) {
     showToast('⚠️ Tài khoản này chưa được đăng ký! Đang chuyển sang mục Đăng ký để tạo mới...');
@@ -5055,6 +5315,7 @@ function handleAuthSubmit(e) {
     initBroadcastSync();
     initCloudRealtimeSync();
     initFirestoreSync();
+    pullCloudDataSnapshot();
   }
 
   // Clear role param from URL so refresh doesn't override
@@ -5145,6 +5406,7 @@ function handleAuthRegister(e) {
     registeredAt: Date.now()
   };
   saveStoredAccounts(accounts);
+  pushAccountToCloud(accounts[accountKey]);
 
   // Cập nhật mã cặp đôi & người dùng hiện tại
   currentCoupleCode = finalCoupleCode;
@@ -5181,6 +5443,7 @@ function handleAuthRegister(e) {
     initBroadcastSync();
     initCloudRealtimeSync();
     initFirestoreSync();
+    syncDataToCloud();
 
     // Bắn thông báo kết nối trực tiếp tức thì sang máy Bạn Trai
     if (pendingRegRole === 'user') {
@@ -5671,6 +5934,42 @@ function copyCoupleShareLink() {
   }
 }
 
+function copyCoupleFullSyncLink() {
+  const code = (currentCoupleCode || 'LOVE-2026').trim().toUpperCase();
+  const payload = {
+    profile: beProfile,
+    boyfriendProfile: (typeof boyfriendProfile !== 'undefined' ? boyfriendProfile : null),
+    favDishes: favDishes,
+    wheelItems: wheelItems,
+    blackDishes: blackDishes,
+    accounts: getStoredAccounts(),
+    firebaseConfig: localStorage.getItem('an_gi_firebase_config'),
+    updatedAt: Date.now()
+  };
+
+  try {
+    const jsonStr = JSON.stringify(payload);
+    const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+    const url = new URL(window.location.origin + window.location.pathname);
+    url.searchParams.set('couple', code);
+    url.searchParams.set('role', 'user');
+    url.searchParams.set('syncData', b64);
+    const link = url.toString();
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(link).then(() => {
+        showToast(`🔗 Đã sao chép Link Siêu Đồng Bộ (kèm 100% dữ liệu tùy chỉnh & tài khoản)! Bé mở link là nhận ngay 💕`);
+      }).catch(() => {
+        prompt('Sao chép Link Siêu Đồng Bộ gửi cho Bé nha:', link);
+      });
+    } else {
+      prompt('Sao chép Link Siêu Đồng Bộ gửi cho Bé nha:', link);
+    }
+  } catch(e) {
+    copyCoupleShareLink();
+  }
+}
+
 function updateCoupleCodeFromAdmin() {
   const input = document.getElementById('adm-input-couple-code');
   const newCode = input ? input.value.trim().toUpperCase() : '';
@@ -5691,10 +5990,14 @@ function updateCoupleCodeFromAdmin() {
   showToast(`Đã cập nhật mã cặp đôi: ${currentCoupleCode} ✨`);
 }
 
-function forceSyncDataWithCloud() {
+async function forceSyncDataWithCloud() {
+  showToast('⏳ Đang tiến hành đồng bộ 2 chiều dữ liệu và tùy chỉnh với Cloud...');
   syncDataToCloud();
+  if (typeof pullCloudDataSnapshot === 'function') {
+    await pullCloudDataSnapshot();
+  }
   playChimeSound(true);
-  showToast('Đang buộc đồng bộ dữ liệu tới Cloud... Xong! 🟢');
+  showToast('Đã đồng bộ 2 chiều dữ liệu & tùy chỉnh với Cloud thành công! 🟢');
 }
 
 function toggleFirebaseConfigForm() {
