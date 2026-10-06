@@ -1317,18 +1317,22 @@
     </div>
 
     <!-- Quick Action Bar -->
-    <div class="grid grid-cols-3 gap-2">
-      <button onclick="playChimeSound(true)" class="p-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group">
+    <div class="grid grid-cols-4 gap-2">
+      <button onclick="playChimeSound(true)" class="p-2 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group">
         <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm group-hover:scale-110 transition-transform">🔔</span>
-        <span class="text-[11px] font-bold text-on-surface">Test Ting-Ting</span>
+        <span class="text-[10px] font-bold text-on-surface">Test Ting</span>
       </button>
-      <button onclick="forceSyncDataWithCloud()" class="p-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group">
+      <button onclick="forceSyncDataWithCloud()" class="p-2 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group">
         <span class="w-8 h-8 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center text-sm group-hover:scale-110 transition-transform">🔄</span>
-        <span class="text-[11px] font-bold text-on-surface">Đồng bộ ngay</span>
+        <span class="text-[10px] font-bold text-on-surface">Đồng bộ</span>
       </button>
-      <button onclick="switchAdminTab('msg')" class="p-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group">
+      <button onclick="switchAdminTab('msg')" class="p-2 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group">
         <span class="w-8 h-8 rounded-full bg-primary-container/20 text-primary flex items-center justify-center text-sm group-hover:scale-110 transition-transform">💌</span>
-        <span class="text-[11px] font-bold text-on-surface">Bắn tin cho Bé</span>
+        <span class="text-[10px] font-bold text-on-surface">Bắn tin</span>
+      </button>
+      <button onclick="confirmClearAllUserData()" class="p-2 rounded-2xl bg-surface-container-lowest border border-error/20 shadow-xs flex flex-col items-center text-center gap-1 active:scale-95 transition-all group hover:bg-error-container/20" title="Xóa sạch dữ liệu test và hủy liên kết cũ">
+        <span class="w-8 h-8 rounded-full bg-error-container/60 text-error flex items-center justify-center text-sm group-hover:scale-110 transition-transform">🧹</span>
+        <span class="text-[10px] font-bold text-error">Dọn data</span>
       </button>
     </div>
 
@@ -1379,6 +1383,19 @@
 
     <!-- ══ ADMIN TAB 2: EDIT BÉ'S DATA (CONTROL PANEL) ══ -->
     <div id="adm-tab-data" class="admin-tab-content hidden space-y-4">
+      <!-- Unlinked Warning Banner -->
+      <div id="adm-unlinked-be-banner" class="hidden p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-2.5">
+        <span class="text-xl">⚠️</span>
+        <div class="flex-1 text-xs">
+          <p class="font-bold text-amber-800 dark:text-amber-200">Chưa liên kết mã cặp đôi với Bé Yêu</p>
+          <p class="text-on-surface-variant text-[11px] mt-0.5 leading-relaxed">Tài khoản Quản Trị hiện chưa gắn mã cặp đôi nào. Mọi thông tin bên dưới chưa được gán cho Bé Yêu cho tới khi bạn cấp mã hoặc nhập mã cặp đôi chung.</p>
+          <button onclick="switchAdminTab('settings')" class="mt-2 px-3 py-1 rounded-full bg-amber-500 text-white font-bold text-[11px] inline-flex items-center gap-1 shadow-xs active:scale-95">
+            <span class="material-symbols-outlined text-[13px]">link</span>
+            <span>Cài đặt mã cặp đôi ngay</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Data Subtabs: Profile / Wheel / Favorites / Blacklist -->
       <div class="flex gap-1.5 overflow-x-auto pb-1 -mx-margin px-margin text-xs">
         <button onclick="switchAdminDataSubtab('profile')" id="btn-admsub-profile" class="admin-subtab-btn px-3 py-1.5 rounded-full bg-primary text-on-primary font-bold shadow-xs whitespace-nowrap">
@@ -4417,7 +4434,136 @@ function pushDataToFirestore(data) {
   } catch(e) {}
 }
 
+function clearAllSupplementalUserData(skipToast = false) {
+  try {
+    // 1. Reset danh sách tài khoản: chỉ giữ lại 3 tài khoản Admin mặc định
+    const defaultAccounts = {
+      'sang.khanhhn@gmail.com': {
+        email: 'sang.khanhhn@gmail.com',
+        password: 'admin',
+        role: 'admin',
+        name: 'Anh Bạn Trai',
+        coupleCode: ''
+      },
+      'admin@love.app': {
+        email: 'admin@love.app',
+        password: 'admin',
+        role: 'admin',
+        name: 'Bạn Trai Quản Trị',
+        coupleCode: ''
+      },
+      'bantrai@love.app': {
+        email: 'bantrai@love.app',
+        password: 'admin',
+        role: 'admin',
+        name: 'Anh Bạn Trai Chu Đáo',
+        coupleCode: ''
+      }
+    };
+    if (typeof saveStoredAccounts === 'function') {
+      saveStoredAccounts(defaultAccounts);
+    } else {
+      localStorage.setItem('an_gi_accounts', JSON.stringify(defaultAccounts));
+    }
+
+    // 2. Xóa các khóa lưu trữ thông tin Bé Yêu & hoạt động thử nghiệm cũ
+    const keysToRemove = [
+      'an_gi_be_profile',
+      'an_gi_profile',
+      'an_gi_activities_local',
+      'an_gi_activities_LOVE-2026',
+      'an_gi_activities_',
+      'an_gi_recent_picks',
+      'an_gi_dishes',
+      'an_gi_saved_places',
+      'an_gi_custom_locations'
+    ];
+
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && (k.startsWith('an_gi_activities_') || k.startsWith('an_gi_peer_') || k.startsWith('an_gi_be_'))) {
+        localStorage.removeItem(k);
+      }
+    }
+
+    keysToRemove.forEach(k => {
+      try { localStorage.removeItem(k); } catch(e) {}
+    });
+
+    // 3. Nếu chưa có mã hoặc dùng mã LOVE-2026 cũ, đặt lại rỗng
+    if (!currentCoupleCode || currentCoupleCode === 'LOVE-2026') {
+      currentCoupleCode = '';
+      try { localStorage.removeItem('an_gi_couple_code'); } catch(e) {}
+      if (currentAuthUser) {
+        currentAuthUser.coupleCode = '';
+        try { localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser)); } catch(e) {}
+      }
+    }
+
+    // 4. Reset in-memory beProfile về mặc định sạch
+    if (typeof defaultProfile !== 'undefined') {
+      beProfile = { ...defaultProfile };
+    }
+    cloudActivities = [];
+
+    // 5. Cập nhật lại UI
+    if (typeof loadAdminBeData === 'function') loadAdminBeData();
+    if (typeof renderAdminActivities === 'function') renderAdminActivities();
+    if (typeof renderAdminDashboard === 'function') renderAdminDashboard();
+    if (typeof updateAuthUI === 'function') updateAuthUI();
+    if (typeof renderProfile === 'function') renderProfile();
+
+    if (!skipToast) {
+      showToast('🧹 Đã xóa sạch dữ liệu người dùng thử nghiệm!');
+      if (typeof showAuthAlert === 'function') {
+        showAuthAlert({
+          title: 'Đã Dọn Sạch Dữ Liệu',
+          message: 'Tất cả dữ liệu người dùng và hồ sơ Bé Yêu thử nghiệm đã được dọn sạch. Tài khoản Quản Trị của bạn hiện độc lập và không còn bị dính thông tin cũ nữa nhé 💕',
+          icon: '✅',
+          type: 'success',
+          primaryText: 'Tuyệt vời',
+          onPrimary: () => {}
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Error clearing supplemental data:', err);
+    if (!skipToast && typeof showToast === 'function') showToast('⚠️ Có lỗi xảy ra khi dọn dẹp dữ liệu.');
+  }
+}
+
+function confirmClearAllUserData() {
+  if (typeof showAuthAlert === 'function') {
+    showAuthAlert({
+      title: 'Dọn Dẹp Dữ Liệu Thử Nghiệm',
+      message: 'Bạn có chắc chắn muốn dọn sạch mọi dữ liệu người dùng và hồ sơ Bé Yêu đã lưu trên thiết bị này không?<br/><br/><span class="text-xs text-on-surface-variant font-normal">Tài khoản Quản Trị của bạn sẽ được giữ nguyên an toàn, chỉ xóa dữ liệu liên kết cũ để tránh hiển thị sai thông tin khi chưa có mã cặp đôi.</span>',
+      icon: '🧹',
+      type: 'warning',
+      primaryText: 'Xác nhận xóa sạch',
+      onPrimary: () => {
+        clearAllSupplementalUserData(false);
+      },
+      secondaryText: 'Hủy bỏ'
+    });
+  } else if (confirm('Bạn có chắc chắn muốn dọn sạch toàn bộ dữ liệu người dùng/Bé Yêu thử nghiệm trước đó không?')) {
+    clearAllSupplementalUserData(false);
+  }
+}
+
+function initDataCleanupCheck() {
+  const CLEANUP_KEY = 'an_gi_cleanup_v2026_1';
+  try {
+    if (!localStorage.getItem(CLEANUP_KEY)) {
+      clearAllSupplementalUserData(true);
+      localStorage.setItem(CLEANUP_KEY, 'true');
+    }
+  } catch(e) {
+    console.error('Data cleanup check error:', e);
+  }
+}
+
 function initAuthAndSync() {
+  initDataCleanupCheck();
   const urlParams = new URLSearchParams(window.location.search);
   const paramCouple = urlParams.get('couple');
   const paramRole = urlParams.get('role');
@@ -5822,19 +5968,77 @@ function renderAdminActivities() {
 }
 
 function loadAdminBeData() {
+  const isConnected = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
+
+  const bannerEl = document.getElementById('adm-unlinked-be-banner');
+  if (bannerEl) {
+    if (isConnected) {
+      bannerEl.classList.add('hidden');
+    } else {
+      bannerEl.classList.remove('hidden');
+    }
+  }
+
+  const nameInput = document.getElementById('adm-be-name');
+  const nickInput = document.getElementById('adm-be-nickname');
+  const annivInput = document.getElementById('adm-be-anniversary');
+  const spicyInput = document.getElementById('adm-be-spicy');
+  const sweetInput = document.getElementById('adm-be-sweet');
+  const notesInput = document.getElementById('adm-be-notes');
+
+  if (!isConnected) {
+    if (nameInput) { nameInput.value = ''; nameInput.placeholder = '(Chưa liên kết Bé Yêu)'; }
+    if (nickInput) { nickInput.value = ''; nickInput.placeholder = '(Chưa có biệt danh)'; }
+    if (annivInput) { annivInput.value = ''; }
+    if (spicyInput) { spicyInput.value = '2'; }
+    if (sweetInput) { sweetInput.value = '2'; }
+    if (notesInput) { notesInput.value = ''; notesInput.placeholder = '(Chưa có thông tin do chưa liên kết mã)'; }
+
+    const favListEl = document.getElementById('adm-fav-list');
+    if (favListEl) {
+      favListEl.innerHTML = `
+        <div class="p-6 rounded-2xl bg-surface-container-lowest border border-dashed border-outline-variant/30 text-center space-y-2">
+          <span class="text-3xl">🔗</span>
+          <p class="text-xs font-bold text-on-surface">Chưa liên kết với Bé Yêu</p>
+          <p class="text-[11px] text-on-surface-variant leading-relaxed">
+            Hiện tài khoản Admin chưa liên kết mã với Bé Yêu nào.<br/>
+            Hãy cấp mã cặp đôi cho Bé hoặc nhập mã cặp đôi để hiển thị và chỉnh sửa quán ruột của Bé nhé!
+          </p>
+          <button onclick="switchAdminTab('settings')" class="mt-2 px-3 py-1.5 rounded-full bg-primary text-white text-xs font-bold shadow-xs inline-flex items-center gap-1 active:scale-95">
+            <span class="material-symbols-outlined text-[14px]">link</span>
+            <span>Cài đặt mã cặp đôi</span>
+          </button>
+        </div>
+      `;
+    }
+
+    const wheelListEl = document.getElementById('adm-wheel-list');
+    if (wheelListEl) {
+      wheelListEl.innerHTML = `
+        <div class="p-4 rounded-xl bg-surface-container-lowest border border-dashed border-outline-variant/30 text-center text-xs text-on-surface-variant">
+          Chưa liên kết mã cặp đôi với Bé Yêu.
+        </div>
+      `;
+    }
+
+    const blackListEl = document.getElementById('adm-black-list');
+    if (blackListEl) {
+      blackListEl.innerHTML = `
+        <div class="p-4 rounded-xl bg-surface-container-lowest border border-dashed border-outline-variant/30 text-center text-xs text-on-surface-variant">
+          Chưa liên kết mã cặp đôi với Bé Yêu.
+        </div>
+      `;
+    }
+    return;
+  }
+
   if (beProfile) {
-    const nameInput = document.getElementById('adm-be-name');
-    if (nameInput) nameInput.value = beProfile.name || 'Bé Heo';
-    const nickInput = document.getElementById('adm-be-nickname');
-    if (nickInput) nickInput.value = beProfile.nickname || 'Công chúa nhỏ';
-    const annivInput = document.getElementById('adm-be-anniversary');
-    if (annivInput) annivInput.value = beProfile.anniversary || '2024-02-14';
-    const spicyInput = document.getElementById('adm-be-spicy');
-    if (spicyInput) spicyInput.value = String(beProfile.spicyLevel || 2);
-    const sweetInput = document.getElementById('adm-be-sweet');
-    if (sweetInput) sweetInput.value = String(beProfile.sweetLevel || 2);
-    const notesInput = document.getElementById('adm-be-notes');
-    if (notesInput) notesInput.value = beProfile.spicyNote || '';
+    if (nameInput) { nameInput.value = beProfile.name || 'Bé Heo'; nameInput.placeholder = 'Ví dụ: Bé Mèo, Bé Heo...'; }
+    if (nickInput) { nickInput.value = beProfile.nickname || 'Công chúa nhỏ'; nickInput.placeholder = 'Công chúa nhỏ'; }
+    if (annivInput) { annivInput.value = beProfile.anniversary || '2024-02-14'; }
+    if (spicyInput) { spicyInput.value = String(beProfile.spicyLevel || 2); }
+    if (sweetInput) { sweetInput.value = String(beProfile.sweetLevel || 2); }
+    if (notesInput) { notesInput.value = beProfile.spicyNote || ''; notesInput.placeholder = 'Bé không thích hành lá, thích ăn đá bào, say xe khi đi xa...'; }
   }
 
   const favListEl = document.getElementById('adm-fav-list');
@@ -5889,6 +6093,28 @@ function loadAdminBeData() {
 }
 
 function saveAdminBeProfile() {
+  const isConnected = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
+  if (!isConnected) {
+    if (typeof showAuthAlert === 'function') {
+      showAuthAlert({
+        title: 'Chưa Liên Kết Mã',
+        message: 'Bạn chưa liên kết mã cặp đôi với Bé Yêu. Vui lòng thiết lập hoặc nhập mã cặp đôi trước khi lưu hồ sơ nhé 💕',
+        icon: '🔗',
+        type: 'warning',
+        primaryText: 'Cài đặt mã ngay',
+        onPrimary: () => {
+          switchAdminTab('settings');
+          const inp = document.getElementById('adm-input-couple-code');
+          if (inp) inp.focus();
+        },
+        secondaryText: 'Đóng'
+      });
+    } else {
+      showToast('⚠️ Vui lòng liên kết mã cặp đôi trước khi lưu hồ sơ Bé!');
+    }
+    return;
+  }
+
   const name = document.getElementById('adm-be-name').value.trim() || 'Bé Heo';
   const nick = document.getElementById('adm-be-nickname').value.trim() || 'Công chúa nhỏ';
   const anniv = document.getElementById('adm-be-anniversary').value;
@@ -5917,6 +6143,11 @@ function saveAdminBeProfile() {
 }
 
 function deleteAdminFavDish(id) {
+  const isConnected = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
+  if (!isConnected) {
+    showToast('⚠️ Vui lòng liên kết mã cặp đôi với Bé Yêu trước nhé!');
+    return;
+  }
   if (confirm('Bạn có chắc muốn xóa quán này khỏi Sổ tay của Bé?')) {
     favDishes = favDishes.filter(d => d.id !== id);
     saveFavDishesToStorage();
@@ -5931,6 +6162,11 @@ function deleteAdminFavDish(id) {
 }
 
 function deleteAdminWheelDish(idx) {
+  const isConnected = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
+  if (!isConnected) {
+    showToast('⚠️ Vui lòng liên kết mã cặp đôi với Bé Yêu trước nhé!');
+    return;
+  }
   const item = wheelItems[idx];
   wheelItems.splice(idx, 1);
   localStorage.setItem('an_gi_wheel_dishes', JSON.stringify(wheelItems));
@@ -5942,6 +6178,11 @@ function deleteAdminWheelDish(idx) {
 }
 
 function openAddAdminWheelModal() {
+  const isConnected = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
+  if (!isConnected) {
+    showToast('⚠️ Vui lòng liên kết mã cặp đôi với Bé Yêu trước nhé!');
+    return;
+  }
   const modal = document.getElementById('admin-add-wheel-modal');
   if (modal) {
     modal.classList.remove('hidden');
@@ -5958,6 +6199,11 @@ function closeAdminAddWheelModal() {
 }
 
 function saveAdminNewWheelDish() {
+  const isConnected = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
+  if (!isConnected) {
+    showToast('⚠️ Vui lòng liên kết mã cặp đôi với Bé Yêu trước nhé!');
+    return;
+  }
   const input = document.getElementById('adm-new-wheel-name');
   const name = input ? input.value.trim() : '';
   if (!name) {
@@ -5976,6 +6222,11 @@ function saveAdminNewWheelDish() {
 }
 
 function deleteAdminBlackDish(idx) {
+  const isConnected = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
+  if (!isConnected) {
+    showToast('⚠️ Vui lòng liên kết mã cặp đôi với Bé Yêu trước nhé!');
+    return;
+  }
   blackDishes.splice(idx, 1);
   localStorage.setItem('an_gi_black_dishes', JSON.stringify(blackDishes));
   renderBlackList();
@@ -6006,6 +6257,10 @@ function sendPartnerAlertMessage() {
     return;
   }
   const effect = document.getElementById('adm-love-effect')?.value || 'hearts';
+
+  if (!currentCoupleCode || currentCoupleCode.trim().length < 3) {
+    showToast('⚠️ Lưu ý: Bạn chưa liên kết mã cặp đôi nên tin nhắn chưa thể truyền tới máy của Bé nhé!');
+  }
 
   try {
     localStorage.setItem('an_gi_latest_partner_msg', JSON.stringify({
