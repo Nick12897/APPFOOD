@@ -984,10 +984,10 @@
           </div>
           <div>
             <div class="flex items-center gap-space-xs">
-              <span id="nb-name" class="font-headline-sm text-headline-sm text-on-surface font-bold">Bé Heo</span>
+              <span id="nb-name" class="font-headline-sm text-headline-sm text-on-surface font-bold">Bé Yêu</span>
               <span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">verified</span>
             </div>
-            <span id="nb-status" class="font-label-sm text-label-sm text-on-surface-variant block mt-0.5">Hôm nay: Dễ thương nhưng đói bụng 🐰</span>
+            <span id="nb-status" class="font-label-sm text-label-sm text-on-surface-variant block mt-0.5">Hôm nay: Đang đói bụng 🐰</span>
           </div>
         </div>
         <button onclick="openProfileEditModal()" class="w-9 h-9 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary flex items-center justify-center text-on-surface-variant active:scale-95 transition-colors shadow-2xs" title="Chỉnh sửa thông tin bé">
@@ -1047,8 +1047,7 @@
         <div class="min-w-0 flex-1">
           <span class="font-label-md text-label-md text-on-surface font-bold block leading-tight">Vùng cấm địa (Tuyệt đối nhớ kỹ!)</span>
           <div id="nb-blacklist-tags" class="flex flex-wrap gap-1.5 pt-1.5">
-            <span class="bg-error text-on-error px-2 py-0.5 rounded-full font-label-sm text-xs font-semibold">🚫 Không ăn hành lá sống</span>
-            <span class="bg-error text-on-error px-2 py-0.5 rounded-full font-label-sm text-xs font-semibold">🚫 Không ăn ngò gai</span>
+            <span class="text-xs text-on-surface-variant italic">Chưa có món cấm nào</span>
           </div>
         </div>
       </div>
@@ -1062,12 +1061,12 @@
             </div>
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-1.5 flex-wrap">
-                <span id="nb-address-title" class="font-label-md text-label-md text-primary font-bold truncate">Nhà của Bé 🏠</span>
+                <span id="nb-address-title" class="font-label-md text-label-md text-primary font-bold truncate">Vị trí của Bé 📍</span>
                 <span class="text-[9px] bg-primary text-on-primary px-1.5 py-0.2 rounded-full font-bold">Vị trí tìm quán</span>
-                <span id="nb-address-coord-badge" class="text-[9px] bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[11px]" style="font-variation-settings:'FILL' 1">check_circle</span> Bản đồ kết nối</span>
+                <span id="nb-address-coord-badge" class="hidden text-[9px] bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[11px]" style="font-variation-settings:'FILL' 1">check_circle</span> Bản đồ kết nối</span>
               </div>
-              <p id="nb-address-text" class="font-body-sm text-body-sm text-on-surface font-semibold truncate mt-0.5">Quận 1, TP. HCM</p>
-              <span id="nb-address-note" class="font-label-sm text-[11px] text-on-surface-variant opacity-80 block truncate">Khu vực quen thuộc của nàng</span>
+              <p id="nb-address-text" class="font-body-sm text-body-sm text-on-surface font-semibold truncate mt-0.5">Chưa cài đặt địa chỉ</p>
+              <span id="nb-address-note" class="font-label-sm text-[11px] text-on-surface-variant opacity-80 block truncate">Chạm vào để thiết lập toạ độ tìm quán</span>
             </div>
           </div>
           <button type="button" onclick="openProfileEditModal()" class="p-2 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface-variant text-xs font-bold shrink-0 transition-all" title="Chỉnh sửa địa chỉ">
@@ -3283,8 +3282,8 @@
         </div>
         <div class="flex items-center justify-between text-xs text-on-surface-variant">
           <span>Trạng thái kết nối:</span>
-          <span id="auth-profile-cloud-status" class="font-semibold text-emerald-600 flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Đang trực tuyến 2 máy
+          <span id="auth-profile-cloud-status" class="font-semibold text-slate-500 flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span> Chế độ độc lập (Chưa kết nối 2 máy)
           </span>
         </div>
       </div>
@@ -3994,8 +3993,13 @@ async function pullCloudDataSnapshot() {
       }
 
       if (latestSyncPayload) {
-        applyRemoteDataSync(latestSyncPayload);
-        console.log('Đã tự động tải dữ liệu snapshot tùy chỉnh từ Cloud về máy mới thành công! 🟢');
+        const lastCleanupTime = parseInt(localStorage.getItem('an_gi_cleanup_time') || '0');
+        if (latestSyncPayload.updatedAt && latestSyncPayload.updatedAt < lastCleanupTime) {
+          console.log('Bỏ qua snapshot cũ trước lần dọn dẹp data gần nhất.');
+        } else {
+          applyRemoteDataSync(latestSyncPayload);
+          console.log('Đã tự động tải dữ liệu snapshot tùy chỉnh từ Cloud về máy mới thành công! 🟢');
+        }
       }
     }
   } catch(e) {
@@ -4007,6 +4011,14 @@ async function pullCloudDataSnapshot() {
     type: 'REQUEST_DATA_SNAPSHOT',
     senderId: currentClientId
   });
+
+  // Phát lệnh PING_PRESENCE để kiểm tra hai máy có đang cùng online không
+  broadcastCloudEvent({
+    type: 'PING_PRESENCE',
+    role: (currentAuthUser && currentAuthUser.role) || 'admin',
+    senderId: currentClientId,
+    coupleCode: currentCoupleCode
+  });
 }
 
 function updateCloudSyncStatus(status) {
@@ -4014,10 +4026,24 @@ function updateCloudSyncStatus(status) {
   const pingEl = document.getElementById('admin-sync-ping');
   const dotEl = document.getElementById('admin-sync-dot');
 
+  const isPaired = typeof isPartnerConnected === 'function' ? isPartnerConnected() : false;
+
   if (status === 'connected') {
-    if (statusEl) statusEl.textContent = `Đã liên kết Realtime với Bé Yêu (${currentCoupleCode}) 🟢`;
-    if (pingEl) pingEl.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75';
-    if (dotEl) dotEl.className = 'relative inline-flex rounded-full h-2.5 w-2.5 bg-green-300';
+    if (statusEl) {
+      statusEl.textContent = isPaired 
+        ? `Đã liên kết Realtime với Bé Yêu (${currentCoupleCode}) 🟢` 
+        : `Đã mở phòng (${currentCoupleCode}) - Đang chờ Bé kết nối 🟡`;
+    }
+    if (pingEl) {
+      pingEl.className = isPaired 
+        ? 'animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75' 
+        : 'animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75';
+    }
+    if (dotEl) {
+      dotEl.className = isPaired 
+        ? 'relative inline-flex rounded-full h-2.5 w-2.5 bg-green-300' 
+        : 'relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-300';
+    }
   } else if (status === 'connecting') {
     if (statusEl) statusEl.textContent = 'Đang kết nối Realtime Cloud... 🟡';
     if (pingEl) pingEl.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75';
@@ -4025,7 +4051,7 @@ function updateCloudSyncStatus(status) {
   } else if (status === 'reconnecting') {
     if (statusEl) statusEl.textContent = 'Đang tự kết nối lại Cloud... 🟠';
   } else if (status === 'disconnected') {
-    if (statusEl) statusEl.textContent = 'Chưa liên kết Bạn Trai (Chế độ độc lập) 🟡';
+    if (statusEl) statusEl.textContent = 'Chưa thiết lập mã cặp đôi (Chế độ độc lập) 🟡';
     if (pingEl) pingEl.className = 'hidden';
     if (dotEl) dotEl.className = 'relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400';
   } else {
@@ -4066,6 +4092,36 @@ function handleRemoteCloudEvent(data) {
   const currentCode = currentCoupleCode.trim().toUpperCase();
   const eventCode = (data.coupleCode || '').trim().toUpperCase();
   if (eventCode && eventCode !== currentCode) return;
+
+  // Track partner presence signal
+  if (data.senderId && data.senderId !== currentClientId) {
+    const isPartnerSignal = 
+      (data.type === 'PEER_PRESENCE' || data.type === 'PONG_PRESENCE' || data.type === 'PARTNER_JOIN' || data.type === 'partner_ping' || data.type === 'PARTNER_REPLY') ||
+      (currentAuthUser && currentAuthUser.role === 'admin' && (data.role === 'user' || data.actor === 'user')) ||
+      (currentAuthUser && currentAuthUser.role === 'user' && (data.role === 'admin' || data.actor === 'admin'));
+
+    if (isPartnerSignal) {
+      localStorage.setItem('an_gi_partner_seen_' + currentCode, Date.now().toString());
+      if (data.senderName) {
+        localStorage.setItem('an_gi_partner_name_' + currentCode, data.senderName);
+      }
+      updateAuthUI();
+      if (document.getElementById('sc-admin') && document.getElementById('sc-admin').classList.contains('active')) {
+        loadAdminBeData();
+      }
+    }
+  }
+
+  if (data.type === 'PING_PRESENCE' && data.senderId !== currentClientId) {
+    broadcastCloudEvent({
+      type: 'PONG_PRESENCE',
+      role: (currentAuthUser && currentAuthUser.role) || 'user',
+      senderId: currentClientId,
+      senderName: (currentAuthUser && currentAuthUser.name) || (currentAuthUser && currentAuthUser.role === 'admin' ? 'Bạn Trai' : 'Bé Yêu'),
+      coupleCode: currentCoupleCode
+    });
+    return;
+  }
   
   if (data.type === 'ACTIVITY_LOG' && data.activity) {
     if (!cloudActivities.some(a => a.id === data.activity.id)) {
@@ -4434,8 +4490,42 @@ function pushDataToFirestore(data) {
   } catch(e) {}
 }
 
+function isPartnerConnected() {
+  if (!currentCoupleCode || currentCoupleCode.trim().length < 3) return false;
+  const cleanCode = currentCoupleCode.trim().toUpperCase();
+
+  // 1. Kiểm tra danh sách tài khoản đã lưu: có tài khoản Bé Yêu (user) nào mang mã này không?
+  const accs = getStoredAccounts();
+  const currentEmail = (currentAuthUser && currentAuthUser.email) ? currentAuthUser.email.toLowerCase() : '';
+  const currentRole = (currentAuthUser && currentAuthUser.role) ? currentAuthUser.role : 'admin';
+
+  const hasPartnerAcc = Object.values(accs).some(acc => {
+    if (!acc || !acc.coupleCode) return false;
+    if (acc.coupleCode.trim().toUpperCase() !== cleanCode) return false;
+    if (acc.email && acc.email.toLowerCase() === currentEmail) return false;
+    if (currentRole === 'admin' && acc.role === 'user') return true;
+    if (currentRole === 'user' && acc.role === 'admin') return true;
+    return false;
+  });
+  if (hasPartnerAcc) return true;
+
+  // 2. Kiểm tra tín hiệu trực tuyến thực tế nhận được từ thiết bị đối phương
+  try {
+    const partnerSeen = localStorage.getItem('an_gi_partner_seen_' + cleanCode);
+    if (partnerSeen) {
+      const t = parseInt(partnerSeen);
+      if (t && (Date.now() - t < 7 * 86400000)) return true;
+    }
+  } catch(e) {}
+
+  return false;
+}
+
 function clearAllSupplementalUserData(skipToast = false) {
   try {
+    const timestampNow = Date.now();
+    localStorage.setItem('an_gi_cleanup_time', timestampNow.toString());
+
     // 1. Reset danh sách tài khoản: chỉ giữ lại 3 tài khoản Admin mặc định
     const defaultAccounts = {
       'sang.khanhhn@gmail.com': {
@@ -4443,7 +4533,7 @@ function clearAllSupplementalUserData(skipToast = false) {
         password: 'admin',
         role: 'admin',
         name: 'Anh Bạn Trai',
-        coupleCode: ''
+        coupleCode: currentCoupleCode || ''
       },
       'admin@love.app': {
         email: 'admin@love.app',
@@ -4466,22 +4556,30 @@ function clearAllSupplementalUserData(skipToast = false) {
       localStorage.setItem('an_gi_accounts', JSON.stringify(defaultAccounts));
     }
 
-    // 2. Xóa các khóa lưu trữ thông tin Bé Yêu & hoạt động thử nghiệm cũ
+    // 2. Xóa các khóa lưu trữ thông tin Bé Yêu & quán ăn & hoạt động thử nghiệm cũ
     const keysToRemove = [
       'an_gi_be_profile',
       'an_gi_profile',
+      'an_gi_fav_dishes',
+      'an_gi_custom_map_restaurants',
+      'an_gi_custom_restaurants',
+      'an_gi_wheel_dishes',
+      'an_gi_black_dishes',
+      'an_gi_custom_dishes',
+      'an_gi_blacklist_tags',
       'an_gi_activities_local',
       'an_gi_activities_LOVE-2026',
       'an_gi_activities_',
       'an_gi_recent_picks',
       'an_gi_dishes',
       'an_gi_saved_places',
-      'an_gi_custom_locations'
+      'an_gi_custom_locations',
+      'an_gi_latest_partner_msg'
     ];
 
     for (let i = localStorage.length - 1; i >= 0; i--) {
       const k = localStorage.key(i);
-      if (k && (k.startsWith('an_gi_activities_') || k.startsWith('an_gi_peer_') || k.startsWith('an_gi_be_'))) {
+      if (k && (k.startsWith('an_gi_activities_') || k.startsWith('an_gi_peer_') || k.startsWith('an_gi_partner_') || k.startsWith('an_gi_be_'))) {
         localStorage.removeItem(k);
       }
     }
@@ -4490,35 +4588,75 @@ function clearAllSupplementalUserData(skipToast = false) {
       try { localStorage.removeItem(k); } catch(e) {}
     });
 
-    // 3. Nếu chưa có mã hoặc dùng mã LOVE-2026 cũ, đặt lại rỗng
-    if (!currentCoupleCode || currentCoupleCode === 'LOVE-2026') {
-      currentCoupleCode = '';
-      try { localStorage.removeItem('an_gi_couple_code'); } catch(e) {}
-      if (currentAuthUser) {
-        currentAuthUser.coupleCode = '';
-        try { localStorage.setItem('an_gi_auth_user', JSON.stringify(currentAuthUser)); } catch(e) {}
+    // 3. Reset in-memory data
+    favDishes = [];
+    customMapRestaurants = [];
+    wheelItems = ['Cơm tấm', 'Bún bò Huế', 'Phở bò', 'Bún chả', 'Mì Quảng', 'Trà sữa', 'Gà rán', 'Lẩu Thái'];
+    blackDishes = [];
+    customDishes = [];
+    cloudActivities = [];
+    beProfile = {
+      name: 'Bé Yêu',
+      avatar: '🐰',
+      status: 'Hôm nay: Đang đói bụng 🐰',
+      address: '',
+      addressTitle: '',
+      addressCoords: null,
+      addressNote: '',
+      waterPercent: 70,
+      spicyLevel: 2,
+      spicyNote: '',
+      milkTeaFormula: '',
+      blacklistTags: []
+    };
+
+    localStorage.setItem('an_gi_fav_dishes', JSON.stringify([]));
+    localStorage.setItem('an_gi_custom_map_restaurants', JSON.stringify([]));
+    localStorage.setItem('an_gi_wheel_dishes', JSON.stringify(wheelItems));
+    localStorage.setItem('an_gi_black_dishes', JSON.stringify([]));
+    localStorage.setItem('an_gi_be_profile', JSON.stringify(beProfile));
+
+    // 4. Overwrite Cloud snapshot so that cloud does not repopulate old dishes
+    if (currentCoupleCode) {
+      const emptyPayload = {
+        profile: beProfile,
+        boyfriendProfile: typeof boyfriendProfile !== 'undefined' ? boyfriendProfile : null,
+        favDishes: [],
+        wheelItems: wheelItems,
+        blackDishes: [],
+        accounts: defaultAccounts,
+        updatedAt: timestampNow
+      };
+      broadcastCloudEvent({
+        type: 'DATA_SYNC',
+        coupleCode: currentCoupleCode,
+        payload: emptyPayload
+      });
+      if (firestoreDb) {
+        try {
+          firestoreDb.collection('couples').doc(currentCoupleCode).set(emptyPayload, { merge: false }).catch(() => {});
+        } catch(e) {}
       }
     }
 
-    // 4. Reset in-memory beProfile về mặc định sạch
-    if (typeof defaultProfile !== 'undefined') {
-      beProfile = { ...defaultProfile };
-    }
-    cloudActivities = [];
-
     // 5. Cập nhật lại UI
+    if (typeof renderProfile === 'function') renderProfile();
+    if (typeof renderFavList === 'function') renderFavList();
+    if (typeof renderHomeFavList === 'function') renderHomeFavList();
+    if (typeof renderWheel === 'function') renderWheel();
+    if (typeof renderBlackList === 'function') renderBlackList();
+    if (typeof renderMapRestaurants === 'function') renderMapRestaurants();
     if (typeof loadAdminBeData === 'function') loadAdminBeData();
     if (typeof renderAdminActivities === 'function') renderAdminActivities();
     if (typeof renderAdminDashboard === 'function') renderAdminDashboard();
     if (typeof updateAuthUI === 'function') updateAuthUI();
-    if (typeof renderProfile === 'function') renderProfile();
 
     if (!skipToast) {
-      showToast('🧹 Đã xóa sạch dữ liệu người dùng thử nghiệm!');
+      showToast('🧹 Đã xóa sạch dữ liệu Bé Yêu và các quán thử nghiệm!');
       if (typeof showAuthAlert === 'function') {
         showAuthAlert({
           title: 'Đã Dọn Sạch Dữ Liệu',
-          message: 'Tất cả dữ liệu người dùng và hồ sơ Bé Yêu thử nghiệm đã được dọn sạch. Tài khoản Quản Trị của bạn hiện độc lập và không còn bị dính thông tin cũ nữa nhé 💕',
+          message: 'Tất cả dữ liệu hồ sơ Bé Yêu, địa chỉ và các quán ruột thử nghiệm đã được dọn sạch hoàn toàn.<br/><br/><span class="text-xs text-on-surface-variant font-normal">Hệ thống đang ở trạng thái mới tinh. Tài khoản Quản Trị của bạn vẫn được giữ nguyên an toàn.</span>',
           icon: '✅',
           type: 'success',
           primaryText: 'Tuyệt vời',
@@ -4551,7 +4689,7 @@ function confirmClearAllUserData() {
 }
 
 function initDataCleanupCheck() {
-  const CLEANUP_KEY = 'an_gi_cleanup_v2026_1';
+  const CLEANUP_KEY = 'an_gi_cleanup_v2026_3';
   try {
     if (!localStorage.getItem(CLEANUP_KEY)) {
       clearAllSupplementalUserData(true);
@@ -4750,14 +4888,26 @@ function updateAuthUI() {
     if (roleText) roleText.textContent = (typeof beProfile !== 'undefined' && beProfile.name) ? beProfile.name.split(' ')[0] : 'Bé Yêu';
     if (roleArrow) roleArrow.classList.add('hidden');
     if (rolePill) {
+      const isPaired = typeof isPartnerConnected === 'function' ? isPartnerConnected() : false;
       rolePill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed border border-secondary/40 text-on-secondary-fixed text-xs font-bold transition-all';
-      rolePill.title = currentCoupleCode ? '🐰 Bé Yêu (Đã kết nối Bạn Trai) 💕' : '🐰 Bé Yêu (Chế độ độc lập) 💕';
+      rolePill.title = currentCoupleCode 
+        ? (isPaired ? '🐰 Bé Yêu (Đã kết nối Bạn Trai 2 máy) 💕' : `🐰 Bé Yêu (Mã phòng ${currentCoupleCode} - Đang chờ kết nối 2 máy) 💕`) 
+        : '🐰 Bé Yêu (Chế độ độc lập) 💕';
       rolePill.onclick = handleRoleHeaderClick;
     }
   }
 
+  const isPaired = typeof isPartnerConnected === 'function' ? isPartnerConnected() : false;
   const codePill = document.getElementById('admin-couple-code-pill');
-  if (codePill) codePill.textContent = currentCoupleCode || '(Chưa có mã)';
+  if (codePill) {
+    if (!currentCoupleCode) {
+      codePill.textContent = '(Chưa có mã)';
+    } else if (isPaired) {
+      codePill.textContent = `${currentCoupleCode} (Đã liên kết 2 máy 🟢)`;
+    } else {
+      codePill.textContent = `${currentCoupleCode} (Chờ đối phương 🟡)`;
+    }
+  }
   const inputCode = document.getElementById('adm-input-couple-code');
   if (inputCode) inputCode.value = currentCoupleCode || '';
   const authCodeInput = document.getElementById('auth-couple-code');
@@ -4796,12 +4946,15 @@ function updateAuthUI() {
   }
   const nbCoupleBadge = document.getElementById('nb-couple-status-badge');
   if (nbCoupleBadge) {
-    if (currentCoupleCode) {
+    if (currentCoupleCode && isPaired) {
       nbCoupleBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20';
-      nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span>Đã kết nối trực tiếp</span>';
-    } else if (isAuth) {
+      nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span>Đã liên kết 2 máy 🟢</span>';
+    } else if (currentCoupleCode && !isPaired) {
       nbCoupleBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20';
-      nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span>Chưa kết nối Bạn Trai (Độc lập)</span>';
+      nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span><span>Đang chờ đối phương nhập mã 🟡</span>';
+    } else if (isAuth) {
+      nbCoupleBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/10 text-slate-600 border border-slate-500/20';
+      nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span><span>Chế độ độc lập (Chưa nhập mã)</span>';
     } else {
       nbCoupleBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-outline-variant/20 text-on-surface-variant border border-outline-variant/30';
       nbCoupleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-outline"></span><span>Chưa đăng nhập</span>';
@@ -4821,8 +4974,10 @@ function updateAuthUI() {
   }
   const nbUserStatusText = document.getElementById('nb-user-status-text');
   if (nbUserStatusText) {
-    if (currentCoupleCode) {
-      nbUserStatusText.innerHTML = '<span class="text-base shrink-0">🌸</span><span class="leading-relaxed">Hai bạn đang kết nối chung phòng! Mọi món quay và tâm trạng sẽ đồng bộ tức thì sang Bạn Trai.</span>';
+    if (currentCoupleCode && isPaired) {
+      nbUserStatusText.innerHTML = '<span class="text-base shrink-0">🌸</span><span class="leading-relaxed">Hai bạn đang kết nối chung phòng! Mọi món quay và tâm trạng sẽ đồng bộ tức thì giữa 2 máy.</span>';
+    } else if (currentCoupleCode && !isPaired) {
+      nbUserStatusText.innerHTML = `<span class="text-base shrink-0">🟡</span><span class="leading-relaxed">Đã tạo mã phòng: <b class="font-mono text-primary">${currentCoupleCode}</b>. Đang chờ ${isAdmin ? 'Bé Yêu' : 'Bạn Trai'} nhập mã trên máy của mình để liên kết 2 thiết bị 💕</span>`;
     } else {
       nbUserStatusText.innerHTML = '<span class="text-base shrink-0">🟡</span><span class="leading-relaxed">Bé đang dùng ở <b>Chế độ độc lập</b> (chưa liên kết với ADMIN). Khi nào Bạn Trai gửi mã kết nối, bé bấm nút <b>"Nhập mã Bạn Trai cấp"</b> ở trên để liên kết nhé 💕</span>';
     }
@@ -5114,12 +5269,16 @@ function showAuthProfile() {
   }
   const cloudStatusEl = document.getElementById('auth-profile-cloud-status');
   if (cloudStatusEl) {
-    if (currentCoupleCode) {
-      cloudStatusEl.className = 'font-semibold text-emerald-600 flex items-center gap-1';
-      cloudStatusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Đang trực tuyến 2 máy';
-    } else {
+    const isPaired = typeof isPartnerConnected === 'function' ? isPartnerConnected() : false;
+    if (!currentCoupleCode) {
+      cloudStatusEl.className = 'font-semibold text-slate-500 flex items-center gap-1';
+      cloudStatusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Chế độ độc lập (Chưa tạo mã)';
+    } else if (!isPaired) {
       cloudStatusEl.className = 'font-semibold text-amber-600 flex items-center gap-1';
-      cloudStatusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500"></span> Chế độ độc lập (Chưa kết nối Bạn Trai)';
+      cloudStatusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Đang chờ ${isAdmin ? 'Bé Yêu' : 'Bạn Trai'} kết nối mã... (Chưa liên kết 2 máy)`;
+    } else {
+      cloudStatusEl.className = 'font-semibold text-emerald-600 flex items-center gap-1';
+      cloudStatusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Đang trực tuyến 2 máy (Đã liên kết)';
     }
   }
 
@@ -5968,14 +6127,37 @@ function renderAdminActivities() {
 }
 
 function loadAdminBeData() {
-  const isConnected = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
+  const isPaired = typeof isPartnerConnected === 'function' ? isPartnerConnected() : false;
+  const hasCode = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
 
   const bannerEl = document.getElementById('adm-unlinked-be-banner');
   if (bannerEl) {
-    if (isConnected) {
-      bannerEl.classList.add('hidden');
-    } else {
+    if (!hasCode) {
+      bannerEl.className = 'p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-2.5';
       bannerEl.classList.remove('hidden');
+      bannerEl.innerHTML = `
+        <span class="text-xl">⚠️</span>
+        <div class="flex-1 text-xs">
+          <p class="font-bold text-amber-800 dark:text-amber-200">Chưa cài đặt mã cặp đôi</p>
+          <p class="text-on-surface-variant text-[11px] mt-0.5 leading-relaxed">Tài khoản Quản Trị hiện chưa gán mã cặp đôi nào. Hãy cài đặt mã để kết nối với Bé Yêu nhé!</p>
+          <button onclick="switchAdminTab('settings')" class="mt-2 px-3 py-1 rounded-full bg-amber-500 text-white font-bold text-[11px] inline-flex items-center gap-1 shadow-xs active:scale-95">
+            <span class="material-symbols-outlined text-[13px]">link</span>
+            <span>Cài đặt mã cặp đôi ngay</span>
+          </button>
+        </div>
+      `;
+    } else if (!isPaired) {
+      bannerEl.className = 'p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-2.5';
+      bannerEl.classList.remove('hidden');
+      bannerEl.innerHTML = `
+        <span class="text-xl">⏳</span>
+        <div class="flex-1 text-xs">
+          <p class="font-bold text-amber-800 dark:text-amber-200">Đang chờ Bé Yêu kết nối mã: <span class="font-mono underline">${currentCoupleCode}</span></p>
+          <p class="text-on-surface-variant text-[11px] mt-0.5 leading-relaxed">Admin đã tạo mã thành công nhưng hiện <b>chưa có tài khoản Bé Yêu nào kết nối</b> với mã này (Chưa liên kết 2 máy). Khi Bé Yêu nhập mã trên thiết bị của Bé, thông tin quán ruột và sở thích của Bé sẽ tự động đồng bộ tại đây!</p>
+        </div>
+      `;
+    } else {
+      bannerEl.classList.add('hidden');
     }
   }
 
@@ -5986,28 +6168,30 @@ function loadAdminBeData() {
   const sweetInput = document.getElementById('adm-be-sweet');
   const notesInput = document.getElementById('adm-be-notes');
 
-  if (!isConnected) {
-    if (nameInput) { nameInput.value = ''; nameInput.placeholder = '(Chưa liên kết Bé Yêu)'; }
+  if (!isPaired) {
+    if (nameInput) { nameInput.value = ''; nameInput.placeholder = hasCode ? `(Chờ Bé kết nối mã ${currentCoupleCode}...)` : '(Chưa liên kết Bé Yêu)'; }
     if (nickInput) { nickInput.value = ''; nickInput.placeholder = '(Chưa có biệt danh)'; }
     if (annivInput) { annivInput.value = ''; }
     if (spicyInput) { spicyInput.value = '2'; }
     if (sweetInput) { sweetInput.value = '2'; }
-    if (notesInput) { notesInput.value = ''; notesInput.placeholder = '(Chưa có thông tin do chưa liên kết mã)'; }
+    if (notesInput) { notesInput.value = ''; notesInput.placeholder = hasCode ? `(Đang chờ Bé kết nối với mã ${currentCoupleCode})` : '(Chưa có thông tin do chưa liên kết mã)'; }
 
     const favListEl = document.getElementById('adm-fav-list');
     if (favListEl) {
       favListEl.innerHTML = `
         <div class="p-6 rounded-2xl bg-surface-container-lowest border border-dashed border-outline-variant/30 text-center space-y-2">
-          <span class="text-3xl">🔗</span>
-          <p class="text-xs font-bold text-on-surface">Chưa liên kết với Bé Yêu</p>
+          <span class="text-3xl">${hasCode ? '⏳' : '🔗'}</span>
+          <p class="text-xs font-bold text-on-surface">${hasCode ? `Đang chờ Bé Yêu kết nối mã: ${currentCoupleCode}` : 'Chưa liên kết với Bé Yêu'}</p>
           <p class="text-[11px] text-on-surface-variant leading-relaxed">
-            Hiện tài khoản Admin chưa liên kết mã với Bé Yêu nào.<br/>
-            Hãy cấp mã cặp đôi cho Bé hoặc nhập mã cặp đôi để hiển thị và chỉnh sửa quán ruột của Bé nhé!
+            ${hasCode 
+              ? 'Hiện tại chưa có tài khoản Bé Yêu nào kết nối với mã này.<br/>Khi Bé nhập đúng mã trên máy của mình, danh sách quán ruột của Bé sẽ hiển thị tại đây!' 
+              : 'Hiện tài khoản Admin chưa liên kết mã với Bé Yêu nào.<br/>Hãy cấp mã cặp đôi cho Bé hoặc nhập mã cặp đôi để hiển thị và chỉnh sửa quán ruột của Bé nhé!'}
           </p>
+          ${!hasCode ? `
           <button onclick="switchAdminTab('settings')" class="mt-2 px-3 py-1.5 rounded-full bg-primary text-white text-xs font-bold shadow-xs inline-flex items-center gap-1 active:scale-95">
             <span class="material-symbols-outlined text-[14px]">link</span>
             <span>Cài đặt mã cặp đôi</span>
-          </button>
+          </button>` : ''}
         </div>
       `;
     }
@@ -6016,7 +6200,7 @@ function loadAdminBeData() {
     if (wheelListEl) {
       wheelListEl.innerHTML = `
         <div class="p-4 rounded-xl bg-surface-container-lowest border border-dashed border-outline-variant/30 text-center text-xs text-on-surface-variant">
-          Chưa liên kết mã cặp đôi với Bé Yêu.
+          ${hasCode ? `Đang chờ Bé Yêu kết nối mã (${currentCoupleCode})...` : 'Chưa liên kết mã cặp đôi với Bé Yêu.'}
         </div>
       `;
     }
@@ -6025,7 +6209,7 @@ function loadAdminBeData() {
     if (blackListEl) {
       blackListEl.innerHTML = `
         <div class="p-4 rounded-xl bg-surface-container-lowest border border-dashed border-outline-variant/30 text-center text-xs text-on-surface-variant">
-          Chưa liên kết mã cặp đôi với Bé Yêu.
+          ${hasCode ? `Đang chờ Bé Yêu kết nối mã (${currentCoupleCode})...` : 'Chưa liên kết mã cặp đôi với Bé Yêu.'}
         </div>
       `;
     }
@@ -6033,12 +6217,12 @@ function loadAdminBeData() {
   }
 
   if (beProfile) {
-    if (nameInput) { nameInput.value = beProfile.name || 'Bé Heo'; nameInput.placeholder = 'Ví dụ: Bé Mèo, Bé Heo...'; }
-    if (nickInput) { nickInput.value = beProfile.nickname || 'Công chúa nhỏ'; nickInput.placeholder = 'Công chúa nhỏ'; }
-    if (annivInput) { annivInput.value = beProfile.anniversary || '2024-02-14'; }
+    if (nameInput) { nameInput.value = beProfile.name || 'Bé Yêu'; nameInput.placeholder = 'Ví dụ: Bé Mèo, Bé Yêu...'; }
+    if (nickInput) { nickInput.value = beProfile.nickname || ''; nickInput.placeholder = 'Biệt danh của bé'; }
+    if (annivInput) { annivInput.value = beProfile.anniversary || ''; }
     if (spicyInput) { spicyInput.value = String(beProfile.spicyLevel || 2); }
     if (sweetInput) { sweetInput.value = String(beProfile.sweetLevel || 2); }
-    if (notesInput) { notesInput.value = beProfile.spicyNote || ''; notesInput.placeholder = 'Bé không thích hành lá, thích ăn đá bào, say xe khi đi xa...'; }
+    if (notesInput) { notesInput.value = beProfile.spicyNote || ''; notesInput.placeholder = 'Ghi chú khẩu vị của bé...'; }
   }
 
   const favListEl = document.getElementById('adm-fav-list');
@@ -6093,30 +6277,34 @@ function loadAdminBeData() {
 }
 
 function saveAdminBeProfile() {
-  const isConnected = !!(currentCoupleCode && currentCoupleCode.trim().length >= 3);
-  if (!isConnected) {
+  const isPaired = typeof isPartnerConnected === 'function' ? isPartnerConnected() : false;
+  if (!isPaired) {
     if (typeof showAuthAlert === 'function') {
       showAuthAlert({
-        title: 'Chưa Liên Kết Mã',
-        message: 'Bạn chưa liên kết mã cặp đôi với Bé Yêu. Vui lòng thiết lập hoặc nhập mã cặp đôi trước khi lưu hồ sơ nhé 💕',
+        title: 'Chưa Liên Kết Bé Yêu',
+        message: currentCoupleCode 
+          ? `Mã cặp đôi <b>${currentCoupleCode}</b> hiện đang chờ Bé Yêu kết nối trên máy của Bé.<br/><br/><span class="text-xs text-on-surface-variant font-normal">Khi Bé nhập mã và liên kết thành công 2 máy, bạn mới có thể chỉnh sửa hồ sơ Bé nhé 💕</span>`
+          : 'Bạn chưa tạo mã cặp đôi. Vui lòng cài đặt mã cặp đôi trước khi lưu hồ sơ nhé 💕',
         icon: '🔗',
         type: 'warning',
-        primaryText: 'Cài đặt mã ngay',
+        primaryText: currentCoupleCode ? 'Đã hiểu' : 'Cài đặt mã ngay',
         onPrimary: () => {
-          switchAdminTab('settings');
-          const inp = document.getElementById('adm-input-couple-code');
-          if (inp) inp.focus();
+          if (!currentCoupleCode) {
+            switchAdminTab('settings');
+            const inp = document.getElementById('adm-input-couple-code');
+            if (inp) inp.focus();
+          }
         },
         secondaryText: 'Đóng'
       });
     } else {
-      showToast('⚠️ Vui lòng liên kết mã cặp đôi trước khi lưu hồ sơ Bé!');
+      showToast('⚠️ Vui lòng đợi Bé Yêu liên kết mã trước khi lưu hồ sơ!');
     }
     return;
   }
 
-  const name = document.getElementById('adm-be-name').value.trim() || 'Bé Heo';
-  const nick = document.getElementById('adm-be-nickname').value.trim() || 'Công chúa nhỏ';
+  const name = document.getElementById('adm-be-name').value.trim() || 'Bé Yêu';
+  const nick = document.getElementById('adm-be-nickname').value.trim();
   const anniv = document.getElementById('adm-be-anniversary').value;
   const spicy = parseInt(document.getElementById('adm-be-spicy').value) || 2;
   const sweet = parseInt(document.getElementById('adm-be-sweet').value) || 2;
@@ -11625,18 +11813,18 @@ function nbTab(t){
 
 // ── Profile Management ──
 const defaultProfile = {
-  name: 'Bé Heo',
+  name: 'Bé Yêu',
   avatar: '🐰',
-  status: 'Hôm nay: Dễ thương nhưng đói bụng 🐰',
-  address: 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh',
-  addressTitle: 'Nhà của Bé 🏠',
-  addressCoords: { lat: 10.79812, lng: 106.68531 },
-  addressNote: 'Phan Xích Long, gần nhiều quán ngon',
+  status: 'Hôm nay: Đang đói bụng 🐰',
+  address: '',
+  addressTitle: '',
+  addressCoords: null,
+  addressNote: '',
   waterPercent: 70,
   spicyLevel: 2,
-  spicyNote: 'Quá cay là quăng đũa liền!',
-  milkTeaFormula: 'Luôn 30% đường, 50% đá, thêm trân châu hoàng kim mềm dẻo.',
-  blacklistTags: ['Không ăn hành lá sống', 'Không ăn ngò gai']
+  spicyNote: '',
+  milkTeaFormula: '',
+  blacklistTags: []
 };
 
 let beProfile = { ...defaultProfile };
@@ -11700,17 +11888,17 @@ function renderProfile() {
   }
 
   const nameEl = document.getElementById('nb-name');
-  if (nameEl) nameEl.textContent = beProfile.name || 'Bé Heo';
+  if (nameEl) nameEl.textContent = beProfile.name || 'Bé Yêu';
   const statusEl = document.getElementById('nb-status');
-  if (statusEl) statusEl.textContent = beProfile.status || 'Hôm nay: Dễ thương nhưng đói bụng 🐰';
+  if (statusEl) statusEl.textContent = beProfile.status || 'Hôm nay: Đang đói bụng 🐰';
 
   // Notebook Address Display
   const nbAddrTitle = document.getElementById('nb-address-title');
-  if (nbAddrTitle) nbAddrTitle.textContent = beProfile.addressTitle || 'Nhà của Bé 🏠';
+  if (nbAddrTitle) nbAddrTitle.textContent = beProfile.addressTitle || (beProfile.address ? 'Nhà của Bé 🏠' : 'Vị trí của Bé 📍');
   const nbAddrText = document.getElementById('nb-address-text');
-  if (nbAddrText) nbAddrText.textContent = beProfile.address || 'Phú Nhuận, TP. HCM';
+  if (nbAddrText) nbAddrText.textContent = beProfile.address || 'Chưa cài đặt địa chỉ';
   const nbAddrNote = document.getElementById('nb-address-note');
-  if (nbAddrNote) nbAddrNote.textContent = beProfile.addressNote || 'Khu vực quen thuộc của nàng';
+  if (nbAddrNote) nbAddrNote.textContent = beProfile.addressNote || (beProfile.address ? 'Khu vực quen thuộc của nàng' : 'Chạm vào để thiết lập toạ độ tìm quán');
   const nbAddrCoordBadge = document.getElementById('nb-address-coord-badge');
   if (nbAddrCoordBadge) {
     if (beProfile.addressCoords && beProfile.addressCoords.lat) {
@@ -11725,7 +11913,7 @@ function renderProfile() {
   const mapBeName = document.getElementById('map-be-name-mini');
   if (mapBeName) mapBeName.textContent = `${beProfile.name || 'Bé'}:`;
   const mapBeAddr = document.getElementById('map-be-address-mini');
-  if (mapBeAddr) mapBeAddr.textContent = `${beProfile.addressTitle || 'Nhà bé'} (${(beProfile.address || 'Phú Nhuận').split(',')[0]})`;
+  if (mapBeAddr) mapBeAddr.textContent = `${beProfile.addressTitle || 'Nhà bé'} (${(beProfile.address || 'Chưa có vị trí').split(',')[0]})`;
   const mapBeAv = document.getElementById('map-be-avatar-mini');
   if (mapBeAv) {
     if (isImageAvatar(beProfile.avatar)) {
@@ -11739,7 +11927,7 @@ function renderProfile() {
   const modalBeTitle = document.getElementById('modal-be-address-title');
   if (modalBeTitle) modalBeTitle.textContent = `${beProfile.addressTitle || 'Nhà của Bé'} (${beProfile.name || 'Bé'})`;
   const modalBeText = document.getElementById('modal-be-address-text');
-  if (modalBeText) modalBeText.textContent = beProfile.address || 'Phú Nhuận, TP. HCM';
+  if (modalBeText) modalBeText.textContent = beProfile.address || 'Chưa cài đặt địa chỉ';
   const modalBeAv = document.getElementById('modal-be-avatar-badge');
   if (modalBeAv) {
     if (isImageAvatar(beProfile.avatar)) {
@@ -11773,20 +11961,24 @@ function renderProfile() {
     }
   }
   const sNote = document.getElementById('nb-spicy-note');
-  if (sNote) sNote.textContent = beProfile.spicyNote || 'Quá cay là quăng đũa liền!';
+  if (sNote) sNote.textContent = beProfile.spicyNote || '';
 
   const mtText = document.getElementById('nb-milktea-text');
   if (mtText) {
-    mtText.innerHTML = beProfile.milkTeaFormula || 'Luôn 30% đường, 50% đá, thêm trân châu hoàng kim mềm dẻo.';
+    mtText.innerHTML = beProfile.milkTeaFormula || 'Chưa có công thức';
   }
 
   const blTags = document.getElementById('nb-blacklist-tags');
   if (blTags) {
     blTags.innerHTML = '';
-    const tags = Array.isArray(beProfile.blacklistTags) ? beProfile.blacklistTags : ['Không ăn hành lá sống', 'Không ăn ngò gai'];
-    tags.forEach(t => {
-      blTags.innerHTML += `<span class="bg-error text-on-error px-2.5 py-0.5 rounded-full font-label-sm text-xs font-semibold">🚫 ${t}</span>`;
-    });
+    const tags = Array.isArray(beProfile.blacklistTags) ? beProfile.blacklistTags : [];
+    if (tags.length === 0) {
+      blTags.innerHTML = '<span class="text-xs text-on-surface-variant italic">Chưa có món cấm nào</span>';
+    } else {
+      tags.forEach(t => {
+        blTags.innerHTML += `<span class="bg-error text-on-error px-2.5 py-0.5 rounded-full font-label-sm text-xs font-semibold">🚫 ${t}</span>`;
+      });
+    }
   }
 
   // Update understanding score banner
@@ -12300,13 +12492,13 @@ function removeCustomAvatar() {
 }
 
 function openProfileEditModal() {
-  document.getElementById('edit-profile-name').value = beProfile.name || 'Bé Heo';
+  document.getElementById('edit-profile-name').value = beProfile.name || 'Bé Yêu';
   document.getElementById('edit-profile-status').value = beProfile.status || '';
   const addrTitleInp = document.getElementById('edit-profile-address-title');
-  if (addrTitleInp) addrTitleInp.value = beProfile.addressTitle || 'Nhà bé yêu 🏠';
+  if (addrTitleInp) addrTitleInp.value = beProfile.addressTitle || '';
   const addrInp = document.getElementById('edit-profile-address');
   if (addrInp) {
-    addrInp.value = beProfile.address || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
+    addrInp.value = beProfile.address || '';
     toggleProfileAddressClearBtn();
   }
   const addrNoteInp = document.getElementById('edit-profile-address-note');
@@ -12325,8 +12517,8 @@ function openProfileEditModal() {
   renderSpicyLevelButtons();
 
   // Initialize selected address coordinates & status badge
-  tempSelectedProfileAddressCoords = beProfile.addressCoords || getCoordsForArea(beProfile.address || 'Phú Nhuận, TP. HCM');
-  updateProfileAddressMapBadge(beProfile.address || 'Phú Nhuận, TP. HCM', tempSelectedProfileAddressCoords);
+  tempSelectedProfileAddressCoords = beProfile.addressCoords || (beProfile.address ? getCoordsForArea(beProfile.address) : null);
+  updateProfileAddressMapBadge(beProfile.address || '', tempSelectedProfileAddressCoords);
 
   const sugBox = document.getElementById('profile-address-suggestions');
   if (sugBox) sugBox.classList.add('hidden');
@@ -13272,7 +13464,12 @@ function setQuickProfileAddress(addr, coords = null, title = null) {
 }
 
 function goToMapAroundBe() {
-  const beAddr = beProfile.address || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
+  if (!beProfile || !beProfile.address) {
+    showToast('Bé chưa cài đặt địa chỉ nhà/vị trí. Hãy thiết lập ở trang Hồ sơ nhé! 📍');
+    openProfileEditModal();
+    return;
+  }
+  const beAddr = beProfile.address;
   const beCoords = (beProfile.addressCoords && beProfile.addressCoords.lat) ? beProfile.addressCoords : getCoordsForArea(beAddr);
   
   // 1. Chuyển sang màn hình Bản Đồ trước để container có kích thước hiển thị
@@ -13328,7 +13525,12 @@ function goToMapAroundBe() {
 }
 
 function selectBeSavedAddress() {
-  const beAddr = beProfile.address || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
+  if (!beProfile || !beProfile.address) {
+    showToast('Bé chưa cài đặt địa chỉ nhà/vị trí. Hãy thiết lập ở trang Hồ sơ nhé! 📍');
+    openProfileEditModal();
+    return;
+  }
+  const beAddr = beProfile.address;
   const beCoords = (beProfile.addressCoords && beProfile.addressCoords.lat) ? beProfile.addressCoords : getCoordsForArea(beAddr);
   selectArea(beAddr, beCoords);
   if (leafletMap) {
@@ -13385,18 +13587,18 @@ function renderSpicyLevelButtons() {
 }
 
 function saveProfileChanges() {
-  const name = document.getElementById('edit-profile-name').value.trim() || 'Bé Heo';
-  const status = document.getElementById('edit-profile-status').value.trim() || 'Hôm nay: Dễ thương nhưng đói bụng 🐰';
-  const addressTitle = document.getElementById('edit-profile-address-title')?.value.trim() || 'Nhà bé yêu 🏠';
-  const address = document.getElementById('edit-profile-address')?.value.trim() || 'Đường Phan Xích Long, Phường 2, Quận Phú Nhuận, TP. Hồ Chí Minh';
+  const name = document.getElementById('edit-profile-name').value.trim() || 'Bé Yêu';
+  const status = document.getElementById('edit-profile-status').value.trim() || 'Hôm nay: Đang đói bụng 🐰';
+  const addressTitle = document.getElementById('edit-profile-address-title')?.value.trim() || '';
+  const address = document.getElementById('edit-profile-address')?.value.trim() || '';
   const addressNote = document.getElementById('edit-profile-address-note')?.value.trim() || '';
   const waterPercent = parseInt(document.getElementById('edit-profile-water').value) || 70;
-  const spicyNote = document.getElementById('edit-profile-spicy-note').value.trim() || 'Quá cay là quăng đũa liền!';
-  const milkTeaFormula = document.getElementById('edit-profile-milktea').value.trim() || 'Luôn 30% đường, 50% đá, thêm trân châu hoàng kim mềm dẻo.';
+  const spicyNote = document.getElementById('edit-profile-spicy-note').value.trim() || '';
+  const milkTeaFormula = document.getElementById('edit-profile-milktea').value.trim() || '';
   const blRaw = document.getElementById('edit-profile-blacklist').value.trim();
-  const blacklistTags = blRaw ? blRaw.split(',').map(s => s.trim()).filter(Boolean) : ['Không ăn hành lá sống', 'Không ăn ngò gai'];
+  const blacklistTags = blRaw ? blRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
-  const addressCoords = tempSelectedProfileAddressCoords || (beProfile && beProfile.addressCoords) || getCoordsForArea(address);
+  const addressCoords = tempSelectedProfileAddressCoords || (beProfile && beProfile.addressCoords) || (address ? getCoordsForArea(address) : null);
 
   beProfile = {
     ...beProfile,
@@ -13443,32 +13645,7 @@ document.addEventListener('click', (e) => {
 });
 
 // ── Favorites Management (Quán Ruột Nàng Mê) ──
-const defaultFavDishes = [
-  {
-    id: 'f1',
-    icon: '🍜',
-    title: 'Quán bún chả cô Nga',
-    badge: 'Điểm hài lòng: 10/10',
-    address: '42 Hàng Mành, Hoàn Kiếm',
-    note: 'Gọi thêm chả viên nướng, nước chấm xin thêm ớt băm riêng'
-  },
-  {
-    id: 'f2',
-    icon: '🧋',
-    title: 'Trà sữa Maycha',
-    badge: 'Uống mỗi khi dỗi',
-    address: '115 Nguyễn Gia Trí, Bình Thạnh',
-    note: 'Trân châu đen dai mềm, không dùng trân châu trắng vì mỏi răng'
-  },
-  {
-    id: 'f3',
-    icon: '🍲',
-    title: 'Bánh canh cua Út Lệ',
-    badge: 'Quán kỷ niệm hẹn hò',
-    address: '210 Tô Hiến Thành, Q.10',
-    note: 'Luôn lấy thêm quẩy giòn và vắt đúng 1 miếng chanh mỏng'
-  }
-];
+const defaultFavDishes = [];
 
 let favDishes = [];
 try {
